@@ -21,4 +21,8 @@ public class Editor {
         workbooksToBeChanged = new ArrayList<>();
         patternRecognizer = new PatternRecognizer();
     }
+
+    public void modifyWorkbooks() {
+
+    }
 }
