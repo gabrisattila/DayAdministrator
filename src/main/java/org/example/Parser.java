@@ -3,7 +3,9 @@ package org.example;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 
+import static org.example.I18N.delimiterBetweenTextParts;
 import static org.example.I18N.swap;
 
 public class Parser {
@@ -18,12 +20,17 @@ public class Parser {
 
     private String time;
 
+    private Comparator<String> textPartsComparator;
+
     //endregion
 
 
     //region Constructor
 
     public Parser(String dayText) {
+        text = dayText;
+        defineComparator();
+        sortPartsAndSetUpMeasureMoneyTimeVars();
     }
 
     //endregion
@@ -31,51 +38,22 @@ public class Parser {
 
     //region Methods
 
-    private void parseTextIntoM_M_T() {
-        String[] parts = text.split("/");
-
-        parts = makeMeasuresMoneyTimeOrderFromParts(parts);
-
-        if (parts.length == 1){ // Only time
-            setUpTime();
-        } else if (parts.length == 2) { // Time and -> Money or Measures
-            setUpMoney();
-            setUpMeasures();
-        }else { // All three
-            setUpTime();
-            setUpMoney();
-            setUpMeasures();
-        }
-    }
-
-    private String[] makeMeasuresMoneyTimeOrderFromParts(String[] parts) {
-        for (int i = 0; i < parts.length; i++) {
-            if (isMeasure(parts[i])){
-                if (i == 2)
-	                swap(parts, 2, 0);
-                else if (i == 1)
-                    swap(parts, 1, 0);
-            } else if (isMoney(parts[i])) {
-                if (i == 0)
-                    swap(parts, 0, 1);
-                else if (i == 2)
-                    swap(parts, 2, 1);
-            }else {
-                if (i == 0)
-                    swap(parts, 0, 2);
-                else if (i == 1)
+    private void defineComparator(){
+        textPartsComparator = (s1, s2) -> {
+            if (isTime(s1) && !isTime(s2)) {
+                return 1;
+            } else if (isTime(s2) && !isTime(s1)) {
+                return -1;
+            } else {
+                if (isMeasure(s1) && !isMeasure(s2)){
+                    return -1;
+                }
+                if (isMeasure(s2) && !isMeasure(s1)){
+                    return 1;
+                }
+                return s1.compareTo(s2);
             }
-        }
-        return parts;
-    }
-
-    private void setUpMeasures() {
-    }
-
-    private void setUpMoney() {
-    }
-
-    private void setUpTime() {
+        };
     }
 
     private boolean isMeasure(String part){
@@ -98,6 +76,24 @@ public class Parser {
 
     private boolean isTime(String part){
         return part.contains("-");
+    }
+
+    private void sortPartsAndSetUpMeasureMoneyTimeVars(){
+        String[] parts = splitToParts();
+        Arrays.sort(parts, textPartsComparator);
+
+        for (String part : parts){
+            if (isMeasure(part))
+                measures = part;
+            if (isMoney(part))
+                money = part;
+            if (isTime(part))
+                time = part;
+        }
+    }
+
+    private String[] splitToParts(){
+        return text.split(delimiterBetweenTextParts);
     }
 
     //endregion

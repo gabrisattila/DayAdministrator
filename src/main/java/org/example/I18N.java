@@ -12,6 +12,9 @@ public class I18N {
 
     public static final String TimeExcelFileName = "Az_Idő_Maga.xlsx";
 
+    public static final String delimiterBetweenTextParts = "/";
+
+
     public static <T> T[] swap(T[] array, int i, int j){
         if (array.length < i || array.length < j)
             throw new IndexOutOfBoundsException("We wanted to swap the " + i + ". and the " + j + ". element\n" +
