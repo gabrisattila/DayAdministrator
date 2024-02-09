@@ -40,10 +40,6 @@ public class Editor {
 
     }
 
-    private void parseText(){
-        textParser.parseTexts(modifiableWorkbookNames);
-    }
-
     private ArrayList<String> collectWorkbookPaths(){
         ArrayList<String> paths = new ArrayList<>();
 
