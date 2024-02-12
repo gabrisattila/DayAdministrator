@@ -1,4 +1,7 @@
-package org.example;
+package org.example.Parser;
+
+import lombok.Data;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +11,7 @@ import java.util.Comparator;
 import static org.example.I18N.delimiterBetweenTextParts;
 import static org.example.I18N.swap;
 
+@Data
 public class Parser {
 
     //region Fields
@@ -22,6 +26,12 @@ public class Parser {
 
     private Comparator<String> textPartsComparator;
 
+    private MeasureParser measureParser;
+
+    private MoneyParser moneyParser;
+
+    private TimeParser timeParser;
+
     //endregion
 
 
@@ -31,6 +41,7 @@ public class Parser {
         text = dayText;
         defineComparator();
         sortPartsAndSetUpMeasureMoneyTimeVars();
+        parseWithSubParsers();
     }
 
     //endregion
@@ -62,8 +73,7 @@ public class Parser {
 
         String[] ms = part.split(" ");
         for (String m : ms){
-            if ("cigi".equals(m) || "Cigi".equals(m) || "CIGI".equals(m) || "c".equals(m) || "C".equals(m) ||
-                "cig".equals(m) || "ci".equals(m) || "Cig".equals(m) || "Ci".equals(m)){
+            if (isCigi(m)){
                 return true;
             }
         }
@@ -94,6 +104,25 @@ public class Parser {
 
     private String[] splitToParts(){
         return text.split(delimiterBetweenTextParts);
+    }
+
+    protected static boolean isCigi(String m){
+        return "cigi".equals(m) || "Cigi".equals(m) || "CIGI".equals(m) || "c".equals(m) || "C".equals(m) ||
+                "cig".equals(m) || "ci".equals(m) || "Cig".equals(m) || "Ci".equals(m);
+    }
+
+
+    //Sub Parsers
+
+    private void parseWithSubParsers(){
+        measureParser = new MeasureParser(this);
+        measureParser.parse();
+
+        moneyParser = new MoneyParser(this);
+        moneyParser.parse();
+
+        timeParser = new TimeParser(this);
+        timeParser.parse();
     }
 
     //endregion
