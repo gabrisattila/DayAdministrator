@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -10,11 +11,13 @@ public class Main {
 
     private static String DayText;
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws IOException {
         AdministrateDay();
     }
 
-    public static void AdministrateDay(){
+
+    public static void AdministrateDay() throws IOException {
         TextScanner = new Scanner(System.in);
 
         DayText = TextScanner.nextLine();

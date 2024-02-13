@@ -23,15 +23,16 @@ public class MeasureParser extends PartParser {
 				//Telefon idő
 				if (d < 24){
 					measures.telefonIdő = d;
-				}else {
+				}else { // Súly
 					measures.súly = d;
 				}
 			}else { // Cigi és JO
 				int x = Integer.parseInt(ms[i]);
+				// Cigi
 				if (i < ms.length - 1 && Parser.isCigi(ms[i + 1])){
 					measures.cigi = x;
 					i++;
-				} else {
+				} else { // J O
 					measures.JO = x;
 				}
 			}

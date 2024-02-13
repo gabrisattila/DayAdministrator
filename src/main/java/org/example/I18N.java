@@ -14,6 +14,8 @@ public class I18N {
 
     public static final String delimiterBetweenTextParts = "/";
 
+    public static final int MAX_NUMBER_OF_WORKBOOKS = 3;
+
 
     public static <T> T[] swap(T[] array, int i, int j){
         if (array.length < i || array.length < j)

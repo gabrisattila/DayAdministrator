@@ -4,7 +4,11 @@ import lombok.Getter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.example.Parser.Parser;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import static java.util.Objects.isNull;
+import static org.example.I18N.*;
 
 @Getter
 public class Editor {
@@ -13,24 +17,22 @@ public class Editor {
 
     private final String dayText;
 
-    private final Parser textParser;
+    private Parser textParser;
 
-    private final ArrayList<String> modifiableWorkbookNames;
+    private ArrayList<String> modifiableWorkbookNames;
 
-    private final ArrayList<XSSFWorkbook> workbooksToBeChanged;
+    private ArrayList<XSSFWorkbook> workbooksToBeChanged;
 
-    private final PatternRecognizer patternRecognizer;
+    private PatternRecognizer patternRecognizer;
 
     //endregion
 
     //region Constructor
 
-    public Editor(String dayText){
+    public Editor(String dayText) throws IOException {
         this.dayText = dayText;
-        textParser = new Parser(dayText);
-        modifiableWorkbookNames = new ArrayList<>();
-        workbooksToBeChanged = new ArrayList<>();
-        patternRecognizer = new PatternRecognizer();
+        setUpVars();
+        collectWorkbooksToChange();
     }
 
     //endregion
@@ -41,12 +43,30 @@ public class Editor {
 
     }
 
-    private ArrayList<String> collectWorkbookPaths(){
-        ArrayList<String> paths = new ArrayList<>();
+    private void setUpVars(){
+        textParser = new Parser(dayText);
+        modifiableWorkbookNames = new ArrayList<>();
+        workbooksToBeChanged = new ArrayList<>();
+        patternRecognizer = new PatternRecognizer();
+    }
 
+    private void collectWorkbooksToChange() throws IOException {
+        String[] properWorkbookNames = new String[MAX_NUMBER_OF_WORKBOOKS];
 
+        if (!isNull(textParser.getMeasureParser()))
+            properWorkbookNames[0] = dataExcelsPath + MeasureExcelFileName;
 
-        return paths;
+        if (!isNull(textParser.getMoneyParser()))
+            properWorkbookNames[1] = dataExcelsPath + MoneyExcelFileName;
+
+        if (!isNull(textParser.getTimeParser()))
+            properWorkbookNames[2] = dataExcelsPath + TimeExcelFileName;
+
+        for (String workbookName : properWorkbookNames){
+            if (!workbookName.isBlank()){
+                workbooksToBeChanged.add(new XSSFWorkbook(workbookName));
+            }
+        }
     }
 
     //endregion

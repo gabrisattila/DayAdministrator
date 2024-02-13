@@ -115,14 +115,20 @@ public class Parser {
     //Sub Parsers
 
     private void parseWithSubParsers(){
-        measureParser = new MeasureParser(this);
-        measureParser.parse();
+        if (!measures.isBlank()) {
+            measureParser = new MeasureParser(this);
+            measureParser.parse();
+        }
 
-        moneyParser = new MoneyParser(this);
-        moneyParser.parse();
+        if (!money.isBlank()) {
+            moneyParser = new MoneyParser(this);
+            moneyParser.parse();
+        }
 
-        timeParser = new TimeParser(this);
-        timeParser.parse();
+        if (!time.isBlank()) {
+            timeParser = new TimeParser(this);
+            timeParser.parse();
+        }
     }
 
     //endregion
