@@ -1,15 +1,11 @@
-package org.example.Parser;
+package Classes.Parser;
 
 import lombok.Data;
-import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 
-import static org.example.I18N.delimiterBetweenTextParts;
-import static org.example.I18N.swap;
+import static Classes.I18N.delimiterBetweenTextParts;
 
 @Data
 public class Parser {

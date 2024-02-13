@@ -1,4 +1,4 @@
-package org.example;
+package Classes;
 
 import java.io.IOException;
 import java.util.Scanner;

@@ -1,4 +1,4 @@
-package org.example.Parser;
+package Classes.Parser;
 
 public abstract class PartParser {
 

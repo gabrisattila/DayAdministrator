@@ -1,4 +1,4 @@
-package org.example.Parser;
+package Classes.Parser;
 
 import lombok.Getter;
 

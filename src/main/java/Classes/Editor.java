@@ -1,14 +1,14 @@
-package org.example;
+package Classes;
 
 import lombok.Getter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.example.Parser.Parser;
+import Classes.Parser.Parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.util.Objects.isNull;
-import static org.example.I18N.*;
+import static Classes.I18N.*;
 
 @Getter
 public class Editor {
