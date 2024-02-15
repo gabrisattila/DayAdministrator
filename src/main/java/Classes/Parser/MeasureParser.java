@@ -22,7 +22,7 @@ public class MeasureParser extends PartParser {
 				double d = Double.parseDouble(ms[i]);
 				//Telefon idő
 				if (d < 24){
-					measures.telefonIdő = d;
+					measures.telefonIdő() = d;
 				}else { // Súly
 					measures.súly = d;
 				}
