@@ -7,6 +7,7 @@ import Classes.Parser.Parser;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static Classes.Day.getDay;
 import static java.util.Objects.isNull;
 import static Classes.I18N.*;
 
@@ -32,6 +33,7 @@ public class Editor {
     public Editor(String dayText) throws IOException {
         this.dayText = dayText;
         setUpVars();
+        createDay();
         collectWorkbooksToChange();
     }
 
@@ -48,6 +50,12 @@ public class Editor {
         modifiableWorkbookNames = new ArrayList<>();
         workbooksToBeChanged = new ArrayList<>();
         patternRecognizer = new PatternRecognizer();
+    }
+
+    private void createDay(){
+        getDay().setMeasures(textParser.getMeasureParser().getMeasures());
+        getDay().setMoney(textParser.getMoneyParser().getMoney());
+//        getDay().setTimeLine(textParser.getTimeParser().);
     }
 
     private void collectWorkbooksToChange() throws IOException {

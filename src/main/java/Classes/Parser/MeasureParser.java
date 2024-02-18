@@ -20,15 +20,15 @@ public class MeasureParser extends PartParser {
 		double súly = 0, telefonIdő = 0;
 		int cigi = 0, JO = 0;
 		for (int i = 0; i < ms.length; i++) {
-			if (ms[i].contains(",")){ // Súly és telefon idő
-				double d = Double.parseDouble(ms[i]);
-				//Telefon idő
-				if (d < 24){
-					telefonIdő = d;
-				}else { // Súly
-					súly = d;
-				}
-			}else { // Cigi és JO
+			if (ms[i].contains(",")){ // Súly
+				//Súly
+				súly = Double.parseDouble(ms[i]);
+			} else if (ms[i].contains(":")) { // Telefon idő
+				String[] hourAndMinute = ms[i].split(":");
+				int hourInMinutes = Integer.parseInt(hourAndMinute[0]) * 60;
+				int minutes = Integer.parseInt(hourAndMinute[1]);
+				telefonIdő = hourInMinutes + minutes;
+			} else { // Cigi és JO
 				int x = Integer.parseInt(ms[i]);
 				// Cigi
 				if (i < ms.length - 1 && Parser.isCigi(ms[i + 1])){

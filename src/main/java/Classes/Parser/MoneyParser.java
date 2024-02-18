@@ -7,20 +7,26 @@ import java.util.ArrayList;
 @Getter
 public class MoneyParser extends PartParser{
 
-	private final ArrayList<Integer> moneyOfTheDay = new ArrayList<>();
+	private final Money money;
 
 	protected MoneyParser(Parser parser) {
 		super(parser);
+		money = new Money();
 	}
 
 	@Override
 	public void parse() {
 		part = originParser.getMoney();
-		String[] money = part.split(" ");
-		for (String m : money){
+		String[] spent = part.split(" ");
+		String forWhat = null;
+		int howMuch = 0;
+		for (String m : spent){
 			if (Character.isDigit(m.charAt(0))){
-				moneyOfTheDay.add(Integer.getInteger(m));
+				howMuch = Integer.getInteger(m);
+			}else {
+				forWhat = m;
 			}
+			money.addSpentMoney(forWhat, howMuch);
 		}
 	}
 
