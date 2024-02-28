@@ -1,7 +1,5 @@
 package Classes;
 
-import Classes.Parser.Slot;
-
 import java.io.IOException;
 import java.util.Scanner;
 

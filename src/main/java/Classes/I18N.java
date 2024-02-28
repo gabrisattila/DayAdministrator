@@ -2,6 +2,8 @@ package Classes;
 
 import java.util.Arrays;
 
+import static java.util.Objects.isNull;
+
 public class I18N {
 
     public final static String dataExcelsPath = "C:\\Users\\asus\\Desktop\\Minden\\Adat\\";
@@ -27,6 +29,10 @@ public class I18N {
         array[j] = tmp;
 
         return array;
+    }
+
+    public static boolean notNull(Object o){
+        return !isNull(o);
     }
 
 }

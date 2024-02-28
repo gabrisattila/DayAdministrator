@@ -55,7 +55,7 @@ public class Editor {
     private void createDay(){
         getDay().setMeasures(textParser.getMeasureParser().getMeasures());
         getDay().setMoney(textParser.getMoneyParser().getMoney());
-//        getDay().setTimeLine(textParser.getTimeParser().);
+        getDay().setTimeLine(textParser.getTimeParser().getTimeLine());
     }
 
     private void collectWorkbooksToChange() throws IOException {
