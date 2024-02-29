@@ -21,7 +21,7 @@ public class Slot {
 
 	private String action;
 
-	private DurationWithActivity duration;
+	private DurationWithActivity[] durations;
 
 	public Slot(String next, LocalTime from, LocalTime to, String action){
 		this.next = next;
@@ -35,21 +35,32 @@ public class Slot {
 	}
 
 	public static Slot createSlot(String slotInText, String next){
-		List<String> slotParts = splitSlotStringToItsParts(slotInText, next);
+		List<String> slotParts = splitSlotStringToItsParts(slotInText);
 		LocalTime from = convertFirstTimeStrToTime(slotParts.get(0));
 		LocalTime to = convertSecondTimeStrToTime(slotParts.get(1), from, next);
 		String action = slotParts.get(2);
-		DurationWithActivity _duration = null;
+		DurationWithActivity[] _durations = null;
 		if (slotParts.size() > 3){
-			_duration = new DurationWithActivity(Integer.parseInt(slotParts.get(3)), slotParts.get(4));
+			_durations = new DurationWithActivity[(slotParts.size() - 3) / 2];
+			int amount = 0; String activity = "";
+			int dCounter = 0;
+			for (int i = 3; i < slotParts.size(); i++) {
+				if (i % 2 == 0){
+					activity = slotParts.get(i);
+				}else {
+					amount = Integer.parseInt(slotParts.get(i));
+				}
+				_durations[dCounter] = new DurationWithActivity(amount, activity);
+				dCounter++;
+			}
 		}
 		Slot slot = new Slot(next, from, to, action);
-		if (notNull(_duration))
-			slot.duration = _duration;
+		if (notNull(_durations))
+			slot.durations = _durations;
 		return slot;
 	}
 
-	private static List<String> splitSlotStringToItsParts(String slotString, String next){
+	private static List<String> splitSlotStringToItsParts(String slotString){
 		List<String> parts = new ArrayList<>();
 		String[] firstSplit = slotString.split("-");
 		String firstTime = firstSplit[0];
@@ -59,15 +70,17 @@ public class Slot {
 		parts.add(firstTime);
 		parts.add(secondTime);
 		parts.add(action);
-		if (firstSplit.length == 3){
-			String[] dur = firstSplit[2].split(" ");
-			String durationTime = dur[0];
-			String durationAction = dur[1];
-			parts.add(firstTime);
-			parts.add(secondTime);
-			parts.add(action);
-			parts.add(durationTime);
-			parts.add(durationAction);
+		if (firstSplit.length > 2){
+			String[] dur;
+			String durationTime;
+			String durationAction;
+			for (int i = 2; i < firstSplit.length; i++) {
+				dur = firstSplit[i].split(" ");
+				durationTime = dur[0];
+				durationAction = dur[1];
+				parts.add(durationTime);
+				parts.add(durationAction);
+			}
 		}
 		return parts;
 	}
