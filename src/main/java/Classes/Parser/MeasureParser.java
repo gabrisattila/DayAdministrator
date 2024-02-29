@@ -15,7 +15,7 @@ public class MeasureParser extends PartParser {
 	void parse() {
 		part = originParser.getMeasures();
 
-		String[] ms = part.split(" ");
+		String[] ms = part.split(";");
 
 		double súly = 0, telefonIdő = 0;
 		int cigi = 0, JO = 0;

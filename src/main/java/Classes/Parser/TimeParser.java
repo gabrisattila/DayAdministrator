@@ -20,7 +20,7 @@ public class TimeParser extends PartParser{
 	@Override
 	public void parse() {
 		part = originParser.getTime();
-		String[] preListOfSlots = part.split("; ");
+		String[] preListOfSlots = part.split(";");
 		timeLine = makeSlots(preListOfSlots);
 	}
 

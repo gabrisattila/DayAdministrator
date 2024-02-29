@@ -14,11 +14,11 @@ public class Parser {
 
     private String text;
 
-    private String measures;
+    private String measures = "";
 
-    private String money;
+    private String money = "";
 
-    private String time;
+    private String time = "";
 
     private Comparator<String> textPartsComparator;
 
@@ -64,20 +64,13 @@ public class Parser {
     }
 
     private boolean isMeasure(String part){
-
-        //TODO Szexi mintaillesztés algoritmussal.
-
-        String[] ms = part.split(" ");
-        for (String m : ms){
-            if (isCigi(m)){
-                return true;
-            }
-        }
-        return false;
+        return !isMoney(part) && !isTime(part);
     }
 
     private boolean isMoney(String part){
-        return !isTime(part) && !isMeasure(part);
+        return part.contains("Ft") || part.contains("FT") ||
+                part.contains("KP") || part.contains("Kp") || part.contains("kp") ||
+                 part.contains("Kártya");
     }
 
     private boolean isTime(String part){
@@ -87,15 +80,18 @@ public class Parser {
     private void sortPartsAndSetUpMeasureMoneyTimeVars(){
         String[] parts = splitToParts();
         Arrays.sort(parts, textPartsComparator);
-
+        StringBuilder ms = new StringBuilder(), mo = new StringBuilder(), t = new StringBuilder();
         for (String part : parts){
             if (isMeasure(part))
-                measures = part;
+                ms.append(part).append(";");
             if (isMoney(part))
-                money = part;
+                mo.append(part).append(";");
             if (isTime(part))
-                time = part;
+                t.append(part).append(";");
         }
+        measures = ms.toString();
+        money = mo.toString();
+        time = t.toString();
     }
 
     private String[] splitToParts(){

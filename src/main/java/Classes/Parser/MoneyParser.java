@@ -17,7 +17,7 @@ public class MoneyParser extends PartParser{
 	@Override
 	public void parse() {
 		part = originParser.getMoney();
-		String[] spent = part.split(" ");
+		String[] spent = part.split(";");
 		String forWhat = null;
 		int howMuch = 0;
 		for (String m : spent){
