@@ -1,5 +1,6 @@
 package Classes;
 
+import Classes.ModifyWorkBooks.WorkBookPattern;
 import lombok.Getter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import Classes.Parser.Parser;
@@ -24,7 +25,7 @@ public class Editor {
 
     private ArrayList<XSSFWorkbook> workbooksToBeChanged;
 
-    private PatternRecognizer patternRecognizer;
+    private WorkBookPattern workBookPattern;
 
     //endregion
 
@@ -55,7 +56,7 @@ public class Editor {
         textParser = new Parser(dayText);
         modifiableWorkbookNames = new ArrayList<>();
         workbooksToBeChanged = new ArrayList<>();
-        patternRecognizer = new PatternRecognizer();
+        workBookPattern = new WorkBookPattern();
     }
 
     private void createDay(){
