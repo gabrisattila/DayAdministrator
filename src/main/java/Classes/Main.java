@@ -1,10 +1,11 @@
 package Classes;
 
-import Classes.ModifyWorkBooks.WorkBookPattern;
+import Classes.ModifyWorkBooks.WorkBookModifier;
 
 import java.io.IOException;
 import java.util.Scanner;
 
+import static Classes.Day.getDay;
 import static Classes.I18N.TimeExcelFileName;
 import static Classes.I18N.dataExcelsPath;
 
@@ -12,7 +13,7 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 //        AdministrateDay();
-		WorkBookPattern pattern = new WorkBookPattern(dataExcelsPath + TimeExcelFileName);
+		WorkBookModifier pattern = new WorkBookModifier();
     }
 
 

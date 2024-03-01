@@ -1,6 +1,6 @@
 package Classes;
 
-import Classes.ModifyWorkBooks.WorkBookPattern;
+import Classes.ModifyWorkBooks.WorkBookModifier;
 import lombok.Getter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import Classes.Parser.Parser;
@@ -25,7 +25,7 @@ public class Editor {
 
     private ArrayList<XSSFWorkbook> workbooksToBeChanged;
 
-    private WorkBookPattern workBookPattern;
+    private WorkBookModifier workBookModifier;
 
     //endregion
 
@@ -37,51 +37,31 @@ public class Editor {
     *
     *
     * */
-    public Editor(String dayText) throws IOException {
+    public Editor(String dayText) {
         this.dayText = dayText;
         setUpVars();
         createDay();
-        collectWorkbooksToChange();
     }
 
     //endregion
 
     //region Methods
 
-    public void modifyWorkbooks() {
-
+    public void modifyWorkbooks() throws IOException {
+        workBookModifier = new WorkBookModifier();
+        workBookModifier.modify();
     }
 
     private void setUpVars(){
         textParser = new Parser(dayText);
         modifiableWorkbookNames = new ArrayList<>();
         workbooksToBeChanged = new ArrayList<>();
-        workBookPattern = new WorkBookPattern();
     }
 
     private void createDay(){
         getDay().setMeasures(textParser.getMeasureParser().getMeasures());
         getDay().setMoney(textParser.getMoneyParser().getMoney());
         getDay().setTimeLine(textParser.getTimeParser().getTimeLine());
-    }
-
-    private void collectWorkbooksToChange() throws IOException {
-        String[] properWorkbookNames = new String[MAX_NUMBER_OF_WORKBOOKS];
-
-        if (!isNull(textParser.getMeasureParser()))
-            properWorkbookNames[0] = dataExcelsPath + MeasureExcelFileName;
-
-        if (!isNull(textParser.getMoneyParser()))
-            properWorkbookNames[1] = dataExcelsPath + MoneyExcelFileName;
-
-        if (!isNull(textParser.getTimeParser()))
-            properWorkbookNames[2] = dataExcelsPath + TimeExcelFileName;
-
-        for (String workbookName : properWorkbookNames){
-            if (!workbookName.isBlank()){
-                workbooksToBeChanged.add(new XSSFWorkbook(workbookName));
-            }
-        }
     }
 
     //endregion

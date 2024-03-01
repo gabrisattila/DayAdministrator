@@ -5,6 +5,7 @@ import Classes.Parser.Money;
 import Classes.Parser.Slot;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.LinkedList;
 
 import static java.util.Objects.isNull;
@@ -13,6 +14,8 @@ import static java.util.Objects.isNull;
 public class Day {
 
 	public static Day day;
+
+	public LocalDate dateOfDay;
 
 	private Measures measures;
 
