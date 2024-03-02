@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Classes.I18N.notNull;
+import static Classes.I18N.I18N.notNull;
 
 @Getter
 @Setter

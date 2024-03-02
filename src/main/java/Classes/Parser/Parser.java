@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import static Classes.I18N.delimiterBetweenTextParts;
+import static Classes.I18N.I18N.delimiterBetweenTextParts;
 
 @Data
 public class Parser {

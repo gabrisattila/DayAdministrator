@@ -10,7 +10,7 @@ import static Classes.Parser.Slot.createSlot;
 @Getter
 public class TimeParser extends PartParser{
 
-	LinkedList<Slot> timeLine;
+	Time time;
 
 	protected TimeParser(Parser parser) {
 		super(parser);
@@ -21,7 +21,7 @@ public class TimeParser extends PartParser{
 	public void parse() {
 		part = originParser.getTime();
 		String[] preListOfSlots = part.split(";");
-		timeLine = makeSlots(preListOfSlots);
+		time = new Time(makeSlots(preListOfSlots));
 	}
 
 	private LinkedList<Slot> makeSlots(String[] slotsInString){

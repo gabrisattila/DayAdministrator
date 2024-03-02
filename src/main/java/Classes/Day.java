@@ -3,6 +3,7 @@ package Classes;
 import Classes.Parser.Measures;
 import Classes.Parser.Money;
 import Classes.Parser.Slot;
+import Classes.Parser.Time;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -21,7 +22,7 @@ public class Day {
 
 	private Money money;
 
-	private LinkedList<Slot> timeLine;
+	private Time time;
 
 	public static Day getDay(){
 		if (isNull(day)) {

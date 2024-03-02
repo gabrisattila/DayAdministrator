@@ -1,6 +1,6 @@
 package Classes;
 
-import Classes.ModifyWorkBooks.WorkBookModifier;
+import Classes.ModifyWorkBooks.ExcelModifier;
 import lombok.Getter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import Classes.Parser.Parser;
@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static Classes.Day.getDay;
-import static java.util.Objects.isNull;
-import static Classes.I18N.*;
 
 @Getter
 public class Editor {
@@ -25,7 +23,7 @@ public class Editor {
 
     private ArrayList<XSSFWorkbook> workbooksToBeChanged;
 
-    private WorkBookModifier workBookModifier;
+    private ExcelModifier excelModifier;
 
     //endregion
 
@@ -48,8 +46,8 @@ public class Editor {
     //region Methods
 
     public void modifyWorkbooks() throws IOException {
-        workBookModifier = new WorkBookModifier();
-        workBookModifier.modify();
+        excelModifier = new ExcelModifier();
+        excelModifier.modify();
     }
 
     private void setUpVars(){
@@ -61,7 +59,7 @@ public class Editor {
     private void createDay(){
         getDay().setMeasures(textParser.getMeasureParser().getMeasures());
         getDay().setMoney(textParser.getMoneyParser().getMoney());
-        getDay().setTimeLine(textParser.getTimeParser().getTimeLine());
+        getDay().setTime(textParser.getTimeParser().getTime());
     }
 
     //endregion
