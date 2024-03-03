@@ -33,7 +33,7 @@ public class I18N {
 
     public static final String[] SzükségesTimeExcelHeadTitles =
             new String[]{
-                    "Reggeli rutin", "Ebéd és vagy főzés", "Esti rutin", "Utazás (Tevékenység nélkül / Valós idejű)",
+                    "Reggeli tevékenységek", "Ebéd és vagy főzés", "Esti tevékenységek", "Utazás (Tevékenység nélkül / Valós idejű)",
                     "Bevásárlás", "Takarítás", "Mosás + teregetés", "Mosogatás", "Vasalás", "Daily", "Egyéb (Összesen / Darabolva)",
                     "SUM"
             };
@@ -115,6 +115,101 @@ public class I18N {
             // Ha nem találjuk a mappa elválasztójelét vagy a string üres, akkor visszatérünk az eredeti stringgel
             return path;
         }
+    }
+
+
+    public static class ActionTerms{
+
+        public static final Map<String, List<String>> ÉrtékesActionTerms = new HashMap<>(){{
+            put("Meló", new ArrayList<>(){{
+                add("Meló"); add("Meló:"); add("Munka"); add("Munka"); add("meló"); add("munka"); add("MELÓ"); add("MUNKA");
+                add("Interjúk"); add("Interjú"); add("interjúk"); add("interjú"); add("Interjúk"); add("próba feladat"); add("emailek");
+                add("Emailek"); add("Próba feladat"); add("Próbafeladat"); add("próbafeladat"); add("Próba feladatok"); add("Próbafeladatok");
+                add("próbafeladatok"); add("próba feladatok"); add("Munka keresés"); add("Munkakeresés"); add("munka keresés"); add("munkakeresés");
+
+            }});
+            put("Olvasás", new ArrayList<>(){{
+                add("");
+            }});
+            put("Írás", new ArrayList<>(){{
+                add("");
+            }});
+            put("Önálló Munka", new ArrayList<>(){{
+                add("");
+            }});
+            put("Videózás", new ArrayList<>(){{
+                add("");
+            }});
+            put("Sport", new ArrayList<>(){{
+                add("");
+            }});
+            put("Tanulás", new ArrayList<>(){{
+                add("");
+            }});
+            put("Templom", new ArrayList<>(){{
+                add("");
+            }});
+            put("Egyéb", new ArrayList<>(){{
+                add("");
+            }});
+        }};
+
+        public static final Map<String, List<String>> SzükségesActionTerms = new HashMap<>(){{
+            put("Reggeli tevékenységek", new ArrayList<>(){{
+                add("");
+            }});
+            put("Ebéd és vagy főzés", new ArrayList<>(){{
+                add("");
+            }});
+            put("Esti tevékenységek", new ArrayList<>(){{
+                add("");
+            }});
+            put("Utazás (Tevékenység nélkül / Valós idejű)", new ArrayList<>(){{
+                add("");
+            }});
+            put("Bevásárlás", new ArrayList<>(){{
+                add("");
+            }});
+            put("Takarítás", new ArrayList<>(){{
+                add("");
+            }});
+            put("Mosás + teregetés", new ArrayList<>(){{
+                add("");
+            }});
+            put("Mosogatás", new ArrayList<>(){{
+                add("");
+            }});
+            put("Vasalás", new ArrayList<>(){{
+                add("");
+            }});
+            put("Daily", new ArrayList<>(){{
+                add("");
+            }});
+            put("Egyéb (Összesen / Darabolva)", new ArrayList<>(){{
+                add("");
+            }});
+        }};
+
+        public static final Map<String, List<String>> SzabadidőActionTerms = new HashMap<>(){{
+            put("Család (Összesen / Darabolva)", new ArrayList<>(){{
+                add("");
+            }});
+            put("Kórus", new ArrayList<>(){{
+                add("");
+            }});
+            put("IG", new ArrayList<>(){{
+                add("");
+            }});
+            put("Időtöltés mással", new ArrayList<>(){{
+                add("");
+            }});
+            put("Időtöltés több emberrel", new ArrayList<>(){{
+                add("");
+            }});
+            put("Egyéb", new ArrayList<>(){{
+                add("");
+            }});
+        }};
     }
 
 }
