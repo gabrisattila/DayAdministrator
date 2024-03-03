@@ -120,12 +120,15 @@ public class I18N {
 
     public static class ActionTerms{
 
+        public static String lower(String term){
+            return term.toLowerCase();
+        }
+
         public static final Map<String, List<String>> ÉrtékesActionTerms = new HashMap<>(){{
             put("Meló", new ArrayList<>(){{
-                add("Meló"); add("Meló:"); add("Munka"); add("Munka"); add("meló"); add("munka"); add("MELÓ"); add("MUNKA");
-                add("Interjúk"); add("Interjú"); add("interjúk"); add("interjú"); add("Interjúk"); add("próba feladat"); add("emailek");
-                add("Emailek"); add("Próba feladat"); add("Próbafeladat"); add("próbafeladat"); add("Próba feladatok"); add("Próbafeladatok");
-                add("próbafeladatok"); add("próba feladatok"); add("Munka keresés"); add("Munkakeresés"); add("munka keresés"); add("munkakeresés");
+                add("meló"); add("munka"); add("meló:"); add("munka:"); add("interjúk"); add("interjú");
+                add("próba feladat"); add("emailek"); add("próbafeladat"); add("próbafeladatok");
+                add("próba feladatok"); add("Munkakeresés"); add("munka keresés"); add("munkakeresés");
 
             }});
             put("Olvasás", new ArrayList<>(){{
@@ -156,38 +159,41 @@ public class I18N {
 
         public static final Map<String, List<String>> SzükségesActionTerms = new HashMap<>(){{
             put("Reggeli tevékenységek", new ArrayList<>(){{
-                add("");
+                add("reggeli"); add("reggel"); add("borotválkozás"); add("borot."); add("fogmosás"); add("hideg zuhany"); add("zuhany");
+                add("hideg"); add("méreckedés"); add("mér."); add("mérés"); add("póz."); add("pózol."); add("pózól"); add("pózolás");
             }});
             put("Ebéd és vagy főzés", new ArrayList<>(){{
-                add("");
+                add("ebéd"); add("főzés"); add("főz."); add("főz"); add("sali."); add("sali"); add("saláta"); add("másnapra");
+                add("napra"); add("elrakás"); add("elrak."); add("készítés"); add("készít"); add("készít"); add("előkészít");
+                add("előkész."); add("elkészítés"); add("elkészít.");
             }});
             put("Esti tevékenységek", new ArrayList<>(){{
-                add("");
+                add("fogmosás"); add("fog."); add("tus"); add("hajmosás"); add("haj."); add("vacsi"); add("vacsora"); add("vacsi.");
+                add("sali."); add("sali"); add("saláta"); add("másnapra"); add("előkészítés"); add("előkészít.");
             }});
             put("Utazás (Tevékenység nélkül / Valós idejű)", new ArrayList<>(){{
-                add("");
+                add("ut."); add("utazás"); add("utaz");
             }});
             put("Bevásárlás", new ArrayList<>(){{
-                add("");
+                add("bev."); add("bev.:"); add("bevásárlás"); add("vásárlás"); add("bev:");
+                add("spar"); add("coop"); add("aldi"); add("lidl"); add("príma"); add("prima");
             }});
             put("Takarítás", new ArrayList<>(){{
-                add("");
+                add("takarítás"); add("nagy takarítás"); add("takar."); add("tak."); add("takarít"); add("takarít.");
+                add("porszívózás"); add("porsz."); add("por."); add("felmosás"); add("felmos."); add("interjúk");
+                add("portörlés"); add("seprés"); add("söprés"); add("rend."); add("rend rakás"); add("rakás");
             }});
             put("Mosás + teregetés", new ArrayList<>(){{
-                add("");
-            }});
-            put("Mosogatás", new ArrayList<>(){{
-                add("");
+                add("mosás"); add("teregetés"); add("mos."); add("ter."); add("tereget."); add("tereget");
+                add("ruhák beszedése"); add("ruhák"); add("beszedése"); add("beszed.");
             }});
             put("Vasalás", new ArrayList<>(){{
-                add("");
+                add("vasalás"); add("vas."); add("vasal.");
             }});
             put("Daily", new ArrayList<>(){{
-                add("");
+                add("napi"); add("napi teendők"); add("teendők"); add("összegzés"); add("összegzése");
             }});
-            put("Egyéb (Összesen / Darabolva)", new ArrayList<>(){{
-                add("");
-            }});
+            put("Egyéb (Összesen / Darabolva)", new ArrayList<>());
         }};
 
         public static final Map<String, List<String>> SzabadidőActionTerms = new HashMap<>(){{
