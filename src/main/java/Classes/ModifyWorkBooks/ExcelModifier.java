@@ -1,9 +1,9 @@
 package Classes.ModifyWorkBooks;
 
 import Classes.I18N.NoSuchCellException;
+import Classes.ModifyWorkBooks.OwnFileTypes.Excel;
 import Classes.Parser.Measures;
 import Classes.Parser.Money;
-import Classes.Parser.Slot;
 import Classes.Parser.Time;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,7 +51,6 @@ public class ExcelModifier {
 		if (notNull(getDay().getTime())){
 			excelFiles.add(new Excel(dataExcelsPath + TimeExcelFileName));
 		}
-
 	}
 
 	private void exploreFile(){
@@ -62,9 +61,9 @@ public class ExcelModifier {
 	private void iterateTroughSheets(){
 		for (Excel excelFile : excelFiles){
 			for (int i = 0; i < excelFile.getNumberOfSheets(); i++) {
-				if (notNull(sheetNames.get(excelFile)))
+				if (notNull(sheetNames.get(excelFile))) {
 					sheetNames.get(excelFile).add(excelFile.getSheetName(i));
-				else {
+				} else {
 					int finalI = i;
 					sheetNames.put(excelFile, new ArrayList<>(){{add(excelFile.getSheetName(finalI));}});
 				}
@@ -123,15 +122,33 @@ public class ExcelModifier {
 	}
 	
 	//Helpers
-	private int getWorkingRowNumOnASheet(Sheet sheet) throws NoSuchCellException {
-		Cell firstCellInRow;
-		for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
-			firstCellInRow = sheet.getRow(i).getCell(0);
-			if (firstCellInRow.getLocalDateTimeCellValue().toLocalDate() == getDay().dateOfDay){
-				return i;
+	public static Row getWorkingRowOnASheet(Sheet sheet) throws NoSuchCellException {
+		int dayColIndex = 0;
+		for (Cell cell : sheet.getRow(0)){
+			if ("Nap".equals(cell.toString())){
+				dayColIndex = cell.getColumnIndex();
+				break;
+			}
+		}
+		for (Cell cell : getColumn(sheet, dayColIndex)){
+//			if (cell.getDateCellValue() == getDay().dateOfDay){
+//			//TODO Megírni az excel.java-ba a következőket:
+			//TODO getColumn(), getColumnByTitle, getTitleOfACell, getCellByTitle
+			//TODO Conversation cell.getDateCellValue() == getDay().dateOfDay Date = LocalDate
+//			}
+			if (cell.toString().equals(getDay().dateOfDay.toString())){
+				return sheet.getRow(cell.getRowIndex());
 			}
 		}
 		throw new NoSuchCellException(sheet, getDay().dateOfDay.toString());
+	}
+
+	public static List<Cell> getColumn(Sheet sheet, int index){
+		List<Cell> cells = new ArrayList<>();
+		for (Row row : sheet){
+			cells.add(row.getCell(index));
+		}
+		return cells;
 	}
 
 	private String getTitleOfACell(Cell cell){
