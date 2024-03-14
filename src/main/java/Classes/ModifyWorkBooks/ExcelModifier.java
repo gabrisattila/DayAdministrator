@@ -34,7 +34,6 @@ public class ExcelModifier {
 
 	public ExcelModifier() throws IOException {
 		collectExcels();
-		exploreFile();
 	}
 
 
