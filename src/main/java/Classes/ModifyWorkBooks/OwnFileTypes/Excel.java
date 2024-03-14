@@ -1,5 +1,6 @@
 package Classes.ModifyWorkBooks.OwnFileTypes;
 
+import Classes.I18N.FailedSearch;
 import Classes.I18N.NoSuchCellException;
 import lombok.Getter;
 import org.apache.poi.ss.formula.eval.NotImplementedException;
@@ -70,9 +71,15 @@ public class Excel extends XSSFWorkbook {
 		throw new NoSuchCellException(sheet, getDay().dateOfDay.toString());
 	}
 
-	public List<Cell> getColumnByTitle(String title){
-		//TODO getColumnByTitle
-		throw new NotImplementedException("getColumnByTitle megoldani nagy számításmennyiség nélkül.");
+	public List<Cell> getColumnByTitle(String _title) throws FailedSearch {
+		for (String sheetName : titlesPerSheets.keySet()){
+			for (String title : titlesPerSheets.get(sheetName)){
+				if (title.equals(_title)){
+					return getColumn(getSheet(sheetName), titlesPerSheets.get(sheetName).indexOf(title));
+				}
+			}
+		}
+		throw new FailedSearch(_title);
 	}
 
 	public static boolean containsTodayDate(Cell cell){
