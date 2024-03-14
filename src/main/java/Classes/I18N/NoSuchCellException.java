@@ -10,4 +10,8 @@ public class NoSuchCellException extends AdministratorException{
 		super(sheet, cellValue);
 	}
 
+	public NoSuchCellException(){
+		super("cella");
+	}
+
 }

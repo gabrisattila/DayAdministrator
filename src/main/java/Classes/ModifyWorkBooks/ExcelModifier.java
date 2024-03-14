@@ -37,8 +37,7 @@ public class ExcelModifier {
 		exploreFile();
 	}
 
-	//region Set Up
-	
+
 	private void collectExcels() throws IOException {
 		excelFiles = new ArrayList<>();
 
@@ -52,44 +51,6 @@ public class ExcelModifier {
 			excelFiles.add(new Excel(dataExcelsPath + TimeExcelFileName));
 		}
 	}
-
-	private void exploreFile(){
-		iterateTroughSheets();
-		collectTitlesPerSheet();
-	}
-
-	private void iterateTroughSheets(){
-		for (Excel excelFile : excelFiles){
-			for (int i = 0; i < excelFile.getNumberOfSheets(); i++) {
-				if (notNull(sheetNames.get(excelFile))) {
-					sheetNames.get(excelFile).add(excelFile.getSheetName(i));
-				} else {
-					int finalI = i;
-					sheetNames.put(excelFile, new ArrayList<>(){{add(excelFile.getSheetName(finalI));}});
-				}
-			}
-		}
-	}
-	
-	private void collectTitlesPerSheet(){
-		Sheet sheet;
-		List<String> rowTitles;
-		String currentSheetName;
-		for (Excel excelFile : excelFiles){
-			for (int i = 0; i < excelFile.getNumberOfSheets(); i++) {
-				currentSheetName = sheetNames.get(excelFile).get(i);
-				sheet = excelFile.getSheet(currentSheetName);
-				rowTitles = new ArrayList<>();
-				Row row = sheet.getRow(0);
-				for (Cell cell : row){
-					rowTitles.add(cell.getStringCellValue());
-				}
-				titleListPerSheet.put(currentSheetName, rowTitles);
-			}
-		}
-	}
-	
-	//endregion
 
 	//region Modify
 	
@@ -122,38 +83,6 @@ public class ExcelModifier {
 	}
 	
 	//Helpers
-	public static Row getWorkingRowOnASheet(Sheet sheet) throws NoSuchCellException {
-		int dayColIndex = 0;
-		for (Cell cell : sheet.getRow(0)){
-			if ("Nap".equals(cell.toString())){
-				dayColIndex = cell.getColumnIndex();
-				break;
-			}
-		}
-		for (Cell cell : getColumn(sheet, dayColIndex)){
-//			if (cell.getDateCellValue() == getDay().dateOfDay){
-//			//TODO Megírni az excel.java-ba a következőket:
-			//TODO getColumn(), getColumnByTitle, getTitleOfACell, getCellByTitle
-			//TODO Conversation cell.getDateCellValue() == getDay().dateOfDay Date = LocalDate
-//			}
-			if (cell.toString().equals(getDay().dateOfDay.toString())){
-				return sheet.getRow(cell.getRowIndex());
-			}
-		}
-		throw new NoSuchCellException(sheet, getDay().dateOfDay.toString());
-	}
-
-	public static List<Cell> getColumn(Sheet sheet, int index){
-		List<Cell> cells = new ArrayList<>();
-		for (Row row : sheet){
-			cells.add(row.getCell(index));
-		}
-		return cells;
-	}
-
-	private String getTitleOfACell(Cell cell){
-		return titleListPerSheet.get(cell.getSheet().getSheetName()).get(cell.getColumnIndex());
-	}
 
 	//endregion
 

@@ -1,5 +1,6 @@
 package Classes.ModifyWorkBooks.ModifyMeasures;
 
+import Classes.I18N.NoSuchCellException;
 import Classes.ModifyWorkBooks.OwnFileTypes.Excel;
 import Classes.Parser.Measures;
 import lombok.Getter;
@@ -27,30 +28,30 @@ public class ModifyAdatok {
 		sheet = excel.getSheet(MeasureExcelFileName);
 	}
 
-	public void modifyAll(){
+	public void modifyAllInMeasures() throws NoSuchCellException {
 		modifyKávé();
 		modifySúly();
 		modifyCigi();
 		modifyJO();
 	}
 
-	private void modifyKávé() {
-		Cell cell = sheet.getCellByTitle("Kávé");
+	private void modifyKávé() throws NoSuchCellException {
+		Cell cell = excel.getCellByTitle("Kávé");
 		cell.setCellValue(measures.kávé());
 	}
 
-	private void modifySúly() {
-		Cell cell = sheet.getCellByTitle("Súly");
+	private void modifySúly() throws NoSuchCellException {
+		Cell cell = excel.getCellByTitle("Súly");
 		cell.setCellValue(measures.súly());
 	}
 
-	private void modifyCigi() {
-		Cell cell = sheet.getCellByTitle("Telefon idő");
+	private void modifyCigi() throws NoSuchCellException {
+		Cell cell = excel.getCellByTitle("Telefon idő");
 		cell.setCellValue(measures.telefonIdő());
 	}
 
-	private void modifyJO() {
-		Cell cell = sheet.getCellByTitle("Cigi");
+	private void modifyJO() throws NoSuchCellException {
+		Cell cell = excel.getCellByTitle("Cigi");
 		cell.setCellValue(measures.súly());
 	}
 

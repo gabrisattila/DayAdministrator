@@ -6,4 +6,8 @@ public class AdministratorException extends NoSuchFieldException {
 		System.err.println("A " + what.toString() + " nem található " + where.toString() + "(-n).");
 	}
 
+	public AdministratorException(String what){
+		System.err.println("A " + what + " nem található");
+	}
+
 }
