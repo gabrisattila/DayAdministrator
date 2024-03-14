@@ -39,7 +39,8 @@ public class MeasureParser extends PartParser {
 				}
 			}
 		}
-		measures = new Measures(cigi, súly, telefonIdő, JO);
+		//TODO Parse out kávé
+		measures = new Measures(0, cigi, súly, telefonIdő, JO);
 
 	}
 }
