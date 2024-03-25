@@ -85,7 +85,7 @@ public class I18N {
         }});
     }};
 
-    public static final String delimiterBetweenTextParts = "/";
+    public static final String delimiterBetweenTextParts = ";";
 
     public static final int MAX_NUMBER_OF_WORKBOOKS = 3;
 
