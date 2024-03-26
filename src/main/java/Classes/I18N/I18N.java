@@ -1,10 +1,8 @@
 package Classes.I18N;
 
-import Classes.ModifyWorkBooks.ThreeMainType;
 
 import java.util.*;
 
-import static Classes.ModifyWorkBooks.ThreeMainType.*;
 import static java.util.Objects.isNull;
 
 public class I18N {
@@ -16,6 +14,10 @@ public class I18N {
     public static final String MoneyExcelFileName = "Kiadások - Bevételek.xlsx";
 
     public static final String TimeExcelFileName = "Az_Idő_Maga.xlsx";
+
+
+    public static final String delimiterBetweenTextParts = ";";
+
 
     public static final String[] SUMMATimeExcelHeadTitles =
             new String[]{
@@ -71,24 +73,10 @@ public class I18N {
                     "Jelenleg félretett KP:", "Jelenleg félretett Kártya:"
             };
 
-    public static final Map<ThreeMainType, List<String[]>> WORKBOOK_TYPE_PER_HEADLINE_LIST = new HashMap<>(){{
-        put(Time, new ArrayList<>(){{
-            add(SUMMATimeExcelHeadTitles); add(ÉrtékesTimeExcelHeadTitles);
-            add(SzükségesTimeExcelHeadTitles); add(SzabadidőTimeExcelHeadTitles);
-        }});
-        put(Money, new ArrayList<>(){{
-            add(KiadásokMoneyExcelHeadTitles); add(BevételekMoneyExcelHeadTitles);
-            add(SUMMAMoneyExcelHeadTitles);
-        }});
-        put(Measures, new ArrayList<>(){{
-            add(AdatokMeasuresExcelHeadTitles);
-        }});
+
+    public static final Map<String, List<String>> usuals = new HashMap<>(){{
+
     }};
-
-    public static final String delimiterBetweenTextParts = ";";
-
-    public static final int MAX_NUMBER_OF_WORKBOOKS = 3;
-
 
     public static <T> T[] swap(T[] array, int i, int j){
         if (array.length < i || array.length < j)

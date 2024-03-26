@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import static Classes.I18N.I18N.delimiterBetweenTextParts;
+import static Classes.Parser.Measures.*;
 
 @Data
 public class Parser {
@@ -63,20 +64,6 @@ public class Parser {
         };
     }
 
-    private boolean isMeasure(String part){
-        return !isMoney(part) && !isTime(part);
-    }
-
-    private boolean isMoney(String part){
-        return part.contains("Ft") || part.contains("FT") ||
-                part.contains("KP") || part.contains("Kp") || part.contains("kp") ||
-                 part.contains("Kártya");
-    }
-
-    private boolean isTime(String part){
-        return part.contains("-");
-    }
-
     private void sortPartsAndSetUpMeasureMoneyTimeVars(){
         String[] parts = splitToParts();
         Arrays.sort(parts, textPartsComparator);
@@ -97,12 +84,6 @@ public class Parser {
     private String[] splitToParts(){
         return text.split(delimiterBetweenTextParts);
     }
-
-    protected static boolean isCigi(String m){
-        return "cigi".equals(m) || "Cigi".equals(m) || "CIGI".equals(m) || "c".equals(m) || "C".equals(m) ||
-                "cig".equals(m) || "ci".equals(m) || "Cig".equals(m) || "Ci".equals(m);
-    }
-
 
     //Sub Parsers
 

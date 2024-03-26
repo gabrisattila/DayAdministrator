@@ -1,4 +1,4 @@
-package Classes.ModifyWorkBooks.ModifyMeasures;
+package Classes.ModifyWorkBooks;
 
 import Classes.I18N.NoSuchCellException;
 import Classes.ModifyWorkBooks.OwnFileTypes.Excel;
@@ -11,21 +11,19 @@ import org.apache.poi.ss.usermodel.Sheet;
 import java.io.IOException;
 
 import static Classes.I18N.I18N.MeasureExcelFileName;
+import static Classes.I18N.I18N.dataExcelsPath;
 
 @Getter
 @Setter
-public class ModifyAdatok {
+public class ModifyMeasures {
 
 	private Measures measures;
 
 	private Excel excel;
 
-	private Sheet sheet;
-
-	public ModifyAdatok(Measures measures) throws IOException {
+	public ModifyMeasures(Measures measures) throws IOException {
 		this.measures = measures;
-		excel = new Excel("C:\\Users\\asus\\Desktop\\Minden\\Adat\\");
-		sheet = excel.getSheet(MeasureExcelFileName);
+		excel = new Excel(dataExcelsPath + MeasureExcelFileName);
 	}
 
 	public void modifyAllInMeasures() throws NoSuchCellException {

@@ -2,6 +2,9 @@ package Classes.Parser;
 
 import lombok.Getter;
 
+import static Classes.Parser.Measures.isCigi;
+import static Classes.Parser.Measures.isKávé;
+
 @Getter
 public class MeasureParser extends PartParser {
 
@@ -18,20 +21,24 @@ public class MeasureParser extends PartParser {
 		String[] ms = part.split(";");
 
 		double súly = 0, telefonIdő = 0;
-		int cigi = 0, JO = 0;
+		int cigi = 0, JO = 0, kávé = 0;
 		for (int i = 0; i < ms.length; i++) {
 			if (ms[i].contains(",")){ // Súly
-				//Súly
 				súly = Double.parseDouble(ms[i]);
-			} else if (ms[i].contains(":")) { // Telefon idő
+			}
+			else if (ms[i].contains(":")) { // Telefon idő
 				String[] hourAndMinute = ms[i].split(":");
 				int hourInMinutes = Integer.parseInt(hourAndMinute[0]) * 60;
 				int minutes = Integer.parseInt(hourAndMinute[1]);
 				telefonIdő = hourInMinutes + minutes;
-			} else { // Cigi és JO
+			}
+			else if (isKávé(ms[i])) { // Kávé
+				kávé = Integer.parseInt(ms[i]);
+			}
+			else { // Cigi és JO
 				int x = Integer.parseInt(ms[i]);
 				// Cigi
-				if (i < ms.length - 1 && Parser.isCigi(ms[i + 1])){
+				if (i < ms.length - 1 && isCigi(ms[i + 1])){
 					cigi = x;
 					i++;
 				} else { // J O
@@ -39,8 +46,6 @@ public class MeasureParser extends PartParser {
 				}
 			}
 		}
-		//TODO Parse out kávé
-		measures = new Measures(0, cigi, súly, telefonIdő, JO);
-
+		measures = new Measures(kávé, cigi, súly, telefonIdő, JO);
 	}
 }
