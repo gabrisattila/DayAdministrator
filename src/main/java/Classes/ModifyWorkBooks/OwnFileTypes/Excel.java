@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 
 import static Classes.Day.getDay;
@@ -56,6 +57,10 @@ public class Excel extends XSSFWorkbook {
 	//endregion
 
 	public static Row getTodayRowOnASheet(Sheet sheet) throws NoSuchCellException {
+		return getRowByDateOnASheet(getDay().dateOfDay, sheet);
+	}
+
+	public static Row getRowByDateOnASheet(LocalDate date, Sheet sheet) throws NoSuchCellException {
 		int dayColIndex = 0;
 		for (Cell cell : sheet.getRow(0)){
 			if ("Nap".equals(cell.toString())){
@@ -64,11 +69,12 @@ public class Excel extends XSSFWorkbook {
 			}
 		}
 		for (Cell cell : getColumn(sheet, dayColIndex)){
-			if (containsTodayDate(cell)){
+			if (containsDate(cell, date)){
 				return sheet.getRow(cell.getRowIndex());
 			}
 		}
-		throw new NoSuchCellException(sheet, getDay().dateOfDay.toString());
+		throw new NoSuchCellException(sheet, date.toString());
+
 	}
 
 	public List<Cell> getColumnByTitle(String _title) throws FailedSearch {
@@ -86,6 +92,12 @@ public class Excel extends XSSFWorkbook {
 		return cell.getLocalDateTimeCellValue().toLocalDate()
 				==
 				getDay().dateOfDay;
+	}
+
+	public static boolean containsDate(Cell cell, LocalDate date){
+		return cell.getLocalDateTimeCellValue().toLocalDate()
+				==
+				date;
 	}
 
 	public static List<Cell> getColumn(Sheet sheet, int index){

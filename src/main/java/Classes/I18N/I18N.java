@@ -75,7 +75,8 @@ public class I18N {
 
 
     public static final Map<String, List<String>> usuals = new HashMap<>(){{
-
+        //TODO Define usuals for
+        // "Értékes", "Szükséges", "Szabadidő"
     }};
 
     public static <T> T[] swap(T[] array, int i, int j){
@@ -105,10 +106,6 @@ public class I18N {
         }
     }
 
-    // JAVA program for implementation of KMP pattern
-// searching algorithm
-
-
     /**
      * KMP mintaillesztő algoritmus
      * @param pat a minta string amit keresünk a második paraméterben
@@ -118,6 +115,11 @@ public class I18N {
     {
         int M = pat.length();
         int N = txt.length();
+
+        if (M == 0 || N == 0){
+            return false;
+        }
+
         // create lps[] that will hold the longest
         // prefix suffix values for pattern
         int[] lps = new int[M];
