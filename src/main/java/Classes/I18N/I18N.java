@@ -77,6 +77,7 @@ public class I18N {
     public static final Map<String, List<String>> usuals = new HashMap<>(){{
         //TODO Define usuals for
         // "Értékes", "Szükséges", "Szabadidő"
+        // A kód alján már van hozzá subclass abban érdemes lenne
     }};
 
     public static <T> T[] swap(T[] array, int i, int j){
