@@ -2,6 +2,7 @@ package Classes.ModifyWorkBooks.OwnFileTypes;
 
 import Classes.I18N.FailedSearch;
 import Classes.I18N.NoSuchCellException;
+import Classes.Parser.Slot;
 import lombok.Getter;
 import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -126,4 +127,33 @@ public class Excel extends XSSFWorkbook {
 		}
 		throw new NoSuchCellException();
 	}
+
+	public static Cell getCellFromRowByTitle(String title, Row fromRow){
+		for (Cell cell : fromRow){
+			if (title.equals(getTitleOfACell(cell))){
+				return cell;
+			}
+		}
+		return null;
+	}
+
+
+	public static int rowLength(Row row){
+		return row.getLastCellNum() - row.getLastCellNum();
+	}
+
+	public static void writeActionToACell(Cell whereMi, String action){
+		if (whereMi.getStringCellValue().isEmpty()){
+			writeToCell(whereMi, action);
+		} else if (!KMPSearch(action, whereMi.getStringCellValue())) {
+			String cellValue = whereMi.getStringCellValue();
+			cellValue += ", " + action;
+			writeToCell(whereMi, cellValue);
+		}
+	}
+
+	private static void writeToCell(Cell where, String what){
+		where.setCellValue(what);
+	}
+
 }

@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static Classes.I18N.I18N.notNull;
@@ -19,6 +21,8 @@ public class Slot {
 
 	private LocalTime to;
 
+	private double timeAmount;
+
 	private String action;
 
 	private DurationWithActivity[] durations;
@@ -28,6 +32,13 @@ public class Slot {
 		this.from = from;
 		this.to = to;
 		this.action = action;
+	}
+
+	public double getTimeAmount() {
+		long minutes = ChronoUnit.MINUTES.between(from, to);
+		double hours = minutes / 60.0;
+		double fraction = (minutes % 60) / 60.0;
+		return hours + fraction;
 	}
 
 	public static Slot copy(Slot toCopy){
@@ -141,6 +152,15 @@ public class Slot {
 			throw new RuntimeException(t + "-t nem lehet Time objektummá castolni.");
 		}
 		return LocalTime.of(hours, minutes);
+	}
+
+	public static class SlotComparator implements Comparator<Slot> {
+
+		@Override
+		public int compare(Slot slot1, Slot slot2) {
+			// Összehasonlítjuk az action adattagokat
+			return slot1.getAction().compareTo(slot2.getAction());
+		}
 	}
 
 }

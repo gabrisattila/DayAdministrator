@@ -214,12 +214,36 @@ public class I18N {
             throw new AskTheUserForInformation(action, "Time");
         }
 
+        public static String getTitleOfAnAction(String action, actionType typeOfAction) {
+            switch (typeOfAction){
+                case Értékes -> {
+                    for (String headLine : ÉrtékesActionTerms.keySet()){
+                        if (ÉrtékesActionTerms.get(headLine).contains(action))
+                            return headLine;
+                    }
+                }
+                case Szükséges -> {
+                    for (String headLine : SzükségesActionTerms.keySet()){
+                        if (SzükségesActionTerms.get(headLine).contains(action))
+                            return headLine;
+                    }
+                }
+                case Szabadidő -> {
+                    for (String headLine : SzabadidőActionTerms.keySet()){
+                        if (SzabadidőActionTerms.get(headLine).contains(action))
+                            return headLine;
+                    }
+                }
+            }
+            return "";
+        }
+        
         public static String lower(String term){
             return term.toLowerCase();
         }
 
         public static final Map<String, List<String>> ÉrtékesActionTerms = new HashMap<>(){{
-            put("Meló", new ArrayList<>(){{
+            put("Munka", new ArrayList<>(){{
                 add("meló"); add("munka"); add("meló:"); add("munka:"); add("interjúk"); add("interjú");
                 add("próba feladat"); add("emailek"); add("levelek"); add("levelezés"); add("próbafeladat"); add("próbafeladatok");
                 add("próba feladatok"); add("munka keresés"); add("munkakeresés");

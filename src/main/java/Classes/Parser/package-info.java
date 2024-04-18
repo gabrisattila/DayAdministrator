@@ -2,6 +2,7 @@ package Classes.Parser;
 
 /*
 * Basic day string:
+* 2024.04.18.;
 * 610-710 reggel; 86,5 kg; 1 kávé;
 * 710-810 ut. - 30 olv.; 810-1205 meló;
 * 1205-25 ebéd; 1 kávé; 1235-16 meló; 16-17 ut. - 25 olv. - 10 olv.;
