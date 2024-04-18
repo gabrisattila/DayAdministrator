@@ -15,8 +15,6 @@ import static Classes.I18N.I18N.notNull;
 @Setter
 public class Slot {
 
-	private String next;
-
 	private LocalTime from;
 
 	private LocalTime to;
@@ -27,14 +25,13 @@ public class Slot {
 
 	private DurationWithActivity[] durations;
 
-	public Slot(String next, LocalTime from, LocalTime to, String action){
-		this.next = next;
+	public Slot(LocalTime from, LocalTime to, String action){
 		this.from = from;
 		this.to = to;
 		this.action = action;
 	}
 
-	public double getTimeAmount() {
+	public double getTimeAmountFromTo() {
 		long minutes = ChronoUnit.MINUTES.between(from, to);
 		double hours = minutes / 60.0;
 		double fraction = (minutes % 60) / 60.0;
@@ -42,7 +39,7 @@ public class Slot {
 	}
 
 	public static Slot copy(Slot toCopy){
-		return new Slot(toCopy.getNext(), toCopy.getFrom(), toCopy.getTo(), toCopy.getAction());
+		return new Slot(toCopy.getFrom(), toCopy.getTo(), toCopy.getAction());
 	}
 
 	public static Slot createSlot(String slotInText, String next){
@@ -65,7 +62,7 @@ public class Slot {
 				dCounter++;
 			}
 		}
-		Slot slot = new Slot(next, from, to, action);
+		Slot slot = new Slot(from, to, action);
 		if (notNull(_durations))
 			slot.durations = _durations;
 		return slot;

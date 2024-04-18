@@ -3,6 +3,7 @@ package Classes.ModifyWorkBooks;
 import Classes.I18N.AskTheUserForInformation;
 import Classes.I18N.NoSuchCellException;
 import Classes.ModifyWorkBooks.OwnFileTypes.Excel;
+import Classes.Parser.DurationWithActivity;
 import Classes.Parser.Slot;
 import Classes.Parser.Time;
 import org.apache.poi.ss.usermodel.Cell;
@@ -98,31 +99,49 @@ public class ModifyTime {
 		}
 	}
 
-	private void collectSlots() throws NoSuchCellException {
+	private void collectSlots() {
 		List<Slot> wholeDay = time.getTimeLine();
+		List<Slot> extras = new ArrayList<>();
+		Slot extraSlot;
 		for (Slot slot : wholeDay){
-			try {
-				if (isÉrtékes(slot)){
-					értékes.add(slot);
-				} else if (isSzükséges(slot)) {
-					szükséges.add(slot);
-				} else if (isSzabadidő(slot)) {
-					szabadidő.add(slot);
-				}
-			}catch (AskTheUserForInformation e){
-				String válasz = e.handlingAndGetAnswer();
-				switch (válasz){
-					case "Értékes" : {
-						értékes.add(slot);
-					}
-					case "Szükséges" : {
-						szükséges.add(slot);
-					}
-					case "Szabadidő" : {
-						szabadidő.add(slot);
-					}
+			if (notNull(slot.getDurations())){
+				for (DurationWithActivity duration : slot.getDurations()){
+					extraSlot = new Slot(null, null, duration.activity());
+					extraSlot.setTimeAmount(duration.getTimeAmount());
+					extras.add(extraSlot);
 				}
 			}
+			addSlotToProperList(slot);
+		}
+		for (Slot slot : extras){
+			addSlotToProperList(slot);
+		}
+	}
+
+	private void addSlotToProperList(Slot slot){
+		try {
+			if (isÉrtékes(slot)){
+				értékes.add(slot);
+			} else if (isSzükséges(slot)) {
+				szükséges.add(slot);
+			} else if (isSzabadidő(slot)) {
+				szabadidő.add(slot);
+			}
+		} catch (AskTheUserForInformation e){
+			String válasz = e.handlingAndGetAnswer();
+			switch (válasz){
+				case "Értékes" : {
+					értékes.add(slot);
+				}
+				case "Szükséges" : {
+					szükséges.add(slot);
+				}
+				case "Szabadidő" : {
+					szabadidő.add(slot);
+				}
+			}
+		} catch (NoSuchCellException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -186,7 +205,7 @@ public class ModifyTime {
 			finalTimeStringForActivityType = new StringBuilder();
 			if (activities.get(activityType).size() == 1){
 				finalTimeStringForActivityType
-						.append(activities.get(activityType).get(0).getTimeAmount());
+						.append(activities.get(activityType).get(0).getTimeAmountFromTo());
 			}else {
 				activities.get(activityType).sort(new Slot.SlotComparator());
 				List<Slot> actualActivities = activities.get(activityType);
@@ -203,9 +222,9 @@ public class ModifyTime {
 						}else {
 							finalTimeStringForActivityType
 									.append("+(")
-									.append(actualActivities.get(i).getTimeAmount())
+									.append(actualActivities.get(i).getTimeAmountFromTo())
 									.append("+")
-									.append(actualActivities.get(i - 1).getTimeAmount())
+									.append(actualActivities.get(i - 1).getTimeAmountFromTo())
 									.append(")");
 						}
 					}
