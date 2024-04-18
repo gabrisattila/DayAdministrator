@@ -75,8 +75,8 @@ public class I18N {
 
 
     public static final Map<String, List<String>> usuals = new HashMap<>(){{
-        //TODO Use ActionTerms class here.
-
+        //TODO Define usuals for
+        // "Értékes", "Szükséges", "Szabadidő"
     }};
 
     public static <T> T[] swap(T[] array, int i, int j){
@@ -237,7 +237,7 @@ public class I18N {
             }
             return "";
         }
-        
+
         public static String lower(String term){
             return term.toLowerCase();
         }
