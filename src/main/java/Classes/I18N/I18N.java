@@ -11,11 +11,11 @@ public class I18N {
 
     public final static String dataExcelsPath = "C:\\Users\\asus\\Desktop\\Minden\\Adat\\";
 
-    public static final String MeasureExcelFileName = "Mérőszámok_Proba.xlsx";
+    public static final String MeasureExcelFileName = "Measures_Proba.xlsx";
 
-    public static final String MoneyExcelFileName = "Kiadások - Bevételek_Proba.xlsx";
+    public static final String MoneyExcelFileName = "Money_Proba.xlsx";
 
-    public static final String TimeExcelFileName = "Az_Idő_Maga_Proba.xlsx";
+    public static final String TimeExcelFileName = "The_Time_Proba.xlsx";
 
 
     public static final String delimiterBetweenTextParts = ";";
@@ -99,7 +99,7 @@ public class I18N {
 
     public static String getFileNameFromPath(String path) {
         // Az elérési út végéről kinyerjük a fájl nevét
-        int lastSeparatorIndex = path.lastIndexOf('/');
+        int lastSeparatorIndex = path.lastIndexOf('\\');
         if (lastSeparatorIndex >= 0 && lastSeparatorIndex < path.length() - 1) {
             return path.substring(lastSeparatorIndex + 1);
         } else {

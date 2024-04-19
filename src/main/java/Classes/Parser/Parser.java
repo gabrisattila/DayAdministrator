@@ -71,6 +71,9 @@ public class Parser {
 //        Arrays.sort(parts, textPartsComparator);
         StringBuilder ms = new StringBuilder(), mo = new StringBuilder(), t = new StringBuilder();
         for (String part : parts){
+            part = part.trim();
+            if (part.isBlank())
+                continue;
             if (isDate(part)) {
                 dateOfToday = part;
             }else if (isMeasure(part)) {

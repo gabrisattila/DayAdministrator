@@ -38,6 +38,10 @@ public class Slot {
 		return hours + fraction;
 	}
 
+	public String toString(){
+		return from + "-" + to + action;
+	}
+
 	public static Slot copy(Slot toCopy){
 		return new Slot(toCopy.getFrom(), toCopy.getTo(), toCopy.getAction());
 	}
@@ -58,8 +62,12 @@ public class Slot {
 				}else {
 					amount = Integer.parseInt(slotParts.get(i));
 				}
-				_durations[dCounter] = new DurationWithActivity(amount, activity);
-				dCounter++;
+				if (amount != 0 && !activity.isBlank()) {
+					_durations[dCounter] = new DurationWithActivity(amount, activity);
+					dCounter++;
+					activity = "";
+					amount = 0;
+				}
 			}
 		}
 		Slot slot = new Slot(from, to, action);
@@ -71,10 +79,10 @@ public class Slot {
 	private static List<String> splitSlotStringToItsParts(String slotString){
 		List<String> parts = new ArrayList<>();
 		String[] firstSplit = slotString.split("-");
-		String firstTime = firstSplit[0];
+		String firstTime = firstSplit[0].trim();
 		String[] secondSplit = firstSplit[1].split(" ");
-		String secondTime = secondSplit[0];
-		String action = secondSplit[1];
+		String secondTime = secondSplit[0].trim();
+		String action = secondSplit[1].trim();
 		parts.add(firstTime);
 		parts.add(secondTime);
 		parts.add(action);
@@ -83,6 +91,7 @@ public class Slot {
 			String durationTime;
 			String durationAction;
 			for (int i = 2; i < firstSplit.length; i++) {
+				firstSplit[i] = firstSplit[i].trim();
 				dur = firstSplit[i].split(" ");
 				durationTime = dur[0];
 				durationAction = dur[1];
@@ -99,11 +108,11 @@ public class Slot {
 			hours = Integer.parseInt(t);
 			minutes = 0;
 		} else if (t.length() == 3) {
-			hours = Integer.parseInt(t.substring(0, 0));
-			minutes = Integer.parseInt(t.substring(1, 2));
-		} else if (t.length() == 4) {
 			hours = Integer.parseInt(t.substring(0, 1));
-			minutes = Integer.parseInt(t.substring(2, 3));
+			minutes = Integer.parseInt(t.substring(1, 3));
+		} else if (t.length() == 4) {
+			hours = Integer.parseInt(t.substring(0, 2));
+			minutes = Integer.parseInt(t.substring(2, 4));
 		} else {
 			throw new RuntimeException(t + "-t nem lehet Time objektummá castolni.");
 		}
@@ -128,6 +137,9 @@ public class Slot {
 					hours = time;
 					minutes = 0;
 				}else {
+//					if (time > firstPart.getHour()){
+//
+//					}
 					hours = firstPart.getHour();
 					minutes = time;
 				}
@@ -138,13 +150,13 @@ public class Slot {
 		}
 		//Pl.: 905
 		else if (t.length() == 3) {
-			hours = Integer.parseInt(t.substring(0, 0));
-			minutes = Integer.parseInt(t.substring(1, 2));
+			hours = Integer.parseInt(t.substring(0, 1));
+			minutes = Integer.parseInt(t.substring(1, 3));
 		}
 		//Pl.: 1005
 		else if (t.length() == 4) {
-			hours = Integer.parseInt(t.substring(0, 1));
-			minutes = Integer.parseInt(t.substring(2, 3));
+			hours = Integer.parseInt(t.substring(0, 2));
+			minutes = Integer.parseInt(t.substring(2, 4));
 		} else {
 			throw new RuntimeException(t + "-t nem lehet Time objektummá castolni.");
 		}

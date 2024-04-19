@@ -4,12 +4,15 @@ import Classes.I18N.FailedSearch;
 import Classes.I18N.NoSuchCellException;
 import Classes.Parser.Slot;
 import lombok.Getter;
+import lombok.Setter;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
@@ -22,36 +25,42 @@ public class Excel extends XSSFWorkbook {
 
 	private final String path;
 
-	private final List<String> sheetNames = getSheetNames();
+	private final List<String> sheetNames = new ArrayList<>();
 
-	private static Map<String, List<String>> titlesPerSheets;
+	private final Map<String, List<String>> titlesPerSheets = new HashMap<>();
 
-	public Excel(String path) throws IOException {
-		super(path);
-		this.path = path;
+	public Excel(File excelFile) throws IOException, InvalidFormatException {
+		super(excelFile);
+		this.path = excelFile.getPath();
 		exploreFile();
 	}
 
+	public String toString(){
+		return path;
+	}
 
 	//region Set Up
 
 	private void exploreFile(){
+		collectSheetNames();
 		collectTitlesPerSheets();
+	}
+
+	private void collectSheetNames(){
+		for (int i = 0; i < getNumberOfSheets(); i++) {
+			sheetNames.add(getSheetName(i));
+		}
 	}
 
 	private void collectTitlesPerSheets() {
 		List<String> rowTitles;
-		Sheet sheet;
-		String currentSheetName;
-		for (int i = 0; i < getNumberOfSheets(); i++) {
-			currentSheetName = sheetNames.get(i);
-			sheet = getSheet(currentSheetName);
-			rowTitles = new ArrayList<>();
+		for (Sheet sheet : this){
 			Row row = sheet.getRow(0);
+			rowTitles = new ArrayList<>();
 			for (Cell cell : row){
 				rowTitles.add(cell.getStringCellValue());
 			}
-			titlesPerSheets.put(currentSheetName, rowTitles);
+			titlesPerSheets.put(sheet.getSheetName(), rowTitles);
 		}
 	}
 
@@ -96,9 +105,11 @@ public class Excel extends XSSFWorkbook {
 	}
 
 	public static boolean containsDate(Cell cell, LocalDate date){
-		return cell.getLocalDateTimeCellValue().toLocalDate()
-				==
-				date;
+		try {
+			return cell.getLocalDateTimeCellValue().toLocalDate().equals(date);
+		}catch (IllegalStateException e){
+			return false;
+		}
 	}
 
 	public static List<Cell> getColumn(Sheet sheet, int index){
@@ -109,8 +120,10 @@ public class Excel extends XSSFWorkbook {
 		return cells;
 	}
 
-	public static String getTitleOfACell(Cell cell){
-		return titlesPerSheets.get(cell.getSheet().getSheetName()).get(cell.getColumnIndex());
+	public String getTitleOfACell(Cell cell){
+		if (notNull(cell))
+			return titlesPerSheets.get(cell.getSheet().getSheetName()).get(cell.getColumnIndex());
+		return "";
 	}
 
 	public Cell getCellByTitle(String title) throws NoSuchCellException {
@@ -118,9 +131,11 @@ public class Excel extends XSSFWorkbook {
 			if (titlesPerSheets.get(sheet.getSheetName()).stream()
 					.anyMatch(s -> textContainsString(s, title))){
 				Row todayRow = getTodayRowOnASheet(sheet);
-				for (Cell cell : todayRow){
-					if (textContainsString(getTitleOfACell(cell), title)){
-						return cell;
+				for (int i = 0; i < todayRow.getLastCellNum(); i++) {
+					//TODO Cigi esetének tökéletesítése
+					if (!"Cigi".equals(title) && textContainsString(getTitleOfACell(todayRow.getCell(i)), title) ||
+							("Cigi".equals(title) && getTitleOfACell(todayRow.getCell(i)).equals(title))){
+						return todayRow.getCell(i);
 					}
 				}
 			}
@@ -128,7 +143,7 @@ public class Excel extends XSSFWorkbook {
 		throw new NoSuchCellException();
 	}
 
-	public static Cell getCellFromRowByTitle(String title, Row fromRow){
+	public Cell getCellFromRowByTitle(String title, Row fromRow){
 		for (Cell cell : fromRow){
 			if (title.equals(getTitleOfACell(cell))){
 				return cell;

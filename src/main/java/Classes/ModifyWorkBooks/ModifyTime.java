@@ -139,7 +139,7 @@ public class ModifyTime {
 		slots.forEach(s ->
 			writeActionToACell(
 				requireNonNull(
-						getCellFromRowByTitle(
+						excel.getCellFromRowByTitle(
 								getTitleOfAnAction(s.getAction(), typeOfSlots),
 								todayMiRow
 						)
@@ -149,13 +149,13 @@ public class ModifyTime {
 		);
 	}
 
-	private void writeTimesToRow(Map<String, String> activitiesInTimeStrings, Row rowToWrite){
+	private void writeTimesToRow(Map<String, String> activitiesInTimeStrings, Row rowToWrite) throws NoSuchCellException {
 		String titleOfIthCell;
 		String titleOfIPlus1thCell;
 		String separatedTimeString;
 		for (int i = 0; i < rowLength(rowToWrite); i++) {
-			titleOfIthCell = getTitleOfACell(rowToWrite.getCell(i));
-			titleOfIPlus1thCell = getTitleOfACell(rowToWrite.getCell(i + 1));
+			titleOfIthCell = excel.getTitleOfACell(rowToWrite.getCell(i));
+			titleOfIPlus1thCell = excel.getTitleOfACell(rowToWrite.getCell(i + 1));
 			separatedTimeString = activitiesInTimeStrings.get(titleOfIthCell);
 
 			if (notNull(separatedTimeString)){

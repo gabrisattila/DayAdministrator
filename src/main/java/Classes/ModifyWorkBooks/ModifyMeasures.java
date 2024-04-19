@@ -25,6 +25,7 @@ public class ModifyMeasures {
 		modifyKávé();
 		modifySúly();
 		modifyCigi();
+		modifyTelefonIdő();
 		modifyJO();
 	}
 
@@ -39,7 +40,12 @@ public class ModifyMeasures {
 	}
 
 	private void modifyCigi() throws NoSuchCellException {
-		Cell cell = excel.getCellByTitle("Telefon idő");
+		Cell cell = excel.getCellByTitle("Cigi");
+		cell.setCellValue(measures.cigi());
+	}
+
+	private void modifyTelefonIdő() throws NoSuchCellException {
+		Cell cell = excel.getCellByTitle("Telefon");
 		cell.setCellValue(measures.telefonIdő());
 	}
 

@@ -14,4 +14,11 @@ public class Time {
 		timeLine = tL;
 	}
 
+	public String toString(){
+		StringBuilder s = new StringBuilder();
+		for (Slot slot : timeLine){
+			s.append(slot.toString()).append(" ");
+		}
+		return s.toString();
+	}
 }

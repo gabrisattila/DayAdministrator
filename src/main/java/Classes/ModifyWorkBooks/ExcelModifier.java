@@ -7,7 +7,11 @@ import Classes.Parser.Money;
 import Classes.Parser.Time;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -29,22 +33,22 @@ public class ExcelModifier {
 	private Map<String, List<String>> titleListPerSheet = new HashMap<>();
 
 
-	public ExcelModifier() throws IOException {
+	public ExcelModifier() throws IOException, InvalidFormatException {
 		collectExcels();
 	}
 
 
-	private void collectExcels() throws IOException {
+	private void collectExcels() throws IOException, InvalidFormatException {
 		excelFiles = new ArrayList<>();
 
 		if (notNull(getDay().getMeasures())){
-			excelFiles.add(new Excel(dataExcelsPath + MeasureExcelFileName));
+			excelFiles.add(new Excel(new File(dataExcelsPath + MeasureExcelFileName)));
 		}
 		if (notNull(getDay().getMoney())){
-			excelFiles.add(new Excel(dataExcelsPath + MoneyExcelFileName));
+			excelFiles.add(new Excel(new File(dataExcelsPath + MoneyExcelFileName)));
 		}
 		if (notNull(getDay().getTime())){
-			excelFiles.add(new Excel(dataExcelsPath + TimeExcelFileName));
+			excelFiles.add(new Excel(new File(dataExcelsPath + TimeExcelFileName)));
 		}
 	}
 
@@ -52,6 +56,15 @@ public class ExcelModifier {
 	
 	public void modify() throws NoSuchCellException, IOException {
 		placeValuesInCells();
+		for (Excel excel : excelFiles){
+			try {
+				FileOutputStream out = new FileOutputStream(excel.getPath());
+				excel.write(out);
+				out.close();
+			} catch (FileNotFoundException ex) {
+
+			}
+		}
 	}
 
 	private void placeValuesInCells() throws NoSuchCellException, IOException {

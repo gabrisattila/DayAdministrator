@@ -12,4 +12,8 @@ public record DurationWithActivity(int amountInMinutes, String activity) {
 		double fraction = (amountInMinutes % 60) / 60.0;
 		return hours + fraction;
 	}
+
+	public String toString(){
+		return getTimeAmount() + activity;
+	}
 }
