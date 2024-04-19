@@ -7,10 +7,7 @@ import Classes.Parser.Money;
 import Classes.Parser.Time;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
@@ -53,35 +50,39 @@ public class ExcelModifier {
 
 	//region Modify
 	
-	public void modify() {
+	public void modify() throws NoSuchCellException, IOException {
 		placeValuesInCells();
 	}
 
-	private void placeValuesInCells(){
+	private void placeValuesInCells() throws NoSuchCellException, IOException {
 		placeMeasuresIfTheresAny(getDay().getMeasures());
 		placeMoneyIfTheresAny(getDay().getMoney());
 		placeTimeIfTheresAny(getDay().getTime());
 	}
 
-	private void placeMeasuresIfTheresAny(Measures measures) {
-		if (notNull(measures)){
-			
-		}
+	private void placeMeasuresIfTheresAny(Measures measures) throws FileNotFoundException, NoSuchCellException {
+		if (notNull(measures))
+			new ModifyMeasures(measures, getExcel(MeasureExcelFileName));
 	}
 
-	private void placeMoneyIfTheresAny(Money money) {
-		if (notNull(money)){
-			
-		}
+	private void placeMoneyIfTheresAny(Money money) throws FileNotFoundException {
+		if (notNull(money))
+			new ModifyMoney(money, getExcel(MoneyExcelFileName));
 	}
 
-	private void placeTimeIfTheresAny(Time time) {
-		if (notNull(time)){
-			
-		}
+	private void placeTimeIfTheresAny(Time time) throws IOException, NoSuchCellException {
+		if (notNull(time))
+			new ModifyTime(time, getExcel(TimeExcelFileName));
 	}
 	
 	//Helpers
+	private Excel getExcel(String fileName) throws FileNotFoundException {
+		for (Excel excel : excelFiles){
+			if (fileName.equals(getFileNameFromPath(excel.getPath())))
+				return excel;
+		}
+		throw new FileNotFoundException("Nem szerepel ez az elnevezésű excel a most módosítandók között.");
+	}
 
 	//endregion
 

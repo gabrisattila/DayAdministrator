@@ -27,25 +27,74 @@ public class ModifyTime {
 
 	private final Time time;
 
-	private List<Slot> értékes;
+	private final List<Slot> értékes;
 
-	private List<Slot> szükséges;
+	private final List<Slot> szükséges;
 
-	private List<Slot> szabadidő;
+	private final List<Slot> szabadidő;
 
 	private final Excel excel;
 
-	public ModifyTime(Time time) throws IOException {
+	public ModifyTime(Time time, Excel excel) throws NoSuchCellException {
 		this.time = time;
-		excel = new Excel(dataExcelsPath + TimeExcelFileName);
+		this.excel = excel;
+		értékes = new ArrayList<>(); szükséges = new ArrayList<>(); szabadidő = new ArrayList<>();
+		modifyTime();
 	}
 
-	public void modifyTime() throws NoSuchCellException {
+	private void modifyTime() throws NoSuchCellException {
 		collectSlots();
 		modifyÉrtékes();
 		modifySzükséges();
 		modifySzabadidő();
 	}
+
+	private void collectSlots() {
+		List<Slot> wholeDay = time.getTimeLine();
+		List<Slot> extras = new ArrayList<>();
+		Slot extraSlot;
+		for (Slot slot : wholeDay){
+			if (notNull(slot.getDurations())){
+				for (DurationWithActivity duration : slot.getDurations()){
+					extraSlot = new Slot(null, null, duration.activity());
+					extraSlot.setTimeAmount(duration.getTimeAmount());
+					extras.add(extraSlot);
+				}
+			}
+			addSlotToProperList(slot);
+		}
+		for (Slot slot : extras){
+			addSlotToProperList(slot);
+		}
+	}
+
+	private void addSlotToProperList(Slot slot){
+		try {
+			if (isÉrtékes(slot)){
+				értékes.add(slot);
+			} else if (isSzükséges(slot)) {
+				szükséges.add(slot);
+			} else if (isSzabadidő(slot)) {
+				szabadidő.add(slot);
+			}
+		} catch (AskTheUserForInformation e){
+			String válasz = e.handlingAndGetAnswer();
+			switch (válasz){
+				case "Értékes" : {
+					értékes.add(slot);
+				}
+				case "Szükséges" : {
+					szükséges.add(slot);
+				}
+				case "Szabadidő" : {
+					szabadidő.add(slot);
+				}
+			}
+		} catch (NoSuchCellException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 
 	private void modifyÉrtékes() throws NoSuchCellException {
 		modifyTimeExcelSheetOfAnActionType(értékes, Értékes);
@@ -132,51 +181,6 @@ public class ModifyTime {
 		}
 	}
 
-	private void collectSlots() {
-		List<Slot> wholeDay = time.getTimeLine();
-		List<Slot> extras = new ArrayList<>();
-		Slot extraSlot;
-		for (Slot slot : wholeDay){
-			if (notNull(slot.getDurations())){
-				for (DurationWithActivity duration : slot.getDurations()){
-					extraSlot = new Slot(null, null, duration.activity());
-					extraSlot.setTimeAmount(duration.getTimeAmount());
-					extras.add(extraSlot);
-				}
-			}
-			addSlotToProperList(slot);
-		}
-		for (Slot slot : extras){
-			addSlotToProperList(slot);
-		}
-	}
-
-	private void addSlotToProperList(Slot slot){
-		try {
-			if (isÉrtékes(slot)){
-				értékes.add(slot);
-			} else if (isSzükséges(slot)) {
-				szükséges.add(slot);
-			} else if (isSzabadidő(slot)) {
-				szabadidő.add(slot);
-			}
-		} catch (AskTheUserForInformation e){
-			String válasz = e.handlingAndGetAnswer();
-			switch (válasz){
-				case "Értékes" : {
-					értékes.add(slot);
-				}
-				case "Szükséges" : {
-					szükséges.add(slot);
-				}
-				case "Szabadidő" : {
-					szabadidő.add(slot);
-				}
-			}
-		} catch (NoSuchCellException e) {
-			throw new RuntimeException(e);
-		}
-	}
 
 	private boolean isÉrtékes(Slot slot) throws NoSuchCellException, AskTheUserForInformation {
 		String action = slot.getAction();

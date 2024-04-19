@@ -1,5 +1,6 @@
 package Classes;
 
+import Classes.I18N.NoSuchCellException;
 import Classes.ModifyWorkBooks.ExcelModifier;
 import lombok.Getter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -45,7 +46,7 @@ public class Editor {
 
     //region Methods
 
-    public void modifyWorkbooks() throws IOException {
+    public void modifyWorkbooks() throws IOException, NoSuchCellException {
         excelModifier = new ExcelModifier();
         excelModifier.modify();
     }

@@ -6,12 +6,6 @@ import Classes.Parser.Measures;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Sheet;
-
-import java.io.IOException;
-
-import static Classes.I18N.I18N.MeasureExcelFileName;
-import static Classes.I18N.I18N.dataExcelsPath;
 
 @Getter
 @Setter
@@ -21,9 +15,10 @@ public class ModifyMeasures {
 
 	private Excel excel;
 
-	public ModifyMeasures(Measures measures) throws IOException {
+	public ModifyMeasures(Measures measures, Excel excel) throws NoSuchCellException {
 		this.measures = measures;
-		excel = new Excel(dataExcelsPath + MeasureExcelFileName);
+		this.excel = excel;
+		modifyAllInMeasures();
 	}
 
 	public void modifyAllInMeasures() throws NoSuchCellException {
