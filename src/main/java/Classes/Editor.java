@@ -30,12 +30,6 @@ public class Editor {
 
     //region Constructor
 
-    /*
-    * Day Text exp.:
-    * 8-9 reggel/85,8/910-10 tanulás/9 cigi/4500 Ft kp Étel/
-    *
-    *
-    * */
     public Editor(String dayText) {
         this.dayText = dayText;
         setUpVars();
