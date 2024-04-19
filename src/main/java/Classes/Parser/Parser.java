@@ -2,10 +2,10 @@ package Classes.Parser;
 
 import lombok.Data;
 
-import java.util.Arrays;
 import java.util.Comparator;
 
 import static Classes.I18N.I18N.delimiterBetweenTextParts;
+import static Classes.I18N.I18N.isDate;
 import static Classes.Parser.Measures.*;
 
 @Data
@@ -14,6 +14,8 @@ public class Parser {
     //region Fields
 
     private String text;
+
+    private String dateOfToday;
 
     private String measures = "";
 
@@ -36,7 +38,7 @@ public class Parser {
 
     public Parser(String dayText) {
         text = dayText;
-        defineComparator();
+//        defineComparator();
         sortPartsAndSetUpMeasureMoneyTimeVars();
         parseWithSubParsers();
     }
@@ -66,9 +68,11 @@ public class Parser {
 
     private void sortPartsAndSetUpMeasureMoneyTimeVars(){
         String[] parts = splitToParts();
-        Arrays.sort(parts, textPartsComparator);
+//        Arrays.sort(parts, textPartsComparator);
         StringBuilder ms = new StringBuilder(), mo = new StringBuilder(), t = new StringBuilder();
         for (String part : parts){
+            if (isDate(part))
+                dateOfToday = part;
             if (isMeasure(part))
                 ms.append(part).append(";");
             if (isMoney(part))

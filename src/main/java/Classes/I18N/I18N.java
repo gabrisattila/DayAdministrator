@@ -1,11 +1,8 @@
 package Classes.I18N;
 
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.*;
 
 import static java.util.Objects.isNull;
@@ -190,14 +187,30 @@ public class I18N {
         }
     }
 
-    public static boolean stringIsDate(String string){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+    public static boolean isDate(String string){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd.");
         try {
             LocalDate date = LocalDate.parse(string, formatter);
             return true;
         }catch (RuntimeException e){
-            return false;
+            formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+            try {
+                LocalDate date = LocalDate.parse(string, formatter);
+                return true;
+            }catch (RuntimeException ex) {
+                return false;
+            }
         }
+    }
+
+    public static LocalDate toDate(String s){
+        DateTimeFormatter formatter;
+        if (s.charAt(s.length() - 1) == '.'){
+            formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd.");
+        }else {
+            formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        }
+        return LocalDate.parse(s, formatter);
     }
 
 
