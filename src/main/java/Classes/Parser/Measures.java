@@ -1,10 +1,10 @@
 package Classes.Parser;
 
-import static Classes.I18N.I18N.KMPSearch;
+import static Classes.I18N.I18N.textContainsString;
 
 public record Measures(int kávé, int cigi, double súly, double telefonIdő, int JO, int hetiTerv, int hetiTeljesített) {
 
-	public static Measures copy(Measures toCopy){
+	static Measures copy(Measures toCopy){
 		return new Measures(toCopy.kávé, toCopy.cigi, toCopy.súly, toCopy.telefonIdő, toCopy.JO, toCopy.hetiTerv, toCopy.hetiTeljesített);
 	}
 
@@ -14,7 +14,7 @@ public record Measures(int kávé, int cigi, double súly, double telefonIdő, i
 	}
 
 	static boolean isKávé(String part){
-		return KMPSearch("kávé", part.toLowerCase());
+		return textContainsString(part.toLowerCase(), "kávé");
 	}
 
 	static boolean isMeasure(String part){

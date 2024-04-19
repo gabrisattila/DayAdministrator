@@ -6,6 +6,7 @@ import Classes.ModifyWorkBooks.OwnFileTypes.Excel;
 import Classes.Parser.DurationWithActivity;
 import Classes.Parser.Slot;
 import Classes.Parser.Time;
+import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -20,6 +21,7 @@ import static Classes.I18N.I18N.ActionTerms.actionType.*;
 import static Classes.I18N.I18N.ActionTerms.getTitleOfAnAction;
 import static Classes.I18N.I18N.ActionTerms.getTypeOfAction;
 import static Classes.ModifyWorkBooks.OwnFileTypes.Excel.*;
+import static java.util.Objects.requireNonNull;
 
 public class ModifyTime {
 
@@ -38,7 +40,7 @@ public class ModifyTime {
 		excel = new Excel(dataExcelsPath + TimeExcelFileName);
 	}
 
-	public void modifyAllInTime() throws NoSuchCellException {
+	public void modifyTime() throws NoSuchCellException {
 		collectSlots();
 		modifyÉrtékes();
 		modifySzükséges();
@@ -46,56 +48,87 @@ public class ModifyTime {
 	}
 
 	private void modifyÉrtékes() throws NoSuchCellException {
-		Row todayRowInÉrtékes = getTodayRowOnASheet(excel.getSheet("Értékes"));
-		Row todayRowInÉrtékes_Mi = getTodayRowOnASheet(excel.getSheet("Értékes_Mi"));
-		String titleOfACell;
-		String titleForAction;
-		Map<String, List<Slot>> activites = new HashMap<>();
-		for (Slot slot : értékes){
-			titleForAction = getTitleOfAnAction(slot.getAction(), Értékes);
-			if (notNull(activites .get(titleForAction))){
-				activites.get(titleForAction).add(slot);
+		modifyTimeExcelSheetOfAnActionType(értékes, Értékes);
+	}
+
+	private void modifySzükséges() throws NoSuchCellException {
+		modifyTimeExcelSheetOfAnActionType(szükséges, Szükséges);
+	}
+
+	private void modifySzabadidő() throws NoSuchCellException {
+		modifyTimeExcelSheetOfAnActionType(szabadidő, Szabadidő);
+	}
+
+	private void modifyTimeExcelSheetOfAnActionType(List<Slot> slots, ActionTerms.actionType actionType) throws NoSuchCellException {
+		Row todayRowConcreteTimeSheet = getTodayRowOnASheet(excel.getSheet(actionType.toString()));
+		Row todayRowActionStringSheet = getTodayRowOnASheet(excel.getSheet(actionType + "_Mi"));
+
+		Map<String, List<Slot>> activities = sortSlotsByActionType(slots, actionType);
+
+		writeActionStringsToRow(slots, actionType, todayRowActionStringSheet);
+
+		Map<String, String> activitiesInSpearatedTimeStrings = makeSeparatedTimeParts(activities);
+
+		writeTimesToRow(activitiesInSpearatedTimeStrings, todayRowConcreteTimeSheet);
+	}
+
+	private Map<String, List<Slot>> sortSlotsByActionType(List<Slot> slots, ActionTerms.actionType typeOfSlots){
+		Map<String, List<Slot>> activities = new HashMap<>();
+		String titleOfAction;
+		for (Slot slot : slots){
+			titleOfAction = getTitleOfAnAction(slot.getAction(), typeOfSlots);
+			if (notNull(activities.get(titleOfAction))){
+				activities.get(titleOfAction).add(slot);
 			}else {
-				activites.put(titleForAction, new ArrayList<>(){{add(slot);}});
+				activities.put(titleOfAction, new ArrayList<>(){{add(slot);}});
 			}
+		}
+		return activities;
+	}
+
+	private void writeActionStringsToRow(List<Slot> slots, ActionTerms.actionType typeOfSlots, Row todayMiRow){
+		slots.forEach(s ->
 			writeActionToACell(
-					Objects.requireNonNull(
+				requireNonNull(
 						getCellFromRowByTitle(
-								getTitleOfAnAction(slot.getAction(), Értékes),
-								todayRowInÉrtékes_Mi
+								getTitleOfAnAction(s.getAction(), typeOfSlots),
+								todayMiRow
 						)
-					),
-					slot.getAction()
-			);
-		}
+				),
+				s.getAction()
+			)
+		);
+	}
 
-		Map<String, String> activitiesInTimeStrings = makeSeparatedTimeParts(activites);
-		//A következő ciklussal töltöm fel az értékes sheet sorát
-		for (int i = 0; i < rowLength(todayRowInÉrtékes); i++) {
-			titleOfACell = getTitleOfACell(todayRowInÉrtékes.getCell(i));
+	private void writeTimesToRow(Map<String, String> activitiesInTimeStrings, Row rowToWrite){
+		String titleOfIthCell;
+		String titleOfIPlus1thCell;
+		String separatedTimeString;
+		for (int i = 0; i < rowLength(rowToWrite); i++) {
+			titleOfIthCell = getTitleOfACell(rowToWrite.getCell(i));
+			titleOfIPlus1thCell = getTitleOfACell(rowToWrite.getCell(i + 1));
+			separatedTimeString = activitiesInTimeStrings.get(titleOfIthCell);
 
-			if (notNull(activitiesInTimeStrings.get(titleOfACell))){
-			//Részletekre bontott formátum
-				todayRowInÉrtékes.getCell(i + 1).setCellValue(activitiesInTimeStrings.get(titleOfACell));
-			//Teljes idő
-				todayRowInÉrtékes.getCell(i).setCellValue(evaluateExpression(activitiesInTimeStrings.get(titleOfACell)));
+			if (notNull(separatedTimeString)){
+
+				//Amennyiben egy olyan cellában állunk melynek van címe és a rákövekező cellának ugyanúgy -> tehát nincs felsorolva szeparálva az idő
+				if (!"".equals(titleOfIPlus1thCell))
+				{
+					rowToWrite.getCell(i).setCellValue(evaluateExpression(separatedTimeString));
+				}
+				//Itt az utazással kapcsolatos adatokat írjuk a cellákba
+				else if (textContainsString(titleOfIthCell, "utazás")) {
+					//TODO Megcsinálni az utazás esetén, hogy írom az cellákat.
+					throw new NotImplementedException("Utazás cella szerkesztése kimaradt, a beleírni kívánt érték: " + separatedTimeString);
+				}
+				//Ez esetben pedig a következő cellába olyan érték kerül ami szeparált time formátumot tartalmaz.
+				else {
+					//Teljes idő
+					rowToWrite.getCell(i).setCellValue(evaluateExpression(separatedTimeString));
+					//Részletekre bontott formátum
+					rowToWrite.getCell(i + 1).setCellValue(activitiesInTimeStrings.get(titleOfIthCell));
+				}
 			}
-		}
-	}
-
-	public void modifySzükséges() throws NoSuchCellException {
-		Row todayRowInSzükséges = getTodayRowOnASheet(excel.getSheet("Szükséges"));
-		Row todayRowInSzükséges_Mi = getTodayRowOnASheet(excel.getSheet("Szükséges_Mi"));
-		for (Slot slot : szükséges){
-			
-		}
-	}
-
-	public void modifySzabadidő() throws NoSuchCellException {
-		Row todayRowInSzabadidő = getTodayRowOnASheet(excel.getSheet("Szabadidő"));
-		Row todayRowInSzabadidő_Mi = getTodayRowOnASheet(excel.getSheet("Szabadidő_Mi"));
-		for (Slot slot : szabadidő){
-
 		}
 	}
 
@@ -190,7 +223,7 @@ public class ModifyTime {
 		Row endSearchHere = getTodayRowOnASheet(sheet);
 		for (int i = startSearchFromHere.getRowNum(); i < endSearchHere.getRowNum(); i++) {
 			for (Cell cell : sheet.getRow(i)){
-				if (KMPSearch(action, cell.toString())){
+				if (textContainsString(cell.toString(), action)){
 					return true;
 				}
 			}

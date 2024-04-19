@@ -116,10 +116,10 @@ public class Excel extends XSSFWorkbook {
 	public Cell getCellByTitle(String title) throws NoSuchCellException {
 		for (Sheet sheet : this){
 			if (titlesPerSheets.get(sheet.getSheetName()).stream()
-					.anyMatch(s -> KMPSearch(title, s))){
+					.anyMatch(s -> textContainsString(s, title))){
 				Row todayRow = getTodayRowOnASheet(sheet);
 				for (Cell cell : todayRow){
-					if (KMPSearch(title, getTitleOfACell(cell))){
+					if (textContainsString(getTitleOfACell(cell), title)){
 						return cell;
 					}
 				}
@@ -143,12 +143,14 @@ public class Excel extends XSSFWorkbook {
 	}
 
 	public static void writeActionToACell(Cell whereMi, String action){
-		if (whereMi.getStringCellValue().isEmpty()){
-			writeToCell(whereMi, action);
-		} else if (!KMPSearch(action, whereMi.getStringCellValue())) {
-			String cellValue = whereMi.getStringCellValue();
-			cellValue += ", " + action;
-			writeToCell(whereMi, cellValue);
+		if (notNull(whereMi)) {
+			if (whereMi.getStringCellValue().isEmpty()) {
+				writeToCell(whereMi, action);
+			} else if (!textContainsString(whereMi.getStringCellValue(), action)) {
+				String cellValue = whereMi.getStringCellValue();
+				cellValue += ", " + action;
+				writeToCell(whereMi, cellValue);
+			}
 		}
 	}
 

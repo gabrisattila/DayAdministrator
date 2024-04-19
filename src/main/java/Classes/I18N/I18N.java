@@ -1,6 +1,11 @@
 package Classes.I18N;
 
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 import static java.util.Objects.isNull;
@@ -106,6 +111,10 @@ public class I18N {
         }
     }
 
+    public static boolean textContainsString(String text, String string){
+        return KMPSearch(string.toLowerCase(), text.toLowerCase());
+    }
+
     /**
      * KMP mintaillesztő algoritmus
      * @param pat a minta string amit keresünk a második paraméterben
@@ -181,6 +190,16 @@ public class I18N {
         }
     }
 
+    public static boolean stringIsDate(String string){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        try {
+            LocalDate date = LocalDate.parse(string, formatter);
+            return true;
+        }catch (RuntimeException e){
+            return false;
+        }
+    }
+
 
     /**
      * Always use to lower when search for action terms
@@ -192,21 +211,21 @@ public class I18N {
         public static actionType getTypeOfAction(String action) throws AskTheUserForInformation {
             for (String key : ÉrtékesActionTerms.keySet()){
                 for (String értékes : ÉrtékesActionTerms.get(key)){
-                    if (KMPSearch(értékes, action)){
+                    if (textContainsString(action, értékes)){
                         return actionType.Értékes;
                     }
                 }
             }
             for (String key : SzükségesActionTerms.keySet()){
-                for (String értékes : SzükségesActionTerms.get(key)){
-                    if (KMPSearch(értékes, action)){
+                for (String szükséges : SzükségesActionTerms.get(key)){
+                    if (textContainsString(action, szükséges)){
                         return actionType.Szükséges;
                     }
                 }
             }
             for (String key : SzabadidőActionTerms.keySet()){
-                for (String értékes : SzabadidőActionTerms.get(key)){
-                    if (KMPSearch(értékes, action)){
+                for (String szabadidő : SzabadidőActionTerms.get(key)){
+                    if (textContainsString(action, szabadidő)){
                         return actionType.Szabadidő;
                     }
                 }
@@ -279,7 +298,7 @@ public class I18N {
         }};
 
         public static final Map<String, List<String>> SzükségesActionTerms = new HashMap<>(){{
-            put("Reggeli rutin", new ArrayList<>(){{
+            put("Reggeli tevékenységek", new ArrayList<>(){{
                 add("reggeli"); add("reggel"); add("borotválkozás"); add("borot."); add("fogmosás"); add("hideg zuhany"); add("zuhany");
                 add("hideg"); add("méreckedés"); add("mér."); add("mérés"); add("póz."); add("pózol."); add("pózól"); add("pózolás");
             }});
