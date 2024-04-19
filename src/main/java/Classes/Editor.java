@@ -40,7 +40,7 @@ public class Editor {
 
     //region Methods
 
-    public void modifyWorkbooks() throws IOException, NoSuchCellException {
+    public void modify() throws IOException, NoSuchCellException {
         excelModifier = new ExcelModifier();
         excelModifier.modify();
     }

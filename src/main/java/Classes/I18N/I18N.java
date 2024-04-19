@@ -11,11 +11,11 @@ public class I18N {
 
     public final static String dataExcelsPath = "C:\\Users\\asus\\Desktop\\Minden\\Adat\\";
 
-    public static final String MeasureExcelFileName = "Mérőszámok.xlsx";
+    public static final String MeasureExcelFileName = "Mérőszámok_Proba.xlsx";
 
-    public static final String MoneyExcelFileName = "Kiadások - Bevételek.xlsx";
+    public static final String MoneyExcelFileName = "Kiadások - Bevételek_Proba.xlsx";
 
-    public static final String TimeExcelFileName = "Az_Idő_Maga.xlsx";
+    public static final String TimeExcelFileName = "Az_Idő_Maga_Proba.xlsx";
 
 
     public static final String delimiterBetweenTextParts = ";";

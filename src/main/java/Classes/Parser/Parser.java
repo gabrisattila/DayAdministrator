@@ -71,14 +71,15 @@ public class Parser {
 //        Arrays.sort(parts, textPartsComparator);
         StringBuilder ms = new StringBuilder(), mo = new StringBuilder(), t = new StringBuilder();
         for (String part : parts){
-            if (isDate(part))
+            if (isDate(part)) {
                 dateOfToday = part;
-            if (isMeasure(part))
+            }else if (isMeasure(part)) {
                 ms.append(part).append(";");
-            if (isMoney(part))
+            }else if (isMoney(part)) {
                 mo.append(part).append(";");
-            if (isTime(part))
+            }else if (isTime(part)) {
                 t.append(part).append(";");
+            }
         }
         measures = ms.toString();
         money = mo.toString();

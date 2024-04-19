@@ -24,27 +24,30 @@ public class MeasureParser extends PartParser {
 		double súly = 0, telefonIdő = 0;
 		int cigi = 0, JO = 0, kávé = 0, hetiTervezettTeendőMennyiség = 0, hetiTeljesítettTeendőMennyiség = 0;
 		for (int i = 0; i < ms.length; i++) {
+			ms[i] = ms[i].trim();
+
 			if (ms[i].contains(",")){ // Súly
-				súly = Double.parseDouble(ms[i]);
+				String s = ms[i].replace(',', '.');
+				s = s.split(" ")[0];
+				súly = Double.parseDouble(s);
 			}
 			else if (ms[i].contains(":")) { // Telefon idő
 				String[] hourAndMinute = ms[i].split(":");
-				int hourInMinutes = Integer.parseInt(hourAndMinute[0]) * 60;
-				int minutes = Integer.parseInt(hourAndMinute[1]);
-				telefonIdő = hourInMinutes + minutes;
+				int hour = Integer.parseInt(hourAndMinute[0]);
+				double minutes = (double) Integer.parseInt(hourAndMinute[1]) / 60;
+				telefonIdő = hour + minutes;
 			}
 			else if (isKávé(ms[i])) { // Kávé
-				kávé = Integer.parseInt(ms[i]);
+				ms[i] = ms[i].split(" ")[0];
+				kávé += Integer.parseInt(ms[i]);
 			} else { // Cigi és JO
-				int x = Integer.parseInt(ms[i]);
 				// Cigi
-				if (i < ms.length - 1 && isCigi(ms[i + 1])){
-					cigi = x;
-					i++;
+				if (isCigi(ms[i])){
+					cigi = Integer.parseInt(ms[i].split(" ")[0]);
 				} else { // J O
-					//TODO hetiTervezett és teljesített mennyiség bevezetése
-					JO = x;
+					JO = Integer.parseInt(ms[i]);
 				}
+				//TODO hetiTervezett és teljesített mennyiség bevezetése
 			}
 		}
 		measures = new Measures(kávé, cigi, súly, telefonIdő, JO, hetiTervezettTeendőMennyiség, hetiTeljesítettTeendőMennyiség);

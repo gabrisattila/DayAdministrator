@@ -9,8 +9,7 @@ public record Measures(int kávé, int cigi, double súly, double telefonIdő, i
 	}
 
 	static boolean isCigi(String m){
-		return "cigi".equals(m) || "Cigi".equals(m) || "CIGI".equals(m) || "c".equals(m) || "C".equals(m) ||
-				"cig".equals(m) || "ci".equals(m) || "Cig".equals(m) || "Ci".equals(m);
+		return textContainsString(m.toLowerCase(), "cigi");
 	}
 
 	static boolean isKávé(String part){
