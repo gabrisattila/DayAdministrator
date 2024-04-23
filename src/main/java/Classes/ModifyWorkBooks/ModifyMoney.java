@@ -1,6 +1,6 @@
 package Classes.ModifyWorkBooks;
 
-import Classes.ModifyWorkBooks.OwnFileTypes.Excel;
+import Classes.OwnFileTypes.Excel;
 import Classes.Parser.Money;
 
 public class ModifyMoney {

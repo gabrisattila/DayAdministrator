@@ -1,7 +1,7 @@
 package Classes.ModifyWorkBooks;
 
 import Classes.I18N.NoSuchExcelException;
-import Classes.ModifyWorkBooks.OwnFileTypes.Excel;
+import Classes.OwnFileTypes.Excel;
 import Classes.Parser.Measures;
 import Classes.Parser.Money;
 import Classes.Parser.Time;

@@ -1,7 +1,7 @@
 package Classes.ModifyWorkBooks;
 
 import Classes.I18N.NoSuchCellException;
-import Classes.ModifyWorkBooks.OwnFileTypes.Excel;
+import Classes.OwnFileTypes.Excel;
 import Classes.Parser.Measures;
 import lombok.Getter;
 import lombok.Setter;

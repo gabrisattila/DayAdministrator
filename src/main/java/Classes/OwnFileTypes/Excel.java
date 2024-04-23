@@ -1,4 +1,4 @@
-package Classes.ModifyWorkBooks.OwnFileTypes;
+package Classes.OwnFileTypes;
 
 import Classes.I18N.FailedSearch;
 import Classes.I18N.NoSuchCellException;
@@ -19,6 +19,7 @@ import java.util.*;
 
 import static Classes.Day.getDay;
 import static Classes.I18N.I18N.*;
+import static java.util.Objects.isNull;
 
 @Getter
 public class Excel extends XSSFWorkbook {
@@ -132,10 +133,12 @@ public class Excel extends XSSFWorkbook {
 					.anyMatch(s -> textContainsString(s, title))){
 				Row todayRow = getTodayRowOnASheet(sheet);
 				for (int i = 0; i < todayRow.getLastCellNum(); i++) {
+					if (isNull(todayRow.getCell(i)))
+						todayRow.createCell(i);
 					//TODO Cigi esetének tökéletesítése
 					if (!"Cigi".equals(title) && textContainsString(getTitleOfACell(todayRow.getCell(i)), title) ||
-							("Cigi".equals(title) && getTitleOfACell(todayRow.getCell(i)).equals(title))){
-						return todayRow.getCell(i);
+						("Cigi".equals(title) && getTitleOfACell(todayRow.getCell(i)).equals(title))){
+						todayRow.getCell(i);
 					}
 				}
 			}
@@ -144,9 +147,11 @@ public class Excel extends XSSFWorkbook {
 	}
 
 	public Cell getCellFromRowByTitle(String title, Row fromRow){
-		for (Cell cell : fromRow){
-			if (title.equals(getTitleOfACell(cell))){
-				return cell;
+		for (int i = 0; i < fromRow.getLastCellNum(); i++) {
+			if (isNull(fromRow.getCell(i)))
+				fromRow.createCell(i);
+			if (title.equals(getTitleOfACell(fromRow.getCell(i)))){
+				return fromRow.getCell(i);
 			}
 		}
 		return null;

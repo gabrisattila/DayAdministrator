@@ -2,7 +2,7 @@ package Classes.ModifyWorkBooks;
 
 import Classes.I18N.AskTheUserForInformation;
 import Classes.I18N.NoSuchCellException;
-import Classes.ModifyWorkBooks.OwnFileTypes.Excel;
+import Classes.OwnFileTypes.Excel;
 import Classes.Parser.DurationWithActivity;
 import Classes.Parser.Slot;
 import Classes.Parser.Time;
@@ -11,7 +11,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -20,7 +19,7 @@ import static Classes.I18N.I18N.*;
 import static Classes.I18N.I18N.ActionTerms.actionType.*;
 import static Classes.I18N.I18N.ActionTerms.getTitleOfAnAction;
 import static Classes.I18N.I18N.ActionTerms.getTypeOfAction;
-import static Classes.ModifyWorkBooks.OwnFileTypes.Excel.*;
+import static Classes.OwnFileTypes.Excel.*;
 import static java.util.Objects.requireNonNull;
 
 public class ModifyTime {

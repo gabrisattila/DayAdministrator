@@ -1,7 +1,7 @@
 package Classes.ModifyWorkBooks;
 
 import Classes.I18N.NoSuchExcelException;
-import Classes.ModifyWorkBooks.OwnFileTypes.Excel;
+import Classes.OwnFileTypes.Excel;
 import jdk.jshell.spi.ExecutionControl;
 import lombok.Getter;
 import org.apache.poi.ss.formula.functions.Column;
