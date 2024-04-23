@@ -23,10 +23,10 @@ public class ModifyMeasures {
 
 	public void modifyAllInMeasures() throws NoSuchCellException {
 		modifyKávé();
-		modifySúly();
-		modifyCigi();
-		modifyTelefonIdő();
-		modifyJO();
+		//modifySúly();
+		//modifyCigi();
+		//modifyTelefonIdő();
+		//modifyJO();
 	}
 
 	private void modifyKávé() throws NoSuchCellException {

@@ -45,10 +45,10 @@ public class ExcelModifier {
 			excelFiles.add(new Excel(new File(dataExcelsPath + MeasureExcelFileName)));
 		}
 		if (notNull(getDay().getMoney())){
-			excelFiles.add(new Excel(new File(dataExcelsPath + MoneyExcelFileName)));
+//			excelFiles.add(new Excel(new File(dataExcelsPath + MoneyExcelFileName)));
 		}
 		if (notNull(getDay().getTime())){
-			excelFiles.add(new Excel(new File(dataExcelsPath + TimeExcelFileName)));
+//			excelFiles.add(new Excel(new File(dataExcelsPath + TimeExcelFileName)));
 		}
 	}
 
@@ -62,15 +62,15 @@ public class ExcelModifier {
 				excel.write(out);
 				out.close();
 			} catch (FileNotFoundException ex) {
-
+				System.err.println("Baj van Hueston:" + ex);
 			}
 		}
 	}
 
 	private void placeValuesInCells() throws NoSuchCellException, IOException {
 		placeMeasuresIfTheresAny(getDay().getMeasures());
-		placeMoneyIfTheresAny(getDay().getMoney());
-		placeTimeIfTheresAny(getDay().getTime());
+		//placeMoneyIfTheresAny(getDay().getMoney());
+		//placeTimeIfTheresAny(getDay().getTime());
 	}
 
 	private void placeMeasuresIfTheresAny(Measures measures) throws FileNotFoundException, NoSuchCellException {

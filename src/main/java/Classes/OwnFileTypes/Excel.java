@@ -138,7 +138,7 @@ public class Excel extends XSSFWorkbook {
 					//TODO Cigi esetének tökéletesítése
 					if (!"Cigi".equals(title) && textContainsString(getTitleOfACell(todayRow.getCell(i)), title) ||
 						("Cigi".equals(title) && getTitleOfACell(todayRow.getCell(i)).equals(title))){
-						todayRow.getCell(i);
+						return todayRow.getCell(i);
 					}
 				}
 			}
