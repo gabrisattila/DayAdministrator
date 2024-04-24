@@ -3,14 +3,12 @@ package Classes;
 import Classes.I18N.NoSuchCellException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class Front {
 
-	public static void AdministrateDay() throws IOException, NoSuchCellException, InvalidFormatException {
+	public static void AdministrateDay() throws IOException, NoSuchCellException {
 		String dayText;
 						//= readInput();
 		dayText =
@@ -22,7 +20,7 @@ public class Front {
 				"2130-23 írás; 23-2330 saláta és ebéd elrakni; 2330-24 fekvés;\n" +
 				"10 cigi;\n";
 		Editor editor = new Editor(dayText);
-		editor.modify();
+		editor.modifyAndSaveAfterModification();
 	}
 
 	public static String readInput() {

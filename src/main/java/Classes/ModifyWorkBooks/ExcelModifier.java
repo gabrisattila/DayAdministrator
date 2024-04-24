@@ -7,20 +7,14 @@ import Classes.Parser.Money;
 import Classes.Parser.Time;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
 import static Classes.Day.getDay;
 import static Classes.I18N.I18N.*;
-import static java.util.Objects.isNull;
+import static Classes.OwnFileTypes.Excel.openExcel;
 
 @Getter
 @Setter
@@ -37,59 +31,56 @@ public class ExcelModifier {
 	private Map<String, List<String>> titleListPerSheet = new HashMap<>();
 
 
-	public ExcelModifier() throws IOException, InvalidFormatException {
+	public ExcelModifier() throws IOException {
 		collectExcels();
 	}
 
 
-	private void collectExcels() throws IOException, InvalidFormatException {
+	private void collectExcels() throws IOException {
 		excelFiles = new ArrayList<>();
 
 		if (notNull(getDay().getMeasures())){
-//			excelFiles.add(new Excel(new File(dataExcelsPath + MeasureExcelFileName)));
+			excelFiles.add(openExcel(dataExcelsPath + MeasureExcelFileName));
 		}
 		if (notNull(getDay().getMoney())){
-//			excelFiles.add(new Excel(new File(dataExcelsPath + MoneyExcelFileName)));
+			excelFiles.add(openExcel(dataExcelsPath + MoneyExcelFileName));
 		}
 		if (notNull(getDay().getTime())){
-//			excelFiles.add(new Excel(new File(dataExcelsPath + TimeExcelFileName)));
+			excelFiles.add(openExcel(dataExcelsPath + TimeExcelFileName));
 		}
 	}
 
 	//region Modify
 	
-	public void modify() throws NoSuchCellException, IOException {
-		placeValuesInCells();
-		for (Excel excel : excelFiles){
-			try {
-				FileOutputStream out = new FileOutputStream(excel.getPath());
-				excel.write(out);
-				out.close();
-			} catch (FileNotFoundException ex) {
-				System.err.println("Baj van Hueston:" + ex);
-			}
-		}
+	public void modifyAndSave() throws NoSuchCellException, IOException {
+		placeMeasuresIfTheresAny(getDay().getMeasures());
+		placeMoneyIfTheresAny(getDay().getMoney());
+		placeTimeIfTheresAny(getDay().getTime());
 	}
 
-	private void placeValuesInCells() throws NoSuchCellException, IOException {
-		placeMeasuresIfTheresAny(getDay().getMeasures());
-		//placeMoneyIfTheresAny(getDay().getMoney());
-		//placeTimeIfTheresAny(getDay().getTime());
+	public void saveExcels(){
+		excelFiles.forEach(Excel::save);
 	}
 
 	private void placeMeasuresIfTheresAny(Measures measures) throws FileNotFoundException, NoSuchCellException {
-		if (notNull(measures))
+		if (notNull(measures)) {
 			new ModifyMeasures(measures, getExcel(MeasureExcelFileName));
+			getExcel(MeasureExcelFileName).save();
+		}
 	}
 
 	private void placeMoneyIfTheresAny(Money money) throws FileNotFoundException {
-		if (notNull(money))
+		if (notNull(money)) {
 			new ModifyMoney(money, getExcel(MoneyExcelFileName));
+			getExcel(MoneyExcelFileName).save();
+		}
 	}
 
 	private void placeTimeIfTheresAny(Time time) throws IOException, NoSuchCellException {
-		if (notNull(time))
+		if (notNull(time)) {
 			new ModifyTime(time, getExcel(TimeExcelFileName));
+			getExcel(TimeExcelFileName).save();
+		}
 	}
 	
 	//Helpers

@@ -14,7 +14,7 @@ import static Classes.I18N.I18N.dataExcelsPath;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException, NoSuchCellException, InvalidFormatException {
+	public static void main(String[] args) throws IOException, NoSuchCellException{
         AdministrateDay();
     }
 }

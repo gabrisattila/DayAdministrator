@@ -3,7 +3,6 @@ package Classes;
 import Classes.I18N.NoSuchCellException;
 import Classes.ModifyWorkBooks.ExcelModifier;
 import lombok.Getter;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import Classes.Parser.Parser;
 
@@ -42,9 +41,9 @@ public class Editor {
 
     //region Methods
 
-    public void modify() throws IOException, NoSuchCellException, InvalidFormatException {
+    public void modifyAndSaveAfterModification() throws IOException, NoSuchCellException {
         excelModifier = new ExcelModifier();
-        excelModifier.modify();
+        excelModifier.modifyAndSave();
     }
 
     private void setUpVars(){

@@ -31,7 +31,7 @@ public class Excel extends XSSFWorkbook {
 
 	public Excel(InputStream excelFile) throws IOException {
 		super(excelFile);
-//		exploreFile();
+		exploreFile();
 	}
 
 	public String toString(){
