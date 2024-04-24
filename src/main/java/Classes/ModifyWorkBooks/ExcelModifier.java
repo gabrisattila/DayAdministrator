@@ -46,7 +46,7 @@ public class ExcelModifier {
 		excelFiles = new ArrayList<>();
 
 		if (notNull(getDay().getMeasures())){
-			excelFiles.add(new Excel(new File(dataExcelsPath + MeasureExcelFileName)));
+//			excelFiles.add(new Excel(new File(dataExcelsPath + MeasureExcelFileName)));
 		}
 		if (notNull(getDay().getMoney())){
 //			excelFiles.add(new Excel(new File(dataExcelsPath + MoneyExcelFileName)));

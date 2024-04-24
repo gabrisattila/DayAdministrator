@@ -12,8 +12,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -24,20 +23,35 @@ import static java.util.Objects.isNull;
 @Getter
 public class Excel extends XSSFWorkbook {
 
-	private final String path;
+	private String path;
 
 	private final List<String> sheetNames = new ArrayList<>();
 
 	private final Map<String, List<String>> titlesPerSheets = new HashMap<>();
 
-	public Excel(File excelFile) throws IOException, InvalidFormatException {
+	public Excel(InputStream excelFile) throws IOException {
 		super(excelFile);
-		this.path = excelFile.getPath();
-		exploreFile();
+//		exploreFile();
 	}
 
 	public String toString(){
 		return path;
+	}
+
+	public static Excel openExcel(String path) throws IOException {
+		Excel excel = new Excel(new FileInputStream(path));
+		excel.path = path;
+		return excel;
+	}
+
+	public void save(){
+		try {
+			FileOutputStream out = new FileOutputStream(path);
+			this.write(out);
+			out.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	//region Set Up
