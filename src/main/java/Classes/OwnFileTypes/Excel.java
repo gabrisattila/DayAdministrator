@@ -2,11 +2,7 @@ package Classes.OwnFileTypes;
 
 import Classes.I18N.FailedSearch;
 import Classes.I18N.NoSuchCellException;
-import Classes.Parser.Slot;
 import lombok.Getter;
-import lombok.Setter;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -15,6 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.random.RandomGenerator;
 
 import static Classes.Day.getDay;
 import static Classes.I18N.I18N.*;
@@ -100,6 +97,17 @@ public class Excel extends XSSFWorkbook {
 		}
 		throw new NoSuchCellException(sheet, date.toString());
 
+	}
+
+	public void setDayRowsStyleToPrevious() throws NoSuchCellException {
+		LocalDate prev = getDay().dateOfDay.minusDays(1);
+		for (Sheet sheet : this){
+			setRowStyleToAnother(getRowByDateOnASheet(prev, sheet), getRowByDateOnASheet(getDay().dateOfDay, sheet));
+		}
+	}
+
+	private void setRowStyleToAnother(Row previous, Row current) {
+		current.setRowStyle(previous.getRowStyle());
 	}
 
 	public List<Cell> getColumnByTitle(String _title) throws FailedSearch {
