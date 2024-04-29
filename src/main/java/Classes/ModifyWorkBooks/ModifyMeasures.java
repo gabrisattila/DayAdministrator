@@ -27,8 +27,8 @@ public class ModifyMeasures {
 	public void modifyAllInMeasures() throws NoSuchCellException {
 		modifyKávé();
 		modifySúly();
-		modifyCigi();
 		modifyTelefonIdő();
+		modifyCigi();
 		modifyJO();
 	}
 
@@ -42,19 +42,19 @@ public class ModifyMeasures {
 		cell.setCellValue(measures.súly());
 	}
 
-	private void modifyCigi() throws NoSuchCellException {
-		Cell cell = excel.getCellByTitle("Cigi");
-		cell.setCellValue(measures.cigi());
-	}
-
 	private void modifyTelefonIdő() throws NoSuchCellException {
 		Cell cell = excel.getCellByTitle("Telefon");
 		cell.setCellValue(measures.telefonIdő());
 	}
 
-	private void modifyJO() throws NoSuchCellException {
+	private void modifyCigi() throws NoSuchCellException {
 		Cell cell = excel.getCellByTitle("Cigi");
-		cell.setCellValue(measures.súly());
+		cell.setCellValue(measures.cigi());
+	}
+
+	private void modifyJO() throws NoSuchCellException {
+		Cell cell = excel.getCellByTitle("J O :(");
+		cell.setCellValue(measures.JO());
 	}
 
 }

@@ -68,8 +68,12 @@ public class Excel extends XSSFWorkbook {
 		List<String> rowTitles;
 		for (Sheet sheet : this){
 			Row row = sheet.getRow(0);
+			Cell cell;
 			rowTitles = new ArrayList<>();
-			for (Cell cell : row){
+			for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
+				cell = row.getCell(i);
+				if (isNull(cell))
+					cell = row.createCell(i);
 				rowTitles.add(cell.getStringCellValue());
 			}
 			titlesPerSheets.put(sheet.getSheetName(), rowTitles);
