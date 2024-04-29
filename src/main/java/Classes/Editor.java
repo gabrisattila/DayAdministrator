@@ -48,8 +48,7 @@ public class Editor {
 
     private void setUpVars(){
         textParser = new Parser(dayText);
-        modifiableWorkbookNames = new ArrayList<>();
-        workbooksToBeChanged = new ArrayList<>();
+        textParser.parseWithSubParsers();
     }
 
     private void createDay(){

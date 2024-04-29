@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static Classes.I18N.I18N.notNull;
+import static java.util.Objects.isNull;
 
 @Getter
 @Setter
@@ -29,17 +30,25 @@ public class Slot {
 		this.from = from;
 		this.to = to;
 		this.action = action;
+		timeAmount = getTimeAmountFromTo();
 	}
 
 	public double getTimeAmountFromTo() {
 		long minutes = ChronoUnit.MINUTES.between(from, to);
-		double hours = minutes / 60.0;
+		int hours = (int) (minutes / 60.0);
 		double fraction = (minutes % 60) / 60.0;
 		return hours + fraction;
 	}
 
 	public String toString(){
-		return from + "-" + to + action;
+        getTimeAmountFromTo();
+        return (isNull(from) ? "" : from) +
+                "-" +
+                (isNull(to) ? "" : to) +
+                " " +
+                getTimeAmountFromTo() +
+                " " +
+                action;
 	}
 
 	public static Slot copy(Slot toCopy){
@@ -129,6 +138,30 @@ public class Slot {
 		//Pl.: 10
 		else if (t.length() == 2) {
 			int time = Integer.parseInt(t);
+
+			if (time % 5 == 0){
+
+				String nextTime = nextTimeInString.split("-")[0];
+				int nextHour = nextTime.length() > 2 ? Integer.parseInt(nextTime) : Integer.parseInt(nextTime.substring(0, 2));
+
+				if(time > firstPart.getMinute()){
+					if (nextHour % 5 == 0){
+
+					}else {
+
+					}
+					hours = 0;
+					minutes = time;
+				}else {
+					hours = time;
+					minutes = 0;
+				}
+			}else{
+				hours = time;
+				minutes = 0;
+			}
+
+
 			if (time == 5 || time == 10 || time == 15 || time == 20){
 				String nextTime = nextTimeInString.split("-")[0];
 				int nextHour = nextTime.length() == 3 ? Integer.parseInt(nextTime.substring(0, 0)) : Integer.parseInt(nextTime.substring(0, 1));
@@ -144,8 +177,13 @@ public class Slot {
 					minutes = time;
 				}
 			} else {
-				hours = firstPart.getHour();
-				minutes = time;
+				if (time < 24 && time > firstPart.getHour()){
+					hours = time;
+					minutes = 0;
+				}else {
+					hours = firstPart.getHour();
+					minutes = time;
+				}
 			}
 		}
 		//Pl.: 905

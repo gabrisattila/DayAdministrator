@@ -93,9 +93,9 @@ public class Parser {
         return text.split(delimiterBetweenTextParts);
     }
 
-    //Sub Parsers
+    //Sub Parsing
 
-    private void parseWithSubParsers(){
+    public void parseWithSubParsers(){
         if (!measures.isBlank()) {
             measureParser = new MeasureParser(this);
             measureParser.parse();

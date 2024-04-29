@@ -8,9 +8,9 @@ package Classes.Parser;
  */
 public record DurationWithActivity(int amountInMinutes, String activity) {
 	public double getTimeAmount(){
-		double hours = amountInMinutes / 60.0;
-		double fraction = (amountInMinutes % 60) / 60.0;
-		return hours + fraction;
+		int hours = (int) (amountInMinutes / 60.0);
+		double minutes = (amountInMinutes % 60) / 60.0;
+		return hours + minutes;
 	}
 
 	public String toString(){
