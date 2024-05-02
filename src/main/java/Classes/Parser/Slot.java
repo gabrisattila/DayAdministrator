@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static Classes.I18N.I18N.notNull;
+import static java.lang.Integer.parseInt;
 import static java.util.Objects.isNull;
 
 @Getter
@@ -69,7 +70,7 @@ public class Slot {
 				if (i % 2 == 0){
 					activity = slotParts.get(i);
 				}else {
-					amount = Integer.parseInt(slotParts.get(i));
+					amount = parseInt(slotParts.get(i));
 				}
 				if (amount != 0 && !activity.isBlank()) {
 					_durations[dCounter] = new DurationWithActivity(amount, activity);
@@ -114,87 +115,103 @@ public class Slot {
 	private static LocalTime convertFirstTimeStrToTime(String t){
 		int hours, minutes;
 		if (t.length() == 1 || t.length() == 2){
-			hours = Integer.parseInt(t);
+			hours = parseInt(t);
 			minutes = 0;
 		} else if (t.length() == 3) {
-			hours = Integer.parseInt(t.substring(0, 1));
-			minutes = Integer.parseInt(t.substring(1, 3));
+			hours = parseInt(t.substring(0, 1));
+			minutes = parseInt(t.substring(1, 3));
 		} else if (t.length() == 4) {
-			hours = Integer.parseInt(t.substring(0, 2));
-			minutes = Integer.parseInt(t.substring(2, 4));
+			hours = parseInt(t.substring(0, 2));
+			minutes = parseInt(t.substring(2, 4));
 		} else {
 			throw new RuntimeException(t + "-t nem lehet Time objektummá castolni.");
 		}
 		return LocalTime.of(hours, minutes);
 	}
 
-	private static LocalTime convertSecondTimeStrToTime(String t, LocalTime firstPart, String nextTimeInString){
+	private static LocalTime convertSecondTimeStrToTime(String t, LocalTime currTimeFirstPart, String nextTimeInString){
 		int hours, minutes;
 		//Pl.: 7
 		if (t.length() == 1){
-			hours = Integer.parseInt(t);
+			hours = parseInt(t);
 			minutes = 0;
 		}
 		//Pl.: 10
 		else if (t.length() == 2) {
-			int time = Integer.parseInt(t);
+			int currTimeSecondPart = parseInt(t);
 
-			if (time % 5 == 0){
+			if (currTimeSecondPart % 5 == 0){
 
 				String nextTime = nextTimeInString.split("-")[0];
-				int nextHour = nextTime.length() > 2 ? Integer.parseInt(nextTime) : Integer.parseInt(nextTime.substring(0, 2));
+				int nextTimeFirstPartHour = nextTime.length() <= 2 ? parseInt(nextTime) : parseInt(nextTime.substring(0, 2));
 
-				if(time > firstPart.getMinute()){
-					if (nextHour % 5 == 0){
+				if (currTimeSecondPart >= currTimeFirstPart.getMinute()){
+					//TODO Edge case
+					// Amikor egyenlő  x és y
+					// pl.: 1205 - (12)15; 15-1515;
+					// 		1205 -     15; 15-1550;
+					// Amikor nagyobb x-nél y
+					// pl.: 1205 - (12)15; 16-1615;
+					// 		1205 -     15; 16-1650;
 
-					}else {
+					if (nextTimeFirstPartHour % 5 == 0){
 
+					}else{
+						// Ha a következő Slot órája nem 5-tel osztható szám, megnézzük, hogy kisebb-e mint a feltételezett időpont ->
+						// a fenti példában tehát a 1205 - (12)15; 15 - 1515
+						// megnézzük, hogy a 15(00) (a második időpont kezdete) kisebb-e mint a 1215
+						if (LocalTime.of(nextTimeFirstPartHour, 0).isBefore(currTimeFirstPart)){
+							//Ha igen akkor percről beszélünk
+
+						}else {
+							//Ha nem, akkor rohadtul nem tudjuk. Meg kell kérdezni!!
+						}
 					}
-					hours = 0;
-					minutes = time;
-				}else {
-					hours = time;
+
+				}else{
 					minutes = 0;
+					hours = currTimeSecondPart;
 				}
+
 			}else{
-				hours = time;
+				hours = currTimeSecondPart;
 				minutes = 0;
 			}
 
 
-			if (time == 5 || time == 10 || time == 15 || time == 20){
+			if (currTimeSecondPart == 5 || currTimeSecondPart == 10 || currTimeSecondPart == 15 || currTimeSecondPart == 20){
 				String nextTime = nextTimeInString.split("-")[0];
-				int nextHour = nextTime.length() == 3 ? Integer.parseInt(nextTime.substring(0, 0)) : Integer.parseInt(nextTime.substring(0, 1));
-				if (firstPart.getHour() == nextHour || nextHour - firstPart.getHour() < time - firstPart.getHour() || nextHour == time){
+				int nextHour = nextTime.length() == 3 ? parseInt(nextTime.substring(0, 0)) : parseInt(nextTime.substring(0, 1));
+				if (currTimeFirstPart.getHour() == nextHour || nextHour - currTimeFirstPart.getHour() < currTimeSecondPart - currTimeFirstPart.getHour() || nextHour == currTimeSecondPart){
 					//TODO Edge case pl.: 905-(9)15; 15-1515;
-					hours = time;
+					hours = currTimeSecondPart;
 					minutes = 0;
 				}else {
 //					if (time > firstPart.getHour()){
 //
 //					}
-					hours = firstPart.getHour();
-					minutes = time;
+					hours = currTimeFirstPart.getHour();
+					minutes = currTimeSecondPart;
 				}
 			} else {
-				if (time < 24 && time > firstPart.getHour()){
-					hours = time;
+				if (currTimeSecondPart < 24 && currTimeSecondPart > currTimeFirstPart.getHour()){
+					hours = currTimeSecondPart;
 					minutes = 0;
 				}else {
-					hours = firstPart.getHour();
-					minutes = time;
+					hours = currTimeFirstPart.getHour();
+					minutes = currTimeSecondPart;
 				}
 			}
 		}
 		//Pl.: 905
 		else if (t.length() == 3) {
-			hours = Integer.parseInt(t.substring(0, 1));
-			minutes = Integer.parseInt(t.substring(1, 3));
+			hours = parseInt(t.substring(0, 1));
+			minutes = parseInt(t.substring(1, 3));
 		}
 		//Pl.: 1005
 		else if (t.length() == 4) {
-			hours = Integer.parseInt(t.substring(0, 2));
-			minutes = Integer.parseInt(t.substring(2, 4));
+			hours = parseInt(t.substring(0, 2));
+			minutes = parseInt(t.substring(2, 4));
 		} else {
 			throw new RuntimeException(t + "-t nem lehet Time objektummá castolni.");
 		}
