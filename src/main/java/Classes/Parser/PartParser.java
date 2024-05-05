@@ -1,5 +1,7 @@
 package Classes.Parser;
 
+import java.io.IOException;
+
 public abstract class PartParser {
 
 	protected Parser originParser;
@@ -10,6 +12,6 @@ public abstract class PartParser {
 		originParser = parser;
 	}
 
-	abstract void parse();
+	abstract void parse() throws IOException;
 
 }

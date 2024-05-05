@@ -2,6 +2,9 @@ package Classes.I18N;
 
 import lombok.Getter;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Objects;
 
 @Getter
@@ -14,6 +17,21 @@ public class AskTheUserForInformation extends Exception{
 	public AskTheUserForInformation(String info, String typeOfInfo){
 		information = info;
 		this.typeOfInfo = typeOfInfo;
+	}
+
+	public static String getStringAnswer() throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		return reader.readLine();
+	}
+
+	public static int getIntegerAnswer() throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		return Integer.parseInt(reader.readLine());
+	}
+
+	public static double getDoubleAnswer() throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		return Double.parseDouble(reader.readLine());
 	}
 
 	public String handlingAndGetAnswer(){

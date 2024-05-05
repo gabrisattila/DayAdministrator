@@ -2,6 +2,7 @@ package Classes.Parser;
 
 import lombok.Getter;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 import static Classes.Day.getDay;
@@ -12,19 +13,19 @@ public class TimeParser extends PartParser{
 
 	Time time;
 
-	protected TimeParser(Parser parser) {
+	protected TimeParser(Parser parser) throws IOException {
 		super(parser);
 		parse();
 	}
 
 	@Override
-	public void parse() {
+	public void parse() throws IOException {
 		part = originParser.getTime();
 		String[] preListOfSlots = part.split(";");
 		time = new Time(makeSlots(preListOfSlots));
 	}
 
-	private LinkedList<Slot> makeSlots(String[] slotsInString){
+	private LinkedList<Slot> makeSlots(String[] slotsInString) throws IOException {
 		LinkedList<Slot> slots = new LinkedList<>();
 		for (int i = 0; i < slotsInString.length; i++) {
 			if (i < slotsInString.length - 1){

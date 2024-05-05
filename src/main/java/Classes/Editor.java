@@ -31,7 +31,7 @@ public class Editor {
 
     //region Constructor
 
-    public Editor(String dayText) {
+    public Editor(String dayText) throws IOException {
         this.dayText = dayText;
         setUpVars();
         createDay();
@@ -46,7 +46,7 @@ public class Editor {
         excelModifier.modifyAndSave();
     }
 
-    private void setUpVars(){
+    private void setUpVars() throws IOException {
         textParser = new Parser(dayText);
         textParser.parseWithSubParsers();
     }

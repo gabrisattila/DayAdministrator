@@ -14,6 +14,6 @@ public record DurationWithActivity(int amountInMinutes, String activity) {
 	}
 
 	public String toString(){
-		return getTimeAmount() + activity;
+		return getTimeAmount() + " " + activity;
 	}
 }

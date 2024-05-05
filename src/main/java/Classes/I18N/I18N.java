@@ -10,7 +10,7 @@ import static java.util.Objects.isNull;
 public class I18N {
 
     //region For job device
-
+/*
     public final static String dataExcelsPath = "C:\\Users\\gabri\\Desktop\\JOB\\own\\";
 
     public static final String probaExcelFileName = "Proba.xlsx";
@@ -21,9 +21,9 @@ public class I18N {
 
     public static final String TimeExcelFileName = "The_Time_Proba.xlsx";
 
-
+*/
     //endregion
-/*
+
     //region For home device
 
     public final static String dataExcelsPath = "C:\\Users\\asus\\Desktop\\Minden\\Adat\\";
@@ -35,7 +35,7 @@ public class I18N {
     public static final String TimeExcelFileName = "The_Time_Proba.xlsx";
 
     //endregion
-*/
+
     public static final String delimiterBetweenTextParts = ";";
 
     public static final String[] SUMMATimeExcelHeadTitles =

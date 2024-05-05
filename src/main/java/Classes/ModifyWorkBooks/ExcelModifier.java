@@ -53,8 +53,8 @@ public class ExcelModifier {
 	//region Modify
 	
 	public void modifyAndSave() throws NoSuchCellException, IOException {
-		placeMeasuresIfTheresAny(getDay().getMeasures());
-		placeMoneyIfTheresAny(getDay().getMoney());
+		//placeMeasuresIfTheresAny(getDay().getMeasures());
+		//placeMoneyIfTheresAny(getDay().getMoney());
 		placeTimeIfTheresAny(getDay().getTime());
 	}
 

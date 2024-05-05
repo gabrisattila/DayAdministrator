@@ -2,6 +2,7 @@ package Classes.Parser;
 
 import lombok.Data;
 
+import java.io.IOException;
 import java.util.Comparator;
 
 import static Classes.I18N.I18N.delimiterBetweenTextParts;
@@ -36,7 +37,7 @@ public class Parser {
 
     //region Constructor
 
-    public Parser(String dayText) {
+    public Parser(String dayText) throws IOException {
         text = dayText;
 //        defineComparator();
         sortPartsAndSetUpMeasureMoneyTimeVars();
@@ -95,7 +96,7 @@ public class Parser {
 
     //Sub Parsing
 
-    public void parseWithSubParsers(){
+    public void parseWithSubParsers() throws IOException {
         if (!measures.isBlank()) {
             measureParser = new MeasureParser(this);
             measureParser.parse();
