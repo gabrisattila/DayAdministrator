@@ -13,9 +13,8 @@ public class TimeParser extends PartParser{
 
 	Time time;
 
-	protected TimeParser(Parser parser) throws IOException {
+	protected TimeParser(Parser parser) {
 		super(parser);
-		parse();
 	}
 
 	@Override

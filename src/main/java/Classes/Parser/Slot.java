@@ -1,6 +1,5 @@
 package Classes.Parser;
 
-import Classes.I18N.AskTheUserForInformation;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -50,10 +49,11 @@ public class Slot {
         return (isNull(from) ? "" : from) +
                 "-" +
                 (isNull(to) ? "" : to) +
-                " " +
+                " -> " +
                 getTimeAmountFromTo() +
-                " " +
-                action;
+                " h, " +
+                action +
+		        "\n";
 	}
 
 	public static Slot copy(Slot toCopy){
@@ -62,10 +62,14 @@ public class Slot {
 
 	public static Slot createSlot(String slotInText, String next) throws IOException {
 		List<String> slotParts = splitSlotStringToItsParts(slotInText);
+
 		LocalTime from = convertFirstTimeStrToTime(slotParts.get(0));
+
 		LocalTime to = convertSecondTimeStrToTime(slotParts.get(1), from, next);
+
 		String action = slotParts.get(2);
 		DurationWithActivity[] _durations = null;
+
 		if (slotParts.size() > 3){
 			_durations = new DurationWithActivity[(slotParts.size() - 3) / 2];
 			int amount = 0; String activity = "";
@@ -84,9 +88,13 @@ public class Slot {
 				}
 			}
 		}
+
 		Slot slot = new Slot(from, to, action);
+		modifyTimeAmountInsteadOfAfterMidnightTime(slot);
+
 		if (notNull(_durations))
 			slot.durations = _durations;
+
 		return slot;
 	}
 
@@ -146,41 +154,57 @@ public class Slot {
 
 			if (currTimeSecondPart % 5 == 0){
 
-				String nextTime = nextTimeInString.split("-")[0];
-				int nextTimeFirstPartHour = nextTime.length() <= 2 ? parseInt(nextTime) : parseInt(nextTime.substring(0, 2));
-				int nextTimeSecondPartMinute = nextTime.length() <= 2 ? 0 : parseInt(nextTime.substring(2));
+				if (notNull(nextTimeInString)){
+					String nextTime = nextTimeInString.split("-")[0];
+					int nextTimeFirstPartHour = nextTime.length() <= 2 ? parseInt(nextTime) : parseInt(nextTime.substring(0, 2));
+					int nextTimeSecondPartMinute = nextTime.length() <= 2 ? 0 : parseInt(nextTime.substring(2));
 
-				if (currTimeSecondPart >= currTimeFirstPart.getMinute()){
-					// Edge case
-					// Amikor egyenlő  x és y
-					// pl.: 1205 - (12)15; 15-1515;
-					// 		1205 -     15; 15-1550;
+					if (currTimeSecondPart >= currTimeFirstPart.getMinute()){
+						// Edge case
+						// Amikor egyenlő  x és y
+						// pl.: 1205 - (12)15; 15-1515;
+						// 		1205 -     15; 15-1550;
 
-					// Megnézzük, hogy kisebb-e mint a feltételezett időpont ->
-					// a fenti példában tehát a 1205 - (12)15; 15 - 1515
-					// megnézzük, hogy a 15(00) (a második időpont kezdete) kisebb-e mint a 1215
-					if (LocalTime.of(nextTimeFirstPartHour, nextTimeSecondPartMinute).isBefore(currTimeFirstPart)){
-						//Ha igen akkor percről beszélünk
-						hours = currTimeFirstPart.getHour();
-						minutes = currTimeSecondPart;
-					}else {
-						//Ha nem, akkor rohadtul nem tudjuk. Meg kell kérdezni!!
-						System.out.println("\nEmlítettél egy tevékenységet a következő intervallumban:\n" +
-								currTimeFirstPart + " - " + t);
-						System.out.println("Kérlek mond el, hogy a második helyen szereplő " + t + " időpont, az percet, vagy órát jelöl?");
-						String válasz = getStringAnswer();
-						válasz = válasz.trim();
-						if (textContainsString(válasz, "perc") || textContainsString(válasz, "p")){
+						// Megnézzük, hogy kisebb-e mint a feltételezett időpont ->
+						// a fenti példában tehát a 1205 - (12)15; 15 - 1515
+						// megnézzük, hogy a 15(00) (a második időpont kezdete) kisebb-e mint a 1215
+						if (LocalTime.of(nextTimeFirstPartHour, nextTimeSecondPartMinute).isBefore(currTimeFirstPart)){
+							//Ha igen akkor percről beszélünk
 							hours = currTimeFirstPart.getHour();
 							minutes = currTimeSecondPart;
 						}else {
-							hours = currTimeSecondPart;
-							minutes = 0;
+							//Ha nem, akkor rohadtul nem tudjuk. Meg kell kérdezni!!
+							System.out.println("\nEmlítettél egy tevékenységet a következő intervallumban:\n" +
+									currTimeFirstPart + " - " + t);
+							System.out.println("Kérlek mond el, hogy a második helyen szereplő " + t + " időpont, az percet, vagy órát jelöl?");
+							String válasz = getStringAnswer();
+							válasz = válasz.trim();
+							if (textContainsString(válasz, "perc") || textContainsString(válasz, "p")){
+								hours = currTimeFirstPart.getHour();
+								minutes = currTimeSecondPart;
+							}else {
+								hours = currTimeSecondPart;
+								minutes = 0;
+							}
 						}
+					}else{
+						minutes = 0;
+						hours = currTimeSecondPart;
 					}
-				}else{
-					minutes = 0;
-					hours = currTimeSecondPart;
+				}else {
+					//Ha nem, akkor rohadtul nem tudjuk. Meg kell kérdezni!!
+					System.out.println("\nEmlítettél egy tevékenységet a következő intervallumban:\n" +
+							currTimeFirstPart + " - " + t);
+					System.out.println("Kérlek mond el, hogy a második helyen szereplő " + t + " időpont, az percet, vagy órát jelöl?");
+					String válasz = getStringAnswer();
+					válasz = válasz.trim();
+					if (textContainsString(válasz, "perc") || textContainsString(válasz, "p")){
+						hours = currTimeFirstPart.getHour();
+						minutes = currTimeSecondPart;
+					}else {
+						hours = currTimeSecondPart;
+						minutes = 0;
+					}
 				}
 			}else{
 				hours = currTimeSecondPart;
@@ -199,9 +223,32 @@ public class Slot {
 		} else {
 			throw new RuntimeException(t + "-t nem lehet Time objektummá castolni.");
 		}
-		if (hours == 24)
-			hours = 0;
+		hours = handleToInsteadOfAfterMidnightTime(hours);
 		return LocalTime.of(hours, minutes);
+	}
+
+	private static int handleToInsteadOfAfterMidnightTime(int to){
+		if (to >= 24)
+			to -= 24;
+		return to;
+	}
+
+	private static void modifyTimeAmountInsteadOfAfterMidnightTime(Slot slot){
+
+		int h = 0, m = 0;
+		LocalTime tmp;
+		//Ha a slot kezdete este tíz és éjfél között, a vége pedig éjfél után van
+		if (timeIsBetween(slot.from, LocalTime.of(22, 0), LocalTime.of(23,59)) &&
+			timeIsBetween(slot.to, LocalTime.of(23,59), LocalTime.of(5, 30))){
+
+			tmp = LocalTime.of(23,59).minusHours(slot.from.getHour()).minusMinutes(slot.from.getMinute());
+			h = tmp.getHour(); m = tmp.getMinute();
+		}
+		slot.setTimeAmount(h + (double) m / 60);
+	}
+
+	private static boolean timeIsBetween(LocalTime time, LocalTime betw1, LocalTime betw2){
+		return (betw1.isBefore(time) || betw1.equals(time)) && (betw2.isAfter(time) || betw2.equals(time));
 	}
 
 	public static class SlotComparator implements Comparator<Slot> {

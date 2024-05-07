@@ -41,7 +41,6 @@ public class Parser {
         text = dayText;
 //        defineComparator();
         sortPartsAndSetUpMeasureMoneyTimeVars();
-        parseWithSubParsers();
     }
 
     //endregion
@@ -69,7 +68,6 @@ public class Parser {
 
     private void sortPartsAndSetUpMeasureMoneyTimeVars(){
         String[] parts = splitToParts();
-//        Arrays.sort(parts, textPartsComparator);
         StringBuilder ms = new StringBuilder(), mo = new StringBuilder(), t = new StringBuilder();
         for (String part : parts){
             part = part.trim();
