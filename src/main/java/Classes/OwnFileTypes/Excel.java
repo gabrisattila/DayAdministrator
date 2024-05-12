@@ -176,7 +176,7 @@ public class Excel extends XSSFWorkbook {
 		for (int i = 0; i < fromRow.getLastCellNum(); i++) {
 			if (isNull(fromRow.getCell(i)))
 				fromRow.createCell(i);
-			if (title.equals(getTitleOfACell(fromRow.getCell(i)))){
+			if (textContainsString(getTitleOfACell(fromRow.getCell(i)), title)){
 				return fromRow.getCell(i);
 			}
 		}

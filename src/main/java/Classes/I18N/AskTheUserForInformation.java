@@ -34,20 +34,20 @@ public class AskTheUserForInformation extends Exception{
 		return Double.parseDouble(reader.readLine());
 	}
 
-	public String handlingAndGetAnswer(){
+	public String handlingAndGetAnswer() throws IOException {
 		if ("Time".equals(typeOfInfo))
 			return handlingAndGetAnswerTime();
 		else
 			return handlingAndGetAnswerMoney();
 	}
 
-	public String handlingAndGetAnswerTime(){
-		System.out.println("Kérlek add meg, hogy " + information + " ez alatt a kifejezés alatt mit értettél?");
+	public String handlingAndGetAnswerTime() throws IOException {
+		System.out.println("\nKérlek add meg, hogy " + information + " ez alatt a kifejezés alatt mit értettél?");
 		System.out.println("Egészen pontosan ez egy szabadidős, értékes vagy szükséges időtöltés volt?");
 		System.out.println("Kérlek válaszd ki a válaszodnak megfelelő számot.");
-		System.out.println("1.\nÉrtékes.\n2.\tSzükséges.\n3.\tSzabadidő.\n");
-		String válasz = System.in.toString();
-		System.out.println("Köszönöm.");
+		System.out.println("1.\tÉrtékes.\n2.\tSzükséges.\n3.\tSzabadidő.\n");
+		String válasz = getStringAnswer();
+		System.out.println("\nKöszönöm.");
 		if (válasz.contains("1"))
 			return "Értékes";
 		else if (válasz.contains("2"))
@@ -56,9 +56,9 @@ public class AskTheUserForInformation extends Exception{
 			return "Szabadidő";
 	}
 
-	public String handlingAndGetAnswerMoney(){
+	public String handlingAndGetAnswerMoney() throws IOException {
 		//TODO Megírni pénz eshetőségekre is
-		String válasz = System.in.toString();
+		String válasz = getStringAnswer();
 		System.out.println("Köszönöm.");
 		return válasz;
 	}

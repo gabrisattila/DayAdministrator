@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -34,21 +35,21 @@ public class ModifyTime {
 
 	private final Excel excel;
 
-	public ModifyTime(Time time, Excel excel) throws NoSuchCellException {
+	public ModifyTime(Time time, Excel excel) throws NoSuchCellException, IOException {
 		this.time = time;
 		this.excel = excel;
 		értékes = new ArrayList<>(); szükséges = new ArrayList<>(); szabadidő = new ArrayList<>();
 		modifyTime();
 	}
 
-	private void modifyTime() throws NoSuchCellException {
+	private void modifyTime() throws NoSuchCellException, IOException {
 		collectSlots();
 		modifyÉrtékes();
 		modifySzükséges();
 		modifySzabadidő();
 	}
 
-	private void collectSlots() {
+	private void collectSlots() throws IOException {
 		List<Slot> wholeDay = time.getTimeLine();
 		List<Slot> extras = new ArrayList<>();
 		Slot extraSlot;
@@ -67,7 +68,7 @@ public class ModifyTime {
 		}
 	}
 
-	private void addSlotToProperList(Slot slot){
+	private void addSlotToProperList(Slot slot) throws IOException {
 		try {
 			if (isÉrtékes(slot)){
 				értékes.add(slot);
@@ -135,17 +136,15 @@ public class ModifyTime {
 	}
 
 	private void writeActionStringsToRow(List<Slot> slots, ActionTerms.actionType typeOfSlots, Row todayMiRow){
-		slots.forEach(s ->
+		for (Slot slot : slots){
 			writeActionToACell(
-				requireNonNull(
-						excel.getCellFromRowByTitle(
-								getTitleOfAnAction(s.getAction(), typeOfSlots),
-								todayMiRow
-						)
-				),
-				s.getAction()
-			)
-		);
+					excel.getCellFromRowByTitle(
+							getTitleOfAnAction(slot.getAction(), typeOfSlots),
+							todayMiRow
+					),
+					slot.getAction()
+			);
+		}
 	}
 
 	private void writeTimesToRow(Map<String, String> activitiesInTimeStrings, Row rowToWrite) throws NoSuchCellException {
@@ -241,7 +240,7 @@ public class ModifyTime {
 			finalTimeStringForActivityType = new StringBuilder();
 			if (activities.get(activityType).size() == 1){
 				finalTimeStringForActivityType
-						.append(activities.get(activityType).get(0).getTimeAmountFromTo());
+						.append(activities.get(activityType).get(0).getTimeAmount());
 			}else {
 				activities.get(activityType).sort(new Slot.SlotComparator());
 				List<Slot> actualActivities = activities.get(activityType);
@@ -258,9 +257,9 @@ public class ModifyTime {
 						}else {
 							finalTimeStringForActivityType
 									.append("+(")
-									.append(actualActivities.get(i).getTimeAmountFromTo())
+									.append(actualActivities.get(i).getTimeAmount())
 									.append("+")
-									.append(actualActivities.get(i - 1).getTimeAmountFromTo())
+									.append(actualActivities.get(i - 1).getTimeAmount())
 									.append(")");
 						}
 					}

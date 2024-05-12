@@ -31,24 +31,35 @@ public class Slot {
 	private DurationWithActivity[] durations;
 
 	public Slot(LocalTime from, LocalTime to, String action){
+		initialize(from, to, action);
+	}
+
+	private void initialize(LocalTime from, LocalTime to, String action){
 		this.from = from;
 		this.to = to;
 		this.action = action;
-		timeAmount = getTimeAmountFromTo();
+		if (notNull(from) && notNull(to))
+			timeAmount = getTimeAmountFromTo();
+		else
+			timeAmount = 0;
 	}
 
 	public double getTimeAmountFromTo() {
-		long minutes = ChronoUnit.MINUTES.between(from, to);
-		int hours = (int) (minutes / 60.0);
-		double fraction = (minutes % 60) / 60.0;
-		return hours + fraction;
+		if (notNull(from) && notNull(to)) {
+			long minutes = ChronoUnit.MINUTES.between(from, to);
+			int hours = (int) (minutes / 60.0);
+			double fraction = (minutes % 60) / 60.0;
+			return hours + fraction;
+		}else {
+			return 0;
+		}
 	}
 
 	public String toString(){
         getTimeAmountFromTo();
         return (isNull(from) ? "" : from) +
-                "-" +
-                (isNull(to) ? "" : to) +
+                (isNull(from) ? "" : "-") +
+                (isNull(to) ? getTimeAmount() + " " : to) +
                 " -> " +
                 getTimeAmountFromTo() +
                 " h, " +
@@ -65,7 +76,7 @@ public class Slot {
 
 		LocalTime from = convertFirstTimeStrToTime(slotParts.get(0));
 
-		LocalTime to = convertSecondTimeStrToTime(slotParts.get(1), from, next);
+		LocalTime to = convertSecondTimeStrToTime(slotParts.get(1), from, next, slotParts.get(2));
 
 		String action = slotParts.get(2);
 		DurationWithActivity[] _durations = null;
@@ -141,7 +152,7 @@ public class Slot {
 		return LocalTime.of(hours, minutes);
 	}
 
-	private static LocalTime convertSecondTimeStrToTime(String t, LocalTime currTimeFirstPart, String nextTimeInString) throws IOException {
+	private static LocalTime convertSecondTimeStrToTime(String t, LocalTime currTimeFirstPart, String nextTimeInString, String actionOfSlot) throws IOException {
 		int hours, minutes;
 		//Pl.: 7
 		if (t.length() == 1){
@@ -175,7 +186,7 @@ public class Slot {
 						}else {
 							//Ha nem, akkor rohadtul nem tudjuk. Meg kell kérdezni!!
 							System.out.println("\nEmlítettél egy tevékenységet a következő intervallumban:\n" +
-									currTimeFirstPart + " - " + t);
+									currTimeFirstPart + " - " + t + " " + actionOfSlot);
 							System.out.println("Kérlek mond el, hogy a második helyen szereplő " + t + " időpont, az percet, vagy órát jelöl?");
 							String válasz = getStringAnswer();
 							válasz = válasz.trim();
@@ -194,7 +205,7 @@ public class Slot {
 				}else {
 					//Ha nem, akkor rohadtul nem tudjuk. Meg kell kérdezni!!
 					System.out.println("\nEmlítettél egy tevékenységet a következő intervallumban:\n" +
-							currTimeFirstPart + " - " + t);
+							currTimeFirstPart + " - " + t + " " + actionOfSlot);
 					System.out.println("Kérlek mond el, hogy a második helyen szereplő " + t + " időpont, az percet, vagy órát jelöl?");
 					String válasz = getStringAnswer();
 					válasz = válasz.trim();
