@@ -239,9 +239,10 @@ public class Slot {
 		LocalTime tmp;
 		//Ha a slot kezdete este tíz és éjfél között, a vége pedig éjfél után van
 		if (timeIsBetween(slot.from, LocalTime.of(22, 0), LocalTime.of(23,59)) &&
-			timeIsBetween(slot.to, LocalTime.of(23,59), LocalTime.of(5, 30))){
+			timeIsBetween(slot.to, LocalTime.MIDNIGHT, LocalTime.of(5, 30))){
 
-			tmp = LocalTime.of(23,59).minusHours(slot.from.getHour()).minusMinutes(slot.from.getMinute());
+			tmp = LocalTime.MIDNIGHT.minusHours(slot.from.getHour()).minusMinutes(slot.from.getMinute());
+			tmp = tmp.plusHours(slot.to.getHour()).plusMinutes(slot.to.getMinute());
 			h = tmp.getHour(); m = tmp.getMinute();
 		}
 		slot.setTimeAmount(h + (double) m / 60);
