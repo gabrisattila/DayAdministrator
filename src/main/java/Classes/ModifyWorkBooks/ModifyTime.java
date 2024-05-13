@@ -262,14 +262,22 @@ public class ModifyTime {
 	protected Map<String, String> makeSeparatedTimeParts(Map<String, List<Slot>> activities){
 		Map<String, String> mapOfActivityTypesAndTimeStrings = new HashMap<>();
 		StringBuilder finalTimeStringForActivityType;
+		//Végigmegyek a tevékenység fajtákon az előre megadott típusból. Pl.: értékesbe tartozik olv., meló, stb...
 		for (String activityType : activities.keySet()){
+			//A végső (x + y + ... ) string lesz, magyarul a darabolt idő
 			finalTimeStringForActivityType = new StringBuilder();
+
+			//Adott tevékenységből csak egy dolog történt. Pl.: egész nap egyszer olvastam
 			if (activities.get(activityType).size() == 1){
+				//Egyszerűen hozzáfűzöm a time amount-ot
 				finalTimeStringForActivityType
 						.append(activities.get(activityType).get(0).getTimeAmount());
 			}else {
+				//Több esetén ezt a részleget sortoljuk.
 				activities.get(activityType).sort(new Slot.SlotComparator());
 				List<Slot> actualActivities = activities.get(activityType);
+
+				//Végigmegyünk a sort-olt listán pl.: Olvasottak
 				for (int i = 1; i < actualActivities.size(); i++) {
 					if (actualActivities.get(i).getAction().equals(actualActivities.get(i - 1).getAction())){
 						if (!finalTimeStringForActivityType.isEmpty() && finalTimeStringForActivityType.charAt(finalTimeStringForActivityType.length() - 1) == ')'){
@@ -282,10 +290,10 @@ public class ModifyTime {
 									.append(")");
 						}else {
 							finalTimeStringForActivityType
-									.append("+(")
-									.append(actualActivities.get(i).getTimeAmount())
-									.append("+")
+									.append(finalTimeStringForActivityType.isEmpty() ? "(" : "+(")
 									.append(actualActivities.get(i - 1).getTimeAmount())
+									.append("+")
+									.append(actualActivities.get(i).getTimeAmount())
 									.append(")");
 						}
 					}
