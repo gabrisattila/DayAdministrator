@@ -6,6 +6,7 @@ import Classes.OwnFileTypes.Excel;
 import Classes.Parser.DurationWithActivity;
 import Classes.Parser.Slot;
 import Classes.Parser.Time;
+import lombok.Getter;
 import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -23,6 +24,7 @@ import static Classes.I18N.I18N.ActionTerms.getTypeOfAction;
 import static Classes.OwnFileTypes.Excel.*;
 import static java.util.Objects.requireNonNull;
 
+@Getter
 public class ModifyTime {
 
 	private final Time time;
@@ -33,7 +35,15 @@ public class ModifyTime {
 
 	private final List<Slot> szabadidő;
 
-	private final Excel excel;
+	private Excel excel;
+
+	/**
+	 * Used for the test cases
+	 */
+	public ModifyTime(Time time) {
+		this.time = time;
+		értékes = new ArrayList<>(); szükséges = new ArrayList<>(); szabadidő = new ArrayList<>();
+	}
 
 	public ModifyTime(Time time, Excel excel) throws NoSuchCellException, IOException {
 		this.time = time;
@@ -43,13 +53,13 @@ public class ModifyTime {
 	}
 
 	private void modifyTime() throws NoSuchCellException, IOException {
-		collectSlots();
+		collectSlots(false);
 		modifyÉrtékes();
 		modifySzükséges();
 		modifySzabadidő();
 	}
 
-	private void collectSlots() throws IOException {
+	protected void collectSlots(boolean isTest) throws IOException {
 		List<Slot> wholeDay = time.getTimeLine();
 		List<Slot> extras = new ArrayList<>();
 		Slot extraSlot;
@@ -61,20 +71,24 @@ public class ModifyTime {
 					extras.add(extraSlot);
 				}
 			}
-			addSlotToProperList(slot);
+			addSlotToProperList(slot, isTest);
 		}
 		for (Slot slot : extras){
-			addSlotToProperList(slot);
+			addSlotToProperList(slot, isTest);
 		}
 	}
 
-	private void addSlotToProperList(Slot slot) throws IOException {
+	/**
+	 * @param slot the slot what about want to decide which list to it's belongs
+	 * @param isTest if we use the test case (in test functions) then we use is_ForTest functions in decideing because it didn't look through the entire workbook
+	 */
+	private void addSlotToProperList(Slot slot, boolean isTest) throws IOException {
 		try {
-			if (isÉrtékes(slot)){
+			if (isTest ? isÉrtékesForTest(slot) : isÉrtékes(slot)){
 				értékes.add(slot);
-			} else if (isSzükséges(slot)) {
+			} else if (isTest ? isSzükségesForTest(slot) : isSzükséges(slot)) {
 				szükséges.add(slot);
-			} else if (isSzabadidő(slot)) {
+			} else if (isTest ? isSzabadidőForTest(slot) : isSzabadidő(slot)) {
 				szabadidő.add(slot);
 			}
 		} catch (AskTheUserForInformation e){
@@ -96,19 +110,19 @@ public class ModifyTime {
 	}
 
 
-	private void modifyÉrtékes() throws NoSuchCellException {
-		modifyTimeExcelSheetOfAnActionType(értékes, Értékes);
+	protected void modifyÉrtékes() throws NoSuchCellException {
+		modifyTimeExcelSheetsOfAnActionType(értékes, Értékes);
 	}
 
-	private void modifySzükséges() throws NoSuchCellException {
-		modifyTimeExcelSheetOfAnActionType(szükséges, Szükséges);
+	protected void modifySzükséges() throws NoSuchCellException {
+		modifyTimeExcelSheetsOfAnActionType(szükséges, Szükséges);
 	}
 
-	private void modifySzabadidő() throws NoSuchCellException {
-		modifyTimeExcelSheetOfAnActionType(szabadidő, Szabadidő);
+	protected void modifySzabadidő() throws NoSuchCellException {
+		modifyTimeExcelSheetsOfAnActionType(szabadidő, Szabadidő);
 	}
 
-	private void modifyTimeExcelSheetOfAnActionType(List<Slot> slots, ActionTerms.actionType actionType) throws NoSuchCellException {
+	private void modifyTimeExcelSheetsOfAnActionType(List<Slot> slots, ActionTerms.actionType actionType) throws NoSuchCellException {
 		Row todayRowConcreteTimeSheet = getTodayRowOnASheet(excel.getSheet(actionType.toString()));
 		Row todayRowActionStringSheet = getTodayRowOnASheet(excel.getSheet(actionType + "_Mi"));
 
@@ -121,7 +135,7 @@ public class ModifyTime {
 		writeTimesToRow(activitiesInSpearatedTimeStrings, todayRowConcreteTimeSheet);
 	}
 
-	private Map<String, List<Slot>> sortSlotsByActionType(List<Slot> slots, ActionTerms.actionType typeOfSlots){
+	protected Map<String, List<Slot>> sortSlotsByActionType(List<Slot> slots, ActionTerms.actionType typeOfSlots){
 		Map<String, List<Slot>> activities = new HashMap<>();
 		String titleOfAction;
 		for (Slot slot : slots){
@@ -185,14 +199,26 @@ public class ModifyTime {
 		return usualÉrtékesContains(action) || previusÉrtékesContains(action);
 	}
 
+	protected boolean isÉrtékesForTest(Slot slot) throws AskTheUserForInformation {
+		return usualÉrtékesContains(slot.getAction());
+	}
+
 	private boolean isSzükséges(Slot slot) throws NoSuchCellException, AskTheUserForInformation {
 		String action = slot.getAction();
 		return usualSzükségesContains(action) || previousSzükségesContains(action);
 	}
 
+	protected boolean isSzükségesForTest(Slot slot) throws AskTheUserForInformation {
+		return usualSzükségesContains(slot.getAction());
+	}
+
 	private boolean isSzabadidő(Slot slot) throws NoSuchCellException, AskTheUserForInformation {
 		String action = slot.getAction();
 		return usualSzabadidőContains(action) || previousSzabadidőContains(action);
+	}
+
+	protected boolean isSzabadidőForTest(Slot slot) throws AskTheUserForInformation {
+		return usualSzabadidőContains(slot.getAction());
 	}
 
 	private boolean usualÉrtékesContains(String action) throws AskTheUserForInformation {
@@ -233,7 +259,7 @@ public class ModifyTime {
 		return false;
 	}
 
-	private Map<String, String> makeSeparatedTimeParts(Map<String, List<Slot>> activities){
+	protected Map<String, String> makeSeparatedTimeParts(Map<String, List<Slot>> activities){
 		Map<String, String> mapOfActivityTypesAndTimeStrings = new HashMap<>();
 		StringBuilder finalTimeStringForActivityType;
 		for (String activityType : activities.keySet()){

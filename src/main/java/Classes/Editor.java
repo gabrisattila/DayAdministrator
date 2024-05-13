@@ -31,6 +31,11 @@ public class Editor {
 
     //region Constructor
 
+    /**
+     * @param dayText The text which will be parsed to a day. It contains all the information
+     * This constructor parse the text with time, measure and money parser to actual, usable variables.
+     * After it creates the day object which stores all that information.
+     */
     public Editor(String dayText) throws IOException {
         this.dayText = dayText;
         setUpVars();

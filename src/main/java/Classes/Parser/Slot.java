@@ -57,14 +57,11 @@ public class Slot {
 
 	public String toString(){
         getTimeAmountFromTo();
-        return (isNull(from) ? "" : from) +
-                (isNull(from) ? "" : "-") +
-                (isNull(to) ? getTimeAmount() + " " : to) +
-                " -> " +
-                getTimeAmountFromTo() +
-                " h, " +
-                action +
-		        "\n";
+		if (isNull(from) || isNull(to)){
+			return getTimeAmount() + " h -> " + action + "\n";
+		}else {
+			return from + "-" + to + " " + getTimeAmountFromTo() + " h -> " +  action + "\n";
+		}
 	}
 
 	public static Slot copy(Slot toCopy){
@@ -264,7 +261,6 @@ public class Slot {
 	}
 
 	public static class SlotComparator implements Comparator<Slot> {
-
 		@Override
 		public int compare(Slot slot1, Slot slot2) {
 			// Összehasonlítjuk az action adattagokat
