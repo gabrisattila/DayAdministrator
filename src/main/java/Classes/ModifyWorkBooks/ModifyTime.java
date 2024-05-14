@@ -70,6 +70,8 @@ public class ModifyTime {
 					extraSlot.setTimeAmount(duration.getTimeAmount());
 					extras.add(extraSlot);
 				}
+			}else {
+				slot.setTimeAmount(slot.getTimeAmountFromTo());
 			}
 			addSlotToProperList(slot, isTest);
 		}
@@ -286,7 +288,7 @@ public class ModifyTime {
 									'+'
 							);
 							finalTimeStringForActivityType
-									.append(actualActivities.get(i))
+									.append(actualActivities.get(i).getTimeAmount())
 									.append(")");
 						}else {
 							finalTimeStringForActivityType
