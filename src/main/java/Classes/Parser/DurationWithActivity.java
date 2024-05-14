@@ -6,7 +6,7 @@ package Classes.Parser;
  * @param amountInMinutes the duration's length in minutes.
  * @param activity the plus activity under the actual Slot.
  */
-public record DurationWithActivity(int amountInMinutes, String activity) {
+public record DurationWithActivity(int amountInMinutes, Action activity) {
 	public double getTimeAmount(){
 		int hours = (int) (amountInMinutes / 60.0);
 		double minutes = (amountInMinutes % 60) / 60.0;

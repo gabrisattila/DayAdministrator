@@ -1,5 +1,6 @@
 package Classes.Parser;
 
+import Classes.I18N.AskTheUserForInformation;
 import lombok.Getter;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class TimeParser extends PartParser{
 		time = new Time(makeSlots(preListOfSlots));
 	}
 
-	private LinkedList<Slot> makeSlots(String[] slotsInString) throws IOException {
+	private LinkedList<Slot> makeSlots(String[] slotsInString) throws IOException, AskTheUserForInformation {
 		LinkedList<Slot> slots = new LinkedList<>();
 		for (int i = 0; i < slotsInString.length; i++) {
 			if (i < slotsInString.length - 1){

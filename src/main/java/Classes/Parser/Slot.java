@@ -1,5 +1,6 @@
 package Classes.Parser;
 
+import Classes.I18N.AskTheUserForInformation;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,15 +27,15 @@ public class Slot {
 
 	private double timeAmount;
 
-	private String action;
+	private Action action;
 
 	private DurationWithActivity[] durations;
 
-	public Slot(LocalTime from, LocalTime to, String action){
+	public Slot(LocalTime from, LocalTime to, Action action){
 		initialize(from, to, action);
 	}
 
-	private void initialize(LocalTime from, LocalTime to, String action){
+	private void initialize(LocalTime from, LocalTime to, Action action){
 		this.from = from;
 		this.to = to;
 		this.action = action;
@@ -68,32 +69,35 @@ public class Slot {
 		return new Slot(toCopy.getFrom(), toCopy.getTo(), toCopy.getAction());
 	}
 
-	public static Slot createSlot(String slotInText, String next) throws IOException {
+	public static Slot createSlot(String slotInText, String next) throws IOException, AskTheUserForInformation {
 		List<String> slotParts = splitSlotStringToItsParts(slotInText);
 
 		LocalTime from = convertFirstTimeStrToTime(slotParts.get(0));
 
 		LocalTime to = convertSecondTimeStrToTime(slotParts.get(1), from, next, slotParts.get(2));
 
-		String action = slotParts.get(2);
+		Action action = new Action(slotParts.get(2));
 		DurationWithActivity[] _durations = null;
 
 		if (slotParts.size() > 3){
 			_durations = new DurationWithActivity[(slotParts.size() - 3) / 2];
-			int amount = 0; String activity = "";
+			int amount = 0; Action activity = null;
 			int dCounter = 0;
 			for (int i = 3; i < slotParts.size(); i++) {
 				if (i % 2 == 0){
-					activity = slotParts.get(i);
+					activity = new Action(slotParts.get(i));
 				}else {
 					amount = parseInt(slotParts.get(i));
 				}
-				if (amount != 0 && !activity.isBlank()) {
-					_durations[dCounter] = new DurationWithActivity(amount, activity);
-					dCounter++;
-					activity = "";
-					amount = 0;
-				}
+				if (amount != 0) {
+                    assert activity != null;
+                    if (!activity.isBlank()) {
+                        _durations[dCounter] = new DurationWithActivity(amount, activity);
+                        dCounter++;
+                        activity = null;
+                        amount = 0;
+                    }
+                }
 			}
 		}
 
@@ -104,6 +108,10 @@ public class Slot {
 			slot.durations = _durations;
 
 		return slot;
+	}
+
+	public void setAction(String action){
+
 	}
 
 	private static List<String> splitSlotStringToItsParts(String slotString){
