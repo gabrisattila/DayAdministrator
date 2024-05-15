@@ -238,7 +238,7 @@ public class I18N {
 
         public enum actionType {Értékes, Szükséges, Szabadidő}
 
-        public static actionType getTypeOfAction(String action) throws AskTheUserForInformation {
+        public static actionType getActionType(String action) throws AskTheUserForInformation {
             for (String key : ÉrtékesActionTerms.keySet()){
                 for (String értékes : ÉrtékesActionTerms.get(key)){
                     if (textContainsString(action, értékes)){
@@ -291,102 +291,134 @@ public class I18N {
             return term.toLowerCase();
         }
 
-        public static final Map<String, List<String>> ÉrtékesActionTerms = new HashMap<>(){{
-            put("Munka", new ArrayList<>(){{
+        public static final Map<actionGroup, List<String>> ÉrtékesActionTerms = new HashMap<>(){{
+            put(actionGroup.Munka, new ArrayList<>(){{
                 add("meló"); add("munka"); add("meló:"); add("munka:"); add("interjúk"); add("interjú");
                 add("próba feladat"); add("emailek"); add("levelek"); add("levelezés"); add("próbafeladat"); add("próbafeladatok");
                 add("próba feladatok"); add("munka keresés"); add("munkakeresés");
 
             }});
-            put("Olvasás", new ArrayList<>(){{
+            put(actionGroup.Olvasás, new ArrayList<>(){{
                 add("olv."); add("olv"); add("olvas"); add("olvas."); add("olvasás"); add(" olv");
             }});
-            put("Írás", new ArrayList<>(){{
+            put(actionGroup.Írás, new ArrayList<>(){{
                 add("írás"); add("ír"); add("ír."); add("levél");
             }});
-            put("Videózás", new ArrayList<>(){{
+            put(actionGroup.Videózás, new ArrayList<>(){{
                 add("vágás"); add("vág"); add("vág."); add("daily vlog"); add("vlog");
             }});
-            put("Sport", new ArrayList<>(){{
+            put(actionGroup.Sport, new ArrayList<>(){{
                 add("futás"); add("fut."); add("fut"); add("nyújtás"); add("nyújt."); add("nyújt"); add("fekvő"); add("plank");
                 add("planche"); add("planc"); add("planch"); add(" km "); add("body"); add("full body"); add("tánc"); add("parkour");
                 add("kondi"); add("edzés"); add("workout");
             }});
-            put("Tanulás", new ArrayList<>(){{
+            put(actionGroup.Tanulás, new ArrayList<>(){{
                 add("anki"); add("tan."); add("tanul."); add("tanulás"); add("gyak."); add("gyak.");
                 add("tanuló kártyák"); add("tananyag"); add("töri"); add("matek");
             }});
-            put("IG", new ArrayList<>(){{
-                add("sujtás"); add("megbeszélés"); add("akció"); add("matric"); add("anyag"); add(" ig "); add(" ig. ");
+            put(actionGroup.IG_ért, new ArrayList<>(){{
+                add("sujtás"); add("megbeszélés"); add("akció"); add("matricázás");
+                add("matric"); add("anyag"); add(" ig "); add(" ig. ");
             }});
-            put("Templom", new ArrayList<>(){{
+            put(actionGroup.Templom, new ArrayList<>(){{
                 add("mise"); add("lelkiismeret vizsgálat"); add("gyónás"); add("szertartás"); add("gyak.");
             }});
-            put("Egyéb", new ArrayList<>(){{
+            put(actionGroup.Egyéb_ért, new ArrayList<>(){{
                 add("naptár"); add("tervezése"); add("jövő heti"); add("jövő hét"); add("terv"); add("intézés");
             }});
         }};
 
-        public static final Map<String, List<String>> SzükségesActionTerms = new HashMap<>(){{
-            put("Reggeli tevékenységek", new ArrayList<>(){{
+        public static final Map<actionGroup, List<String>> SzükségesActionTerms = new HashMap<>(){{
+            put(actionGroup.Reggeli_tevékenységek, new ArrayList<>(){{
                 add("reggeli"); add("reggel"); add("borotválkozás"); add("borot."); add("fogmosás"); add("hideg zuhany"); add("zuhany");
                 add("hideg"); add("méreckedés"); add("mér."); add("mérés"); add("póz."); add("pózol."); add("pózól"); add("pózolás");
             }});
-            put("Ebéd és vagy főzés", new ArrayList<>(){{
+            put(actionGroup.Ebéd_és_vagy_főzés, new ArrayList<>(){{
                 add("ebéd"); add("főzés"); add("főz."); add("főz"); add("sali."); add("sali"); add("saláta"); add("másnapra");
                 add("napra"); add("elrakás"); add("elrak."); add("készítés"); add("készít"); add("készít");
                 add("elkészítés"); add("elkészít.");
             }});
-            put("Esti tevékenységek", new ArrayList<>(){{
+            put(actionGroup.Esti_tevékenységek, new ArrayList<>(){{
                 add("fogmosás"); add("fog."); add("tus"); add("hajmosás"); add("haj."); add("vacsi"); add("vacsora"); add("vacsi.");
                 add("másnapra"); add("előkészítés"); add("előkészít.");
             }});
-            put("Utazás (Tevékenység nélkül / Valós idejű)", new ArrayList<>(){{
+            put(actionGroup.Utazás_és_készülődés, new ArrayList<>(){{
                 add("ut."); add("utazás"); add("utaz"); add("utaz.");
             }});
-            put("Bevásárlás", new ArrayList<>(){{
+            put(actionGroup.Bevásárlás, new ArrayList<>(){{
                 add("bev."); add("bev.:"); add("bevásárlás"); add("vásárlás"); add("bev:");
                 add("spar"); add("coop"); add("aldi"); add("lidl"); add("príma"); add("prima"); add("cba");
             }});
-            put("Takarítás", new ArrayList<>(){{
+            put(actionGroup.Takarítás, new ArrayList<>(){{
                 add("takarítás"); add("nagy takarítás"); add("takar."); add("tak."); add("takarít"); add("takarít.");
                 add("porszívózás"); add("porsz."); add("por."); add("felmosás"); add("felmos."); add("interjúk");
                 add("portörlés"); add("seprés"); add("söprés"); add("rend."); add("rend rakás"); add("rakás");
             }});
-            put("Mosás + teregetés", new ArrayList<>(){{
+            put(actionGroup.Mosás, new ArrayList<>(){{
                 add("mosás"); add("teregetés"); add("mos."); add("ter."); add("tereget."); add("tereget");
                 add("ruhák beszedése"); add("ruhák"); add("beszedése"); add("beszed.");
             }});
-            put("Vasalás", new ArrayList<>(){{
+            put(actionGroup.Vasalás, new ArrayList<>(){{
                 add("vasalás"); add("vas."); add("vasal.");
             }});
-            put("Daily", new ArrayList<>(){{
+            put(actionGroup.Daily, new ArrayList<>(){{
                 add("napi"); add("napi teendők"); add("teendők"); add("összegzés"); add("összegzése");
             }});
-            put("Egyéb (Összesen / Darabolva)", new ArrayList<>(){{
+            put(actionGroup.Egyéb_szab, new ArrayList<>(){{
                 add("pénz felvétel"); add("bürokrácia"); add("ügyintézés"); add("gyak"); add("intézés");
             }});
         }};
 
-        public static final Map<String, List<String>> SzabadidőActionTerms = new HashMap<>(){{
-            put("Család (Összesen / Darabolva)", new ArrayList<>(){{
+        public static final Map<actionGroup, List<String>> SzabadidőActionTerms = new HashMap<>(){{
+            put(actionGroup.Család, new ArrayList<>(){{
                 add("film"); add("filmnézés"); add("gyak"); add("apa"); add("anya"); add("levi"); add("levente"); add("eme"); add("emese");
                 add("apa"); add("társas"); add("beszélgetés"); add("család"); add("családi ebéd"); add("családi");
             }});
-            put("Kórus", new ArrayList<>(){{
+            put(actionGroup.Kórus, new ArrayList<>(){{
                 add("próba"); add("fellépés"); add("koncert"); add("konc."); add("apa"); add("kórus");
             }});
-            put("IG", new ArrayList<>(){{
+            put(actionGroup.IG_szabad, new ArrayList<>(){{
                 add("tali");
             }});
-            put("Időtöltés mással", new ArrayList<>(){{
+            put(actionGroup.Időtöltés_Mással, new ArrayList<>(){{
                 add("lilla"); add("gerda"); add("d. geri"); add("máté"); add("v. geri"); add("geri"); add("telefon"); add("teló"); add("schönbi");
                 add("b. réka"); add("marci"); add("kávé"); add("mandi"); add("lugosi"); add("apa"); add("berni"); add("színház");
             }});
-            put("Időtöltés több emberrel", new ArrayList<>(){{
+            put(actionGroup.Időtöltés_több_emberrel, new ArrayList<>(){{
                 add("kórusos"); add("srácok"); add("kolis"); add("kkf"); add("mozi");
             }});
         }};
+
+        public enum actionGroup {
+            Munka, Olvasás, Írás, Önálló_munka, Videózás, Közélet, Sport, IG_ért, Tanulás, Templom, Egyéb_ért,
+
+            Reggeli_tevékenységek, Ebéd_és_vagy_főzés, Esti_tevékenységek, Utazás_és_készülődés, Bevásárlás, Takarítás, Mosás, Mosogatás, Vasalás, Daily, Egyéb_szük,
+
+            Család, Kórus, IG_szabad, Időtöltés_Mással, Időtöltés_több_emberrel, Egyéb_szab;
+
+            @Override
+            public String toString() {
+                if (super.toString().contains("_"))
+                    return super.toString().replace("_", " ");
+                return super.toString();
+            }
+        }
+
+        public static actionGroup getActionGroup(String action){
+            for (actionGroup group : ÉrtékesActionTerms.keySet()){
+                if (ÉrtékesActionTerms.get(group).contains(action))
+                    return group;
+            }
+            for (actionGroup group : SzükségesActionTerms.keySet()){
+                if (SzükségesActionTerms.get(group).contains(action))
+                    return group;
+            }
+            for (actionGroup group : SzabadidőActionTerms.keySet()){
+                if (SzabadidőActionTerms.get(group).contains(action))
+                    return group;
+            }
+            return null;
+        }
     }
 
 }

@@ -1,14 +1,12 @@
 package Classes.Parser;
 
 import Classes.I18N.AskTheUserForInformation;
-import Classes.I18N.I18N;
+import Classes.I18N.I18N.ActionTerms;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Comparator;
 
-import static Classes.I18N.I18N.ActionTerms.getActionGroupOfAnAction;
-import static Classes.I18N.I18N.ActionTerms.getTypeOfAnAction;
 import static Classes.I18N.I18N.notNull;
 import static java.util.Objects.isNull;
 
@@ -16,25 +14,25 @@ import static java.util.Objects.isNull;
 @Setter
 public class Action {
 
-    private I18N.ActionTerms.actionType actionType;
+    private ActionTerms.actionType actionType;
 
-    private I18N.ActionTerms.actionGroup actionGroup;
+    private ActionTerms.actionGroup actionGroup;
 
     private String action;
 
     public Action(String action) throws AskTheUserForInformation {
-        actionGroup = getActionGroupOfAnAction(action);
-        actionType = getTypeOfAnAction(action);
+        actionGroup = ActionTerms.getActionGroup(action);
+        actionType = ActionTerms.getActionType(action);
         this.action = action;
     }
 
-    public Action(String action, I18N.ActionTerms.actionType type) throws AskTheUserForInformation {
+    public Action(String action, ActionTerms.actionType type) {
         actionType = type;
-        actionGroup = getActionGroupOfAnAction(action);
+        actionGroup = ActionTerms.getActionGroup(action);
         this.action = action;
     }
 
-    public Action(String action, I18N.ActionTerms.actionGroup group, I18N.ActionTerms.actionType type){
+    public Action(String action, ActionTerms.actionGroup group, ActionTerms.actionType type){
         actionType = type;
         actionGroup = group;
         this.action = action;

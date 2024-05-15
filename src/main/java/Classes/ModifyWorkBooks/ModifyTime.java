@@ -20,7 +20,7 @@ import static Classes.Day.getDay;
 import static Classes.I18N.I18N.*;
 import static Classes.I18N.I18N.ActionTerms.actionType.*;
 import static Classes.I18N.I18N.ActionTerms.getTitleOfAnAction;
-import static Classes.I18N.I18N.ActionTerms.getTypeOfAnAction;
+import static Classes.I18N.I18N.ActionTerms.getActionType;
 import static Classes.OwnFileTypes.Excel.*;
 import static java.util.Objects.requireNonNull;
 
@@ -224,15 +224,15 @@ public class ModifyTime {
 	}
 
 	private boolean usualÉrtékesContains(String action) throws AskTheUserForInformation {
-		return Értékes == getTypeOfAnAction(action);
+		return Értékes == getActionType(action);
 	}
 
 	private boolean usualSzükségesContains(String action) throws AskTheUserForInformation {
-		return Szükséges == getTypeOfAnAction(action);
+		return Szükséges == getActionType(action);
 	}
 
 	private boolean usualSzabadidőContains(String action) throws AskTheUserForInformation {
-		return Szabadidő == getTypeOfAnAction(action);
+		return Szabadidő == getActionType(action);
 	}
 
 	private boolean previusÉrtékesContains(String action) throws NoSuchCellException {
