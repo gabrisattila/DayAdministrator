@@ -239,21 +239,21 @@ public class I18N {
         public enum actionType {Értékes, Szükséges, Szabadidő}
 
         public static actionType getActionType(String action) throws AskTheUserForInformation {
-            for (String key : ÉrtékesActionTerms.keySet()){
+            for (actionGroup key : ÉrtékesActionTerms.keySet()){
                 for (String értékes : ÉrtékesActionTerms.get(key)){
                     if (textContainsString(action, értékes)){
                         return actionType.Értékes;
                     }
                 }
             }
-            for (String key : SzükségesActionTerms.keySet()){
+            for (actionGroup key : SzükségesActionTerms.keySet()){
                 for (String szükséges : SzükségesActionTerms.get(key)){
                     if (textContainsString(action, szükséges)){
                         return actionType.Szükséges;
                     }
                 }
             }
-            for (String key : SzabadidőActionTerms.keySet()){
+            for (actionGroup key : SzabadidőActionTerms.keySet()){
                 for (String szabadidő : SzabadidőActionTerms.get(key)){
                     if (textContainsString(action, szabadidő)){
                         return actionType.Szabadidő;
@@ -266,21 +266,21 @@ public class I18N {
         public static String getTitleOfAnAction(String action, actionType typeOfAction) {
             switch (typeOfAction){
                 case Értékes -> {
-                    for (String headLine : ÉrtékesActionTerms.keySet()){
+                    for (actionGroup headLine : ÉrtékesActionTerms.keySet()){
                         if (ÉrtékesActionTerms.get(headLine).contains(action))
-                            return headLine;
+                            return headLine.toString();
                     }
                 }
                 case Szükséges -> {
-                    for (String headLine : SzükségesActionTerms.keySet()){
+                    for (actionGroup headLine : SzükségesActionTerms.keySet()){
                         if (SzükségesActionTerms.get(headLine).contains(action))
-                            return headLine;
+                            return headLine.toString();
                     }
                 }
                 case Szabadidő -> {
-                    for (String headLine : SzabadidőActionTerms.keySet()){
+                    for (actionGroup headLine : SzabadidőActionTerms.keySet()){
                         if (SzabadidőActionTerms.get(headLine).contains(action))
-                            return headLine;
+                            return headLine.toString();
                     }
                 }
             }

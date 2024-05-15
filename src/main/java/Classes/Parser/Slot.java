@@ -65,6 +65,10 @@ public class Slot {
 		}
 	}
 
+	public String getActionString(){
+		return action.getAction();
+	}
+
 	public static Slot copy(Slot toCopy){
 		return new Slot(toCopy.getFrom(), toCopy.getTo(), toCopy.getAction());
 	}

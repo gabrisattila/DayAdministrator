@@ -141,7 +141,7 @@ public class ModifyTime {
 		Map<String, List<Slot>> activities = new HashMap<>();
 		String titleOfAction;
 		for (Slot slot : slots){
-			titleOfAction = getTitleOfAnAction(slot.getAction(), typeOfSlots);
+			titleOfAction = getTitleOfAnAction(slot.getActionString(), typeOfSlots);
 			if (notNull(activities.get(titleOfAction))){
 				activities.get(titleOfAction).add(slot);
 			}else {
@@ -155,10 +155,10 @@ public class ModifyTime {
 		for (Slot slot : slots){
 			writeActionToACell(
 					excel.getCellFromRowByTitle(
-							getTitleOfAnAction(slot.getAction(), typeOfSlots),
+							getTitleOfAnAction(slot.getActionString(), typeOfSlots),
 							todayMiRow
 					),
-					slot.getAction()
+					slot.getActionString()
 			);
 		}
 	}
