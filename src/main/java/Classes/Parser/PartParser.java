@@ -1,5 +1,7 @@
 package Classes.Parser;
 
+import Classes.I18N.NoSuchCellException;
+
 import java.io.IOException;
 
 public abstract class PartParser {
@@ -12,6 +14,6 @@ public abstract class PartParser {
 		originParser = parser;
 	}
 
-	abstract void parse() throws IOException;
+	abstract void parse() throws IOException, NoSuchCellException;
 
 }

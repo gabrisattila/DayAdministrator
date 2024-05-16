@@ -1,3 +1,9 @@
+- Az első két szó adott Slot string részében jelöli az action group-ot.
+- Utána jöhet, ha jön maga a konkrét tevékenység.
+- Ha az első egy vagy két szó tehát nem szerepel semelyik szokványos ActionTerm között,
+  akkor rákérdezünk a felhasználónál, mégis mit csinált.
+
+
 2024.04.19.; 5:03;
 610-710 reggel; 86,5 kg; 1 kávé;
 710-810 ut. - 30 olv.; 810-1205 meló;

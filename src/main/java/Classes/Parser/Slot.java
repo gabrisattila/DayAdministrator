@@ -1,6 +1,8 @@
 package Classes.Parser;
 
 import Classes.I18N.AskTheUserForInformation;
+import Classes.I18N.I18N;
+import Classes.I18N.NoSuchCellException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,12 +13,22 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import Classes.I18N.I18N.ActionTerms;
+
 import static Classes.I18N.AskTheUserForInformation.getStringAnswer;
-import static Classes.I18N.I18N.notNull;
-import static Classes.I18N.I18N.textContainsString;
+import static Classes.I18N.I18N.*;
+import static Classes.I18N.I18N.ActionTerms.actionGroup.getActionGroup;
+import static Classes.I18N.I18N.ActionTerms.actionType.getActionType;
+import static Classes.Parser.Action.*;
 import static java.lang.Integer.parseInt;
 import static java.util.Objects.isNull;
 
+/**
+ * - Az első két szó adott Slot string részében jelöli az action group-ot.
+ * - Utána jöhet, ha jön maga a konkrét tevékenység.
+ * - Ha az első egy vagy két szó tehát nem szerepel semelyik szokványos ActionTerm között,
+ *   akkor rákérdezünk a felhasználónál, mégis mit csinált.
+ */
 @Getter
 @Setter
 public class Slot {
@@ -73,14 +85,13 @@ public class Slot {
 		return new Slot(toCopy.getFrom(), toCopy.getTo(), toCopy.getAction());
 	}
 
-	public static Slot createSlot(String slotInText, String next) throws IOException, AskTheUserForInformation {
+	public static Slot createSlot(String slotInText, String next) throws IOException, NoSuchCellException {
 		List<String> slotParts = splitSlotStringToItsParts(slotInText);
 
 		LocalTime from = convertFirstTimeStrToTime(slotParts.get(0));
 
 		LocalTime to = convertSecondTimeStrToTime(slotParts.get(1), from, next, slotParts.get(2));
 
-		Action action = new Action(slotParts.get(2));
 		DurationWithActivity[] _durations = null;
 
 		if (slotParts.size() > 3){
@@ -105,6 +116,7 @@ public class Slot {
 			}
 		}
 
+		Action action = createAction(from, to, slotParts.get(2));
 		Slot slot = new Slot(from, to, action);
 		modifyTimeAmountInsteadOfAfterMidnightTime(slot);
 
@@ -112,10 +124,6 @@ public class Slot {
 			slot.durations = _durations;
 
 		return slot;
-	}
-
-	public void setAction(String action){
-
 	}
 
 	private static List<String> splitSlotStringToItsParts(String slotString){

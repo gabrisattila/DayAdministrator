@@ -1,5 +1,6 @@
 package Classes.Parser;
 
+import Classes.I18N.NoSuchCellException;
 import lombok.Data;
 
 import java.io.IOException;
@@ -94,7 +95,7 @@ public class Parser {
 
     //Sub Parsing
 
-    public void parseWithSubParsers() throws IOException {
+    public void parseWithSubParsers() throws IOException, NoSuchCellException {
         if (!measures.isBlank()) {
             measureParser = new MeasureParser(this);
             measureParser.parse();

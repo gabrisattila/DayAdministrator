@@ -36,7 +36,7 @@ public class Editor {
      * This constructor parse the text with time, measure and money parser to actual, usable variables.
      * After it creates the day object which stores all that information.
      */
-    public Editor(String dayText) throws IOException {
+    public Editor(String dayText) throws IOException, NoSuchCellException {
         this.dayText = dayText;
         setUpVars();
         createDay();
@@ -51,7 +51,7 @@ public class Editor {
         excelModifier.modifyAndSave();
     }
 
-    private void setUpVars() throws IOException {
+    private void setUpVars() throws IOException, NoSuchCellException {
         textParser = new Parser(dayText);
         textParser.parseWithSubParsers();
     }

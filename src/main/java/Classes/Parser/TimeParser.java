@@ -1,6 +1,7 @@
 package Classes.Parser;
 
 import Classes.I18N.AskTheUserForInformation;
+import Classes.I18N.NoSuchCellException;
 import lombok.Getter;
 
 import java.io.IOException;
@@ -19,13 +20,13 @@ public class TimeParser extends PartParser{
 	}
 
 	@Override
-	public void parse() throws IOException {
+	public void parse() throws IOException, NoSuchCellException {
 		part = originParser.getTime();
 		String[] preListOfSlots = part.split(";");
 		time = new Time(makeSlots(preListOfSlots));
 	}
 
-	private LinkedList<Slot> makeSlots(String[] slotsInString) throws IOException, AskTheUserForInformation {
+	private LinkedList<Slot> makeSlots(String[] slotsInString) throws IOException, NoSuchCellException {
 		LinkedList<Slot> slots = new LinkedList<>();
 		for (int i = 0; i < slotsInString.length; i++) {
 			if (i < slotsInString.length - 1){

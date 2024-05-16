@@ -1,6 +1,7 @@
 package Classes.ModifyWorkBooks;
 
 import Classes.Editor;
+import Classes.I18N.NoSuchCellException;
 import Classes.Parser.Slot;
 import junit.framework.TestCase;
 
@@ -15,7 +16,7 @@ public class ModifyTimeTest extends TestCase {
 
     String dayText;
 
-    public void testSeparatedTimePartsOnÉrtékes() throws IOException {
+    public void testSeparatedTimePartsOnÉrtékes() throws IOException, NoSuchCellException {
         dayText =
                 "2024.04.19.; 5:03;\n" +
 //				"610-710 reggel; 86,5 kg; 1 kávé;\n" +

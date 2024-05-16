@@ -1,6 +1,9 @@
 package Classes.I18N;
 
 
+import Classes.OwnFileTypes.Excel;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -33,6 +36,36 @@ public class I18N {
     public static final String MoneyExcelFileName = "Money_Proba.xlsx";
 
     public static final String TimeExcelFileName = "The_Time_Proba.xlsx";
+
+    public static final Excel Az_Idő_Maga;
+
+	static {
+		try {
+			Az_Idő_Maga = Excel.openExcel(TimeExcelFileName);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+    public static final Excel Mérőszámok;
+
+    static {
+        try {
+            Mérőszámok = Excel.openExcel(MeasureExcelFileName);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static final Excel Kiadások_Bevételek;
+
+    static {
+        try {
+            Kiadások_Bevételek = Excel.openExcel(MoneyExcelFileName);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     //endregion
 
@@ -236,33 +269,6 @@ public class I18N {
      */
     public static class ActionTerms{
 
-        public enum actionType {Értékes, Szükséges, Szabadidő}
-
-        public static actionType getActionType(String action) throws AskTheUserForInformation {
-            for (actionGroup key : ÉrtékesActionTerms.keySet()){
-                for (String értékes : ÉrtékesActionTerms.get(key)){
-                    if (textContainsString(action, értékes)){
-                        return actionType.Értékes;
-                    }
-                }
-            }
-            for (actionGroup key : SzükségesActionTerms.keySet()){
-                for (String szükséges : SzükségesActionTerms.get(key)){
-                    if (textContainsString(action, szükséges)){
-                        return actionType.Szükséges;
-                    }
-                }
-            }
-            for (actionGroup key : SzabadidőActionTerms.keySet()){
-                for (String szabadidő : SzabadidőActionTerms.get(key)){
-                    if (textContainsString(action, szabadidő)){
-                        return actionType.Szabadidő;
-                    }
-                }
-            }
-            throw new AskTheUserForInformation(action, "Time");
-        }
-
         public static String getTitleOfAnAction(String action, actionType typeOfAction) {
             switch (typeOfAction){
                 case Értékes -> {
@@ -389,6 +395,51 @@ public class I18N {
             }});
         }};
 
+        public enum actionType {
+            Értékes, Szükséges, Szabadidő;
+
+            public static actionType getActionType(String action) {
+                action = lower(action);
+                for (actionGroup key : ÉrtékesActionTerms.keySet()){
+                    for (String értékes : ÉrtékesActionTerms.get(key)){
+                        if (textContainsString(action, értékes)){
+                            return actionType.Értékes;
+                        }
+                    }
+                }
+                for (actionGroup key : SzükségesActionTerms.keySet()){
+                    for (String szükséges : SzükségesActionTerms.get(key)){
+                        if (textContainsString(action, szükséges)){
+                            return actionType.Szükséges;
+                        }
+                    }
+                }
+                for (actionGroup key : SzabadidőActionTerms.keySet()){
+                    for (String szabadidő : SzabadidőActionTerms.get(key)){
+                        if (textContainsString(action, szabadidő)){
+                            return actionType.Szabadidő;
+                        }
+                    }
+                }
+                return null;
+            }
+
+            public static actionType getActionType(actionGroup actionGroup){
+                switch (actionGroup){
+                    case Munka, Olvasás, Írás, Önálló_munka, Videózás, Közélet, Sport, IG_ért, Tanulás, Templom, Egyéb_ért -> {
+                        return Értékes;
+                    }
+                    case Reggeli_tevékenységek, Ebéd_és_vagy_főzés, Esti_tevékenységek, Utazás_és_készülődés, Bevásárlás, Takarítás, Mosás, Mosogatás, Vasalás, Daily, Egyéb_szük -> {
+                        return Szükséges;
+                    }
+                    case Család, Kórus, IG_szabad, Időtöltés_Mással, Időtöltés_több_emberrel, Egyéb_szab -> {
+                        return Szabadidő;
+                    }
+                }
+                throw new RuntimeException("\nYou trying to get actionType from actionGroup, but the group you just given is not valid.\n");
+            }
+        }
+
         public enum actionGroup {
             Munka, Olvasás, Írás, Önálló_munka, Videózás, Közélet, Sport, IG_ért, Tanulás, Templom, Egyéb_ért,
 
@@ -402,23 +453,25 @@ public class I18N {
                     return super.toString().replace("_", " ");
                 return super.toString();
             }
+
+            public static actionGroup getActionGroup(String action){
+                action = lower(action);
+                for (actionGroup group : ÉrtékesActionTerms.keySet()){
+                    if (ÉrtékesActionTerms.get(group).contains(action))
+                        return group;
+                }
+                for (actionGroup group : SzükségesActionTerms.keySet()){
+                    if (SzükségesActionTerms.get(group).contains(action))
+                        return group;
+                }
+                for (actionGroup group : SzabadidőActionTerms.keySet()){
+                    if (SzabadidőActionTerms.get(group).contains(action))
+                        return group;
+                }
+                return null;
+            }
         }
 
-        public static actionGroup getActionGroup(String action){
-            for (actionGroup group : ÉrtékesActionTerms.keySet()){
-                if (ÉrtékesActionTerms.get(group).contains(action))
-                    return group;
-            }
-            for (actionGroup group : SzükségesActionTerms.keySet()){
-                if (SzükségesActionTerms.get(group).contains(action))
-                    return group;
-            }
-            for (actionGroup group : SzabadidőActionTerms.keySet()){
-                if (SzabadidőActionTerms.get(group).contains(action))
-                    return group;
-            }
-            return null;
-        }
     }
 
 }

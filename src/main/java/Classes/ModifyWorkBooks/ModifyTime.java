@@ -20,9 +20,8 @@ import static Classes.Day.getDay;
 import static Classes.I18N.I18N.*;
 import static Classes.I18N.I18N.ActionTerms.actionType.*;
 import static Classes.I18N.I18N.ActionTerms.getTitleOfAnAction;
-import static Classes.I18N.I18N.ActionTerms.getActionType;
 import static Classes.OwnFileTypes.Excel.*;
-import static java.util.Objects.requireNonNull;
+import static Classes.Parser.Action.previouslyContains;
 
 @Getter
 public class ModifyTime {
@@ -197,30 +196,30 @@ public class ModifyTime {
 
 
 	private boolean isÉrtékes(Slot slot) throws NoSuchCellException, AskTheUserForInformation {
-		String action = slot.getAction();
+		String action = slot.getActionString();
 		return usualÉrtékesContains(action) || previusÉrtékesContains(action);
 	}
 
 	protected boolean isÉrtékesForTest(Slot slot) throws AskTheUserForInformation {
-		return usualÉrtékesContains(slot.getAction());
+		return usualÉrtékesContains(slot.getActionString());
 	}
 
 	private boolean isSzükséges(Slot slot) throws NoSuchCellException, AskTheUserForInformation {
-		String action = slot.getAction();
+		String action = slot.getActionString();
 		return usualSzükségesContains(action) || previousSzükségesContains(action);
 	}
 
 	protected boolean isSzükségesForTest(Slot slot) throws AskTheUserForInformation {
-		return usualSzükségesContains(slot.getAction());
+		return usualSzükségesContains(slot.getActionString());
 	}
 
 	private boolean isSzabadidő(Slot slot) throws NoSuchCellException, AskTheUserForInformation {
-		String action = slot.getAction();
+		String action = slot.getActionString();
 		return usualSzabadidőContains(action) || previousSzabadidőContains(action);
 	}
 
 	protected boolean isSzabadidőForTest(Slot slot) throws AskTheUserForInformation {
-		return usualSzabadidőContains(slot.getAction());
+		return usualSzabadidőContains(slot.getActionString());
 	}
 
 	private boolean usualÉrtékesContains(String action) throws AskTheUserForInformation {
@@ -247,19 +246,7 @@ public class ModifyTime {
 		return previouslyContains(action, excel.getSheet("Szabadidő_Mi"));
 	}
 
-	private boolean previouslyContains(String action, Sheet sheet) throws NoSuchCellException {
-		LocalDate oneAndAHalfMonthEarlier = getDay().dateOfDay.minusDays(45);
-		Row startSearchFromHere = getRowByDateOnASheet(oneAndAHalfMonthEarlier, sheet);
-		Row endSearchHere = getTodayRowOnASheet(sheet);
-		for (int i = startSearchFromHere.getRowNum(); i < endSearchHere.getRowNum(); i++) {
-			for (Cell cell : sheet.getRow(i)){
-				if (textContainsString(cell.toString(), action)){
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+
 
 	protected Map<String, String> makeSeparatedTimeParts(Map<String, List<Slot>> activities){
 		Map<String, String> mapOfActivityTypesAndTimeStrings = new HashMap<>();
