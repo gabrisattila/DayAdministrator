@@ -47,26 +47,25 @@ public class I18N {
 		}
 	}
 
-    public static final Excel Mérőszámok;
+//    public static final Excel Mérőszámok;
+//
+//    static {
+//        try {
+//            Mérőszámok = Excel.openExcel(MeasureExcelFileName);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-    static {
-        try {
-            Mérőszámok = Excel.openExcel(MeasureExcelFileName);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static final Excel Kiadások_Bevételek;
-
-    static {
-        try {
-            Kiadások_Bevételek = Excel.openExcel(MoneyExcelFileName);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
+//    public static final Excel Kiadások_Bevételek;
+//
+//    static {
+//        try {
+//            Kiadások_Bevételek = Excel.openExcel(MoneyExcelFileName);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
     //endregion
 
     public static final String delimiterBetweenTextParts = ";";

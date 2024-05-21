@@ -1,6 +1,5 @@
 package Classes.Parser;
 
-import Classes.I18N.AskTheUserForInformation;
 import Classes.I18N.I18N.ActionTerms;
 import Classes.I18N.NoSuchCellException;
 import Classes.OwnFileTypes.Excel;
@@ -14,6 +13,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Comparator;
+import java.util.Objects;
 
 import static Classes.Day.getDay;
 import static Classes.I18N.AskTheUserForInformation.getStringAnswer;
@@ -22,6 +22,7 @@ import static Classes.I18N.I18N.ActionTerms.actionGroup.getActionGroup;
 import static Classes.I18N.I18N.ActionTerms.actionType.getActionType;
 import static Classes.OwnFileTypes.Excel.getRowByDateOnASheet;
 import static Classes.OwnFileTypes.Excel.getTodayRowOnASheet;
+import static Classes.I18N.I18N.notNull;
 import static java.util.Objects.isNull;
 
 @Getter
@@ -52,7 +53,7 @@ public class Action {
         this.action = action;
     }
 
-    public static Action createAction(LocalTime from, LocalTime to, String action) throws IOException, NoSuchCellException {
+    public static Action createAction(String action, Object... objects) throws IOException, NoSuchCellException {
         String[] actionParts = action.split(" ");
         ActionTerms.actionGroup group = getActionGroup(actionParts[0]);
         ActionTerms.actionType type = null;
@@ -64,13 +65,23 @@ public class Action {
                     actualAction.append(" ").append(actionParts[i]);
                 }
             }else {
-                actualAction.append(whatWasTheActualActionBetween(from, to, group));
+                actualAction.append(
+                        whatWasTheActualAction(
+                                group,
+                                objects[0],
+                                objects.length > 1 ? objects[1] : null)
+                );
             }
         }else{
             if (actionParts.length > 1){
                 group = getActionGroup(actionParts[0] + " " + actionParts[1]);
                 if (actionParts.length > 2 && notNull(group)){
-                    actualAction = new StringBuilder(whatWasTheActualActionBetween(from, to, group));
+                    actualAction = new StringBuilder(Objects.requireNonNull(
+                            whatWasTheActualAction(
+                                    group,
+                                    objects[0],
+                                    objects.length > 1 ? objects[1] : null)
+                    ));
                 }
             }
             else
@@ -109,6 +120,21 @@ public class Action {
 
     public int compareTo(Action action) {
         return ActionComparator().compare(this, action);
+    }
+
+    public static String whatWasTheActualAction(ActionTerms.actionGroup actionGroup, Object... objects) throws IOException {
+        if (objects[0] instanceof Integer){
+            return whatWasTheActualActionUnder((Integer) objects[0], actionGroup);
+        } else if (objects[0] instanceof LocalTime) {
+            return whatWasTheActualActionBetween((LocalTime) objects[0], (LocalTime) objects[1], actionGroup);
+        }
+        return null;
+    }
+
+    public static String whatWasTheActualActionUnder(int amount, ActionTerms.actionGroup actionGroup) throws IOException {
+        System.out.println("\n" + amount + " percnyi " +
+            actionGroup + " -t végeztél.\nEgész konkrétan mit?\n");
+        return getStringAnswer();
     }
 
     public static String whatWasTheActualActionBetween(LocalTime from,

@@ -36,6 +36,7 @@ public class Excel extends XSSFWorkbook {
 	}
 
 	public static Excel openExcel(String path) throws IOException {
+		path = dataExcelsPath + path;
 		Excel excel = new Excel(new FileInputStream(path));
 		excel.path = path;
 		return excel;
@@ -134,7 +135,7 @@ public class Excel extends XSSFWorkbook {
 	public static boolean containsDate(Cell cell, LocalDate date){
 		try {
 			return cell.getLocalDateTimeCellValue().toLocalDate().equals(date);
-		}catch (IllegalStateException e){
+		} catch (RuntimeException ex){
 			return false;
 		}
 	}

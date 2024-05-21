@@ -39,22 +39,22 @@ public class ExcelModifier {
 	private void collectExcels() throws IOException {
 		excelFiles = new ArrayList<>();
 
-		if (notNull(getDay().getMeasures())){
-			excelFiles.add(openExcel(dataExcelsPath + MeasureExcelFileName));
-		}
-		if (notNull(getDay().getMoney())){
-			excelFiles.add(openExcel(dataExcelsPath + MoneyExcelFileName));
-		}
+//		if (notNull(getDay().getMeasures())){
+//			excelFiles.add(openExcel(MeasureExcelFileName));
+//		}
+//		if (notNull(getDay().getMoney())){
+//			excelFiles.add(openExcel(MoneyExcelFileName));
+//		}
 		if (notNull(getDay().getTime())){
-			excelFiles.add(openExcel(dataExcelsPath + TimeExcelFileName));
+			excelFiles.add(openExcel(TimeExcelFileName));
 		}
 	}
 
 	//region Modify
 	
 	public void modifyAndSave() throws NoSuchCellException, IOException {
-		//placeMeasuresIfTheresAny(getDay().getMeasures());
-		//placeMoneyIfTheresAny(getDay().getMoney());
+//		placeMeasuresIfTheresAny(getDay().getMeasures());
+//		placeMoneyIfTheresAny(getDay().getMoney());
 		placeTimeIfTheresAny(getDay().getTime());
 	}
 

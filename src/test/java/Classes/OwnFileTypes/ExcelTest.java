@@ -21,7 +21,7 @@ import static org.junit.Assert.assertThrows;
 public class ExcelTest extends TestCase {
 
     public void testExcelOpeningAndWriting() throws IOException {
-        Excel excel = openExcel(dataExcelsPath + MeasureExcelFileName);
+        Excel excel = openExcel(MeasureExcelFileName);
         placeValuesInCellsProba(excel);
         excel.save();
     }

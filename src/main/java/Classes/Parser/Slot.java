@@ -1,7 +1,5 @@
 package Classes.Parser;
 
-import Classes.I18N.AskTheUserForInformation;
-import Classes.I18N.I18N;
 import Classes.I18N.NoSuchCellException;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,11 +11,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import Classes.I18N.I18N.ActionTerms;
-
 import static Classes.I18N.AskTheUserForInformation.getStringAnswer;
 import static Classes.I18N.I18N.*;
-import static Classes.I18N.I18N.ActionTerms.actionGroup.getActionGroup;
 import static Classes.I18N.I18N.ActionTerms.actionType.getActionType;
 import static Classes.Parser.Action.*;
 import static java.lang.Integer.parseInt;
@@ -96,18 +91,18 @@ public class Slot {
 
 		if (slotParts.size() > 3){
 			_durations = new DurationWithActivity[(slotParts.size() - 3) / 2];
-			int amount = 0; Action activity = null;
+			int amount = 0; String activity = null;
 			int dCounter = 0;
 			for (int i = 3; i < slotParts.size(); i++) {
 				if (i % 2 == 0){
-					activity = new Action(slotParts.get(i));
+					activity = slotParts.get(i);
 				}else {
 					amount = parseInt(slotParts.get(i));
 				}
 				if (amount != 0) {
-                    assert activity != null;
-                    if (!activity.isBlank()) {
-                        _durations[dCounter] = new DurationWithActivity(amount, activity);
+                    if (activity != null && !activity.isBlank()) {
+						Action durationAction = createAction(activity, amount);
+                        _durations[dCounter] = new DurationWithActivity(amount, durationAction);
                         dCounter++;
                         activity = null;
                         amount = 0;
@@ -116,14 +111,18 @@ public class Slot {
 			}
 		}
 
-		Action action = createAction(from, to, slotParts.get(2));
-		Slot slot = new Slot(from, to, action);
+		Slot slot = new Slot(from, to, null);
+		slot.setAction(slotParts.get(2));
 		modifyTimeAmountInsteadOfAfterMidnightTime(slot);
 
 		if (notNull(_durations))
 			slot.durations = _durations;
 
 		return slot;
+	}
+
+	public void setAction(String action) throws NoSuchCellException, IOException {
+		this.action = createAction(action, from, to);
 	}
 
 	private static List<String> splitSlotStringToItsParts(String slotString){
