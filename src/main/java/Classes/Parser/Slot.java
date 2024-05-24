@@ -66,14 +66,27 @@ public class Slot {
 	public String toString(){
         getTimeAmountFromTo();
 		if (isNull(from) || isNull(to)){
-			return getTimeAmount() + " h -> " + action + "\n";
+			return getTimeAmount() + " h -> " + action.toString() + "\n";
 		}else {
-			return from + "-" + to + " " + getTimeAmountFromTo() + " h -> " +  action + "\n";
+			return from + "-" + to + " " + getTimeAmountFromTo() + " h -> " + action.toString() + "\n";
 		}
 	}
 
 	public String getActionString(){
 		return action.getAction();
+	}
+
+	public String getActionDescriptor() throws IOException {
+		String action =
+				"".equals(getAction().getGroup().toString()) ?
+						getActionString() :
+						getAction().getGroup().toString();
+		if (action.isBlank()) {
+			System.out.println("Nem tudom megvizsgálni a beérkezett tevékenységet, nincs róla információ csupán az ideje.\nEz a következő: " +
+					(isNull(getFrom()) ? getTimeAmount() : getFrom() + " - " + getTo()) + "\nMit csináltál ez idő alatt\n");
+			action = getStringAnswer();
+		}
+		return action;
 	}
 
 	public static Slot copy(Slot toCopy){
@@ -262,7 +275,7 @@ public class Slot {
 
 	private static void modifyTimeAmountInsteadOfAfterMidnightTime(Slot slot){
 
-		int h = 0, m = 0;
+		int h, m;
 		LocalTime tmp;
 		//Ha a slot kezdete este tíz és éjfél között, a vége pedig éjfél után van
 		if (timeIsBetween(slot.from, LocalTime.of(22, 0), LocalTime.of(23,59)) &&
@@ -271,8 +284,8 @@ public class Slot {
 			tmp = LocalTime.MIDNIGHT.minusHours(slot.from.getHour()).minusMinutes(slot.from.getMinute());
 			tmp = tmp.plusHours(slot.to.getHour()).plusMinutes(slot.to.getMinute());
 			h = tmp.getHour(); m = tmp.getMinute();
+			slot.setTimeAmount(h + (double) m / 60);
 		}
-		slot.setTimeAmount(h + (double) m / 60);
 	}
 
 	private static boolean timeIsBetween(LocalTime time, LocalTime betw1, LocalTime betw2){

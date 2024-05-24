@@ -35,6 +35,8 @@ public class Day {
 		if (isNull(day)) {
 			day = new Day();
 		}
+		if (isNull(day.dateOfDay))
+			day.dateOfDay = LocalDate.now();
 		return day;
 	}
 

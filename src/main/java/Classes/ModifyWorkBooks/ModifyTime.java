@@ -17,11 +17,14 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static Classes.Day.getDay;
+import static Classes.I18N.AskTheUserForInformation.getStringAnswer;
 import static Classes.I18N.I18N.*;
 import static Classes.I18N.I18N.ActionTerms.actionType.*;
 import static Classes.I18N.I18N.ActionTerms.getTitleOfAnAction;
 import static Classes.OwnFileTypes.Excel.*;
 import static Classes.Parser.Action.previouslyContains;
+import static java.util.Objects.isNull;
+
 
 @Getter
 public class ModifyTime {
@@ -69,8 +72,6 @@ public class ModifyTime {
 					extraSlot.setTimeAmount(duration.getTimeAmount());
 					extras.add(extraSlot);
 				}
-			}else {
-				slot.setTimeAmount(slot.getTimeAmountFromTo());
 			}
 			addSlotToProperList(slot, isTest);
 		}
@@ -111,19 +112,19 @@ public class ModifyTime {
 	}
 
 
-	protected void modifyÉrtékes() throws NoSuchCellException {
+	protected void modifyÉrtékes() throws NoSuchCellException, IOException {
 		modifyTimeExcelSheetsOfAnActionType(értékes, Értékes);
 	}
 
-	protected void modifySzükséges() throws NoSuchCellException {
+	protected void modifySzükséges() throws NoSuchCellException, IOException {
 		modifyTimeExcelSheetsOfAnActionType(szükséges, Szükséges);
 	}
 
-	protected void modifySzabadidő() throws NoSuchCellException {
+	protected void modifySzabadidő() throws NoSuchCellException, IOException {
 		modifyTimeExcelSheetsOfAnActionType(szabadidő, Szabadidő);
 	}
 
-	private void modifyTimeExcelSheetsOfAnActionType(List<Slot> slots, ActionTerms.actionType actionType) throws NoSuchCellException {
+	private void modifyTimeExcelSheetsOfAnActionType(List<Slot> slots, ActionTerms.actionType actionType) throws NoSuchCellException, IOException {
 		Row todayRowConcreteTimeSheet = getTodayRowOnASheet(excel.getSheet(actionType.toString()));
 		Row todayRowActionStringSheet = getTodayRowOnASheet(excel.getSheet(actionType + "_Mi"));
 
@@ -136,11 +137,11 @@ public class ModifyTime {
 		writeTimesToRow(activitiesInSpearatedTimeStrings, todayRowConcreteTimeSheet);
 	}
 
-	protected Map<String, List<Slot>> sortSlotsByActionType(List<Slot> slots, ActionTerms.actionType typeOfSlots){
+	protected Map<String, List<Slot>> sortSlotsByActionType(List<Slot> slots, ActionTerms.actionType typeOfSlots) throws IOException {
 		Map<String, List<Slot>> activities = new HashMap<>();
 		String titleOfAction;
 		for (Slot slot : slots){
-			titleOfAction = getTitleOfAnAction(slot.getActionString(), typeOfSlots);
+			titleOfAction = getTitleOfAnAction(slot.getActionDescriptor(), typeOfSlots);
 			if (notNull(activities.get(titleOfAction))){
 				activities.get(titleOfAction).add(slot);
 			}else {
@@ -150,11 +151,11 @@ public class ModifyTime {
 		return activities;
 	}
 
-	private void writeActionStringsToRow(List<Slot> slots, ActionTerms.actionType typeOfSlots, Row todayMiRow){
+	private void writeActionStringsToRow(List<Slot> slots, ActionTerms.actionType typeOfSlots, Row todayMiRow) throws IOException {
 		for (Slot slot : slots){
 			writeActionToACell(
 					excel.getCellFromRowByTitle(
-							getTitleOfAnAction(slot.getActionString(), typeOfSlots),
+							getTitleOfAnAction(slot.getActionDescriptor(), typeOfSlots),
 							todayMiRow
 					),
 					slot.getActionString()
@@ -162,7 +163,7 @@ public class ModifyTime {
 		}
 	}
 
-	private void writeTimesToRow(Map<String, String> activitiesInTimeStrings, Row rowToWrite) throws NoSuchCellException {
+	private void writeTimesToRow(Map<String, String> activitiesInTimeStrings, Row rowToWrite) {
 		String titleOfIthCell;
 		String titleOfIPlus1thCell;
 		String separatedTimeString;
@@ -195,42 +196,42 @@ public class ModifyTime {
 	}
 
 
-	private boolean isÉrtékes(Slot slot) throws NoSuchCellException, AskTheUserForInformation {
-		String action = slot.getActionString();
+	private boolean isÉrtékes(Slot slot) throws NoSuchCellException, AskTheUserForInformation, IOException {
+		String action = slot.getActionDescriptor();
 		return usualÉrtékesContains(action) || previusÉrtékesContains(action);
 	}
 
-	protected boolean isÉrtékesForTest(Slot slot) throws AskTheUserForInformation {
-		return usualÉrtékesContains(slot.getActionString());
+	protected boolean isÉrtékesForTest(Slot slot) throws AskTheUserForInformation, IOException {
+		return usualÉrtékesContains(slot.getActionDescriptor());
 	}
 
-	private boolean isSzükséges(Slot slot) throws NoSuchCellException, AskTheUserForInformation {
-		String action = slot.getActionString();
+	private boolean isSzükséges(Slot slot) throws NoSuchCellException, AskTheUserForInformation, IOException {
+		String action = slot.getActionDescriptor();
 		return usualSzükségesContains(action) || previousSzükségesContains(action);
 	}
 
-	protected boolean isSzükségesForTest(Slot slot) throws AskTheUserForInformation {
-		return usualSzükségesContains(slot.getActionString());
+	protected boolean isSzükségesForTest(Slot slot) throws AskTheUserForInformation, IOException {
+		return usualSzükségesContains(slot.getActionDescriptor());
 	}
 
-	private boolean isSzabadidő(Slot slot) throws NoSuchCellException, AskTheUserForInformation {
-		String action = slot.getActionString();
+	private boolean isSzabadidő(Slot slot) throws NoSuchCellException, AskTheUserForInformation, IOException {
+		String action = slot.getActionDescriptor();
 		return usualSzabadidőContains(action) || previousSzabadidőContains(action);
 	}
 
-	protected boolean isSzabadidőForTest(Slot slot) throws AskTheUserForInformation {
-		return usualSzabadidőContains(slot.getActionString());
+	protected boolean isSzabadidőForTest(Slot slot) throws AskTheUserForInformation, IOException {
+		return usualSzabadidőContains(slot.getActionDescriptor());
 	}
 
-	private boolean usualÉrtékesContains(String action) throws AskTheUserForInformation {
+	private boolean usualÉrtékesContains(String action) {
 		return Értékes == getActionType(action);
 	}
 
-	private boolean usualSzükségesContains(String action) throws AskTheUserForInformation {
+	private boolean usualSzükségesContains(String action) {
 		return Szükséges == getActionType(action);
 	}
 
-	private boolean usualSzabadidőContains(String action) throws AskTheUserForInformation {
+	private boolean usualSzabadidőContains(String action) {
 		return Szabadidő == getActionType(action);
 	}
 

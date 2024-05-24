@@ -125,11 +125,6 @@ public class I18N {
             };
 
 
-    public static final Map<String, List<String>> usuals = new HashMap<>(){{
-        //TODO Define usuals for
-        // "Értékes", "Szükséges", "Szabadidő"
-    }};
-
     public static <T> T[] swap(T[] array, int i, int j){
         if (array.length < i || array.length < j)
             throw new IndexOutOfBoundsException("We wanted to swap the " + i + ". and the " + j + ". element\n" +
@@ -239,12 +234,12 @@ public class I18N {
     public static boolean isDate(String string){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd.");
         try {
-            LocalDate date = LocalDate.parse(string, formatter);
+            LocalDate.parse(string, formatter);
             return true;
         }catch (RuntimeException e){
             formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
             try {
-                LocalDate date = LocalDate.parse(string, formatter);
+                LocalDate.parse(string, formatter);
                 return true;
             }catch (RuntimeException ex) {
                 return false;
@@ -269,22 +264,23 @@ public class I18N {
     public static class ActionTerms{
 
         public static String getTitleOfAnAction(String action, actionType typeOfAction) {
+
             switch (typeOfAction){
                 case Értékes -> {
                     for (actionGroup headLine : ÉrtékesActionTerms.keySet()){
-                        if (ÉrtékesActionTerms.get(headLine).contains(action))
+                        if (ÉrtékesActionTermsContains(headLine, action))
                             return headLine.toString();
                     }
                 }
                 case Szükséges -> {
                     for (actionGroup headLine : SzükségesActionTerms.keySet()){
-                        if (SzükségesActionTerms.get(headLine).contains(action))
+                        if (SzükségesActionTermsContains(headLine, action))
                             return headLine.toString();
                     }
                 }
                 case Szabadidő -> {
                     for (actionGroup headLine : SzabadidőActionTerms.keySet()){
-                        if (SzabadidőActionTerms.get(headLine).contains(action))
+                        if (SzabadidőActionTermsContains(headLine, action))
                             return headLine.toString();
                     }
                 }
@@ -309,8 +305,9 @@ public class I18N {
             put(actionGroup.Írás, new ArrayList<>(){{
                 add("írás"); add("ír"); add("ír."); add("levél");
             }});
+            put(actionGroup.Önálló_munka, new ArrayList<>());
             put(actionGroup.Videózás, new ArrayList<>(){{
-                add("vágás"); add("vág"); add("vág."); add("daily vlog"); add("vlog");
+                add("vágás"); add("vág"); add("vág."); add("daily vlog"); add("vlog"); add("videó");
             }});
             put(actionGroup.Sport, new ArrayList<>(){{
                 add("futás"); add("fut."); add("fut"); add("nyújtás"); add("nyújt."); add("nyújt"); add("fekvő"); add("plank");
@@ -394,6 +391,25 @@ public class I18N {
             }});
         }};
 
+        public static boolean ÉrtékesActionTermsContains(actionGroup group, String action){
+            return ActionTermsContains(ÉrtékesActionTerms, group, action);
+        }
+
+        public static boolean SzükségesActionTermsContains(actionGroup group, String action){
+            return ActionTermsContains(SzükségesActionTerms, group, action);
+        }
+
+        public static boolean SzabadidőActionTermsContains(actionGroup group, String action){
+            return ActionTermsContains(SzabadidőActionTerms, group, action);
+        }
+
+        private static boolean ActionTermsContains(Map<actionGroup, List<String>> map, actionGroup group, String action){
+            if (group.toString().equals(action))
+                return true;
+            action = lower(action);
+            return notNull(map.get(group)) && map.get(group).contains(action);
+        }
+
         public enum actionType {
             Értékes, Szükséges, Szabadidő;
 
@@ -454,17 +470,16 @@ public class I18N {
             }
 
             public static actionGroup getActionGroup(String action){
-                action = lower(action);
                 for (actionGroup group : ÉrtékesActionTerms.keySet()){
-                    if (ÉrtékesActionTerms.get(group).contains(action))
+                    if (ÉrtékesActionTermsContains(group, action))
                         return group;
                 }
                 for (actionGroup group : SzükségesActionTerms.keySet()){
-                    if (SzükségesActionTerms.get(group).contains(action))
+                    if (SzükségesActionTermsContains(group, action))
                         return group;
                 }
                 for (actionGroup group : SzabadidőActionTerms.keySet()){
-                    if (SzabadidőActionTerms.get(group).contains(action))
+                    if (SzabadidőActionTermsContains(group, action))
                         return group;
                 }
                 return null;

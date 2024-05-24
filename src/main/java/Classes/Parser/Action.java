@@ -20,9 +20,8 @@ import static Classes.I18N.AskTheUserForInformation.getStringAnswer;
 import static Classes.I18N.I18N.*;
 import static Classes.I18N.I18N.ActionTerms.actionGroup.getActionGroup;
 import static Classes.I18N.I18N.ActionTerms.actionType.getActionType;
-import static Classes.OwnFileTypes.Excel.getRowByDateOnASheet;
-import static Classes.OwnFileTypes.Excel.getTodayRowOnASheet;
 import static Classes.I18N.I18N.notNull;
+import static Classes.OwnFileTypes.Excel.*;
 import static java.util.Objects.isNull;
 
 @Getter
@@ -86,10 +85,11 @@ public class Action {
             }
             else
             {
-                group = tryToFindEarlier(action, Az_Idő_Maga);
+                group = tryToFindEarlier(action, openExcel(TimeExcelFileName));
                 if (isNull(group))
                     group = whatWasTheActionGroupOfThat(action);
                 type = getActionType(group);
+                actualAction = new StringBuilder().append(action);
             }
         }
         return new Action(actualAction.toString(), group, type);
@@ -133,7 +133,7 @@ public class Action {
 
     public static String whatWasTheActualActionUnder(int amount, ActionTerms.actionGroup actionGroup) throws IOException {
         System.out.println("\n" + amount + " percnyi " +
-            actionGroup + " -t végeztél.\nEgész konkrétan mit?\n");
+            actionGroup + "-t végeztél.\nEgész konkrétan mit?\n");
         return getStringAnswer();
     }
 
@@ -141,12 +141,12 @@ public class Action {
                                                 LocalTime to,
                                                 ActionTerms.actionGroup actionGroup) throws IOException {
         System.out.println("\nEközött ("+ from +") és ("+ to +") eközött az időpont között\n" +
-                            actionGroup + " -t végeztél.\nEgész konkrétan mit?\n");
+                            actionGroup + "-t végeztél.\nEgész konkrétan mit?\n");
 	    return getStringAnswer();
     }
 
     public static ActionTerms.actionGroup whatWasTheActionGroupOfThat(String action) throws IOException {
-        System.out.println("\nEzt a tevékenység ("+ action +") milyen tevékenység csoportba tartozik?\n");
+        System.out.println("\nEz a tevékenység ("+ action +") milyen tevékenység csoportba tartozik?\n");
         String answer = getStringAnswer();
         return getActionGroup(answer);
     }
