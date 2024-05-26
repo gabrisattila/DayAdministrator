@@ -152,6 +152,37 @@ public class I18N {
         }
     }
 
+    public static String trimPartAfterTheFirstParentheses(String string){
+        if (string.contains("(")) {
+            int x = 1;
+            String firstWord = getFirstXWordsOfAString(string, x);
+            while (!firstWord.contains("(")) {
+                x++;
+                firstWord = getFirstXWordsOfAString(string, x);
+            }
+            x--;
+            return getFirstXWordsOfAString(string, x);
+        }else {
+            return string;
+        }
+    }
+
+    public static String getFirstXWordsOfAString(String string, int INeedThatMuchWord){
+        StringBuilder builder = new StringBuilder();
+        String[] split = string.split(" ");
+        int counter = 0;
+        for (String s : split){
+            if (counter < INeedThatMuchWord) {
+                builder.append(s).append(" ");
+                counter++;
+            }
+            else {
+                break;
+            }
+        }
+        return builder.toString().trim();
+    }
+
     public static boolean textContainsString(String text, String string){
         return KMPSearch(string.toLowerCase(), text.toLowerCase());
     }
@@ -414,27 +445,17 @@ public class I18N {
             Értékes, Szükséges, Szabadidő;
 
             public static actionType getActionType(String action) {
-                action = lower(action);
                 for (actionGroup key : ÉrtékesActionTerms.keySet()){
-                    for (String értékes : ÉrtékesActionTerms.get(key)){
-                        if (textContainsString(action, értékes)){
-                            return actionType.Értékes;
-                        }
-                    }
+                    if (ÉrtékesActionTermsContains(key, action))
+                        return Értékes;
                 }
                 for (actionGroup key : SzükségesActionTerms.keySet()){
-                    for (String szükséges : SzükségesActionTerms.get(key)){
-                        if (textContainsString(action, szükséges)){
-                            return actionType.Szükséges;
-                        }
-                    }
+                    if (SzükségesActionTermsContains(key, action))
+                        return Szükséges;
                 }
                 for (actionGroup key : SzabadidőActionTerms.keySet()){
-                    for (String szabadidő : SzabadidőActionTerms.get(key)){
-                        if (textContainsString(action, szabadidő)){
-                            return actionType.Szabadidő;
-                        }
-                    }
+                    if (SzabadidőActionTermsContains(key, action))
+                        return Szabadidő;
                 }
                 return null;
             }

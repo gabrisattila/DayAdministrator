@@ -168,14 +168,20 @@ public class ModifyTime {
 		String titleOfIPlus1thCell;
 		String separatedTimeString;
 		for (int i = 0; i < rowLength(rowToWrite); i++) {
-			titleOfIthCell = excel.getTitleOfACell(rowToWrite.getCell(i));
-			titleOfIPlus1thCell = excel.getTitleOfACell(rowToWrite.getCell(i + 1));
+			titleOfIthCell = trimPartAfterTheFirstParentheses(excel.getTitleOfACell(rowToWrite.getCell(i)));
+			titleOfIPlus1thCell = trimPartAfterTheFirstParentheses(excel.getTitleOfACell(rowToWrite.getCell(i + 1)));
 			separatedTimeString = activitiesInTimeStrings.get(titleOfIthCell);
 
 			if (notNull(separatedTimeString)){
 
+				if (isNull(rowToWrite.getCell(i)))
+					rowToWrite.createCell(i);
+
+				if (isNull(rowToWrite.getCell(i + 1)))
+					rowToWrite.createCell(i + 1);
+
 				//Amennyiben egy olyan cellában állunk melynek van címe és a rákövekező cellának ugyanúgy -> tehát nincs felsorolva szeparálva az idő
-				if (!"".equals(titleOfIPlus1thCell))
+				if (!titleOfIthCell.isEmpty() && !titleOfIPlus1thCell.isEmpty())
 				{
 					rowToWrite.getCell(i).setCellValue(evaluateExpression(separatedTimeString));
 				}
@@ -188,6 +194,7 @@ public class ModifyTime {
 				else {
 					//Teljes idő
 					rowToWrite.getCell(i).setCellValue(evaluateExpression(separatedTimeString));
+
 					//Részletekre bontott formátum
 					rowToWrite.getCell(i + 1).setCellValue(activitiesInTimeStrings.get(titleOfIthCell));
 				}
@@ -289,7 +296,7 @@ public class ModifyTime {
 					}
 				}
 			}
-			mapOfActivityTypesAndTimeStrings.put(activityType, finalTimeStringForActivityType.toString());
+			mapOfActivityTypesAndTimeStrings.put(activityType, finalTimeStringForActivityType.toString().trim());
 		}
 		return mapOfActivityTypesAndTimeStrings;
 	}
@@ -339,15 +346,11 @@ public class ModifyTime {
 	}
 
 	private static int precedence(char op) {
-		switch (op) {
-			case '+':
-			case '-':
-				return 1;
-			case '*':
-			case '/':
-				return 2;
-		}
-		return -1;
+		return switch (op) {
+			case '+', '-' -> 1;
+			case '*', '/' -> 2;
+			default -> -1;
+		};
 	}
 
 	private static double applyOperator(char op, double b, double a) {

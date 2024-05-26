@@ -186,7 +186,7 @@ public class Excel extends XSSFWorkbook {
 
 
 	public static int rowLength(Row row){
-		return row.getLastCellNum() - row.getLastCellNum();
+		return row.getLastCellNum() - row.getFirstCellNum();
 	}
 
 	public static void writeActionToACell(Cell whereMi, String action){

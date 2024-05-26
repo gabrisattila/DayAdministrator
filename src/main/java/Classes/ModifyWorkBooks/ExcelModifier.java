@@ -39,12 +39,12 @@ public class ExcelModifier {
 	private void collectExcels() throws IOException {
 		excelFiles = new ArrayList<>();
 
-//		if (notNull(getDay().getMeasures())){
-//			excelFiles.add(openExcel(MeasureExcelFileName));
-//		}
-//		if (notNull(getDay().getMoney())){
-//			excelFiles.add(openExcel(MoneyExcelFileName));
-//		}
+		if (notNull(getDay().getMeasures())){
+			excelFiles.add(openExcel(MeasureExcelFileName));
+		}
+		if (notNull(getDay().getMoney())){
+			excelFiles.add(openExcel(MoneyExcelFileName));
+		}
 		if (notNull(getDay().getTime())){
 			excelFiles.add(openExcel(TimeExcelFileName));
 		}
@@ -53,8 +53,8 @@ public class ExcelModifier {
 	//region Modify
 	
 	public void modifyAndSave() throws NoSuchCellException, IOException {
-//		placeMeasuresIfTheresAny(getDay().getMeasures());
-//		placeMoneyIfTheresAny(getDay().getMoney());
+		placeMeasuresIfTheresAny(getDay().getMeasures());
+		placeMoneyIfTheresAny(getDay().getMoney());
 		placeTimeIfTheresAny(getDay().getTime());
 	}
 
@@ -64,25 +64,28 @@ public class ExcelModifier {
 
 	private void placeMeasuresIfTheresAny(Measures measures) throws FileNotFoundException, NoSuchCellException {
 		if (notNull(measures)) {
-			new ModifyMeasures(measures, getExcel(MeasureExcelFileName));
-			getExcel(MeasureExcelFileName).setDayRowsStyleToPrevious();
-			getExcel(MeasureExcelFileName).save();
+			Excel excel = getExcel(MeasureExcelFileName);
+			excel.setDayRowsStyleToPrevious();
+			new ModifyMeasures(measures, excel);
+			excel.save();
 		}
 	}
 
 	private void placeMoneyIfTheresAny(Money money) throws FileNotFoundException, NoSuchCellException {
 		if (notNull(money)) {
-			new ModifyMoney(money, getExcel(MoneyExcelFileName));
-			getExcel(MoneyExcelFileName).setDayRowsStyleToPrevious();
-			getExcel(MoneyExcelFileName).save();
+			Excel excel = getExcel(MoneyExcelFileName);
+			excel.setDayRowsStyleToPrevious();
+			new ModifyMoney(money, excel);
+			excel.save();
 		}
 	}
 
 	private void placeTimeIfTheresAny(Time time) throws IOException, NoSuchCellException {
 		if (notNull(time)) {
-			new ModifyTime(time, getExcel(TimeExcelFileName));
-			getExcel(TimeExcelFileName).setDayRowsStyleToPrevious();
-			getExcel(TimeExcelFileName).save();
+			Excel excel = getExcel(TimeExcelFileName);
+			excel.setDayRowsStyleToPrevious();
+			new ModifyTime(time, excel);
+			excel.save();
 		}
 	}
 	
