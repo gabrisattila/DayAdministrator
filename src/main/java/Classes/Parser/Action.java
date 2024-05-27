@@ -133,7 +133,7 @@ public class Action {
 
     public static String whatWasTheActualActionUnder(int amount, ActionTerms.actionGroup actionGroup) throws IOException {
         System.out.println("\n" + amount + " percnyi " +
-            actionGroup + "-t végeztél.\nEgész konkrétan mit?\n");
+            actionGroup + "-t végeztél.\nEgész konkrétan mit?");
         return getStringAnswer();
     }
 
@@ -141,12 +141,12 @@ public class Action {
                                                 LocalTime to,
                                                 ActionTerms.actionGroup actionGroup) throws IOException {
         System.out.println("\nEközött ("+ from +") és ("+ to +") eközött az időpont között\n" +
-                            actionGroup + "-t végeztél.\nEgész konkrétan mit?\n");
+                            actionGroup + "-t végeztél.\nEgész konkrétan mit?");
 	    return getStringAnswer();
     }
 
     public static ActionTerms.actionGroup whatWasTheActionGroupOfThat(String action) throws IOException {
-        System.out.println("\nEz a tevékenység ("+ action +") milyen tevékenység csoportba tartozik?\n");
+        System.out.println("\nEz a tevékenység ("+ action +") milyen tevékenység csoportba tartozik?");
         String answer = getStringAnswer();
         return getActionGroup(answer);
     }

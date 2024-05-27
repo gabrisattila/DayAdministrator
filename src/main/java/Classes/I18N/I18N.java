@@ -13,7 +13,7 @@ import static java.util.Objects.isNull;
 public class I18N {
 
     //region For job device
-/*
+
     public final static String dataExcelsPath = "C:\\Users\\gabri\\Desktop\\JOB\\own\\";
 
     public static final String probaExcelFileName = "Proba.xlsx";
@@ -24,7 +24,6 @@ public class I18N {
 
     public static final String TimeExcelFileName = "The_Time_Proba.xlsx";
 
-*/
     //endregion
 
     //region For home device
@@ -37,35 +36,7 @@ public class I18N {
 
     public static final String TimeExcelFileName = "The_Time_Proba.xlsx";
 
-    public static final Excel Az_Idő_Maga;
-
-	static {
-		try {
-			Az_Idő_Maga = Excel.openExcel(TimeExcelFileName);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-//    public static final Excel Mérőszámok;
-//
-//    static {
-//        try {
-//            Mérőszámok = Excel.openExcel(MeasureExcelFileName);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-//    public static final Excel Kiadások_Bevételek;
-//
-//    static {
-//        try {
-//            Kiadások_Bevételek = Excel.openExcel(MoneyExcelFileName);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+*/
     //endregion
 
     public static final String delimiterBetweenTextParts = ";";

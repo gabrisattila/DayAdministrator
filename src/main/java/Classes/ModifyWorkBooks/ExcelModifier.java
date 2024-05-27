@@ -53,8 +53,8 @@ public class ExcelModifier {
 	//region Modify
 	
 	public void modifyAndSave() throws NoSuchCellException, IOException {
-		placeMeasuresIfTheresAny(getDay().getMeasures());
-		placeMoneyIfTheresAny(getDay().getMoney());
+//		placeMeasuresIfTheresAny(getDay().getMeasures());
+//		placeMoneyIfTheresAny(getDay().getMoney());
 		placeTimeIfTheresAny(getDay().getTime());
 	}
 
@@ -65,8 +65,8 @@ public class ExcelModifier {
 	private void placeMeasuresIfTheresAny(Measures measures) throws FileNotFoundException, NoSuchCellException {
 		if (notNull(measures)) {
 			Excel excel = getExcel(MeasureExcelFileName);
-			excel.setDayRowsStyleToPrevious();
 			new ModifyMeasures(measures, excel);
+			excel.setDayRowsStyleToPrevious();
 			excel.save();
 		}
 	}
@@ -74,8 +74,8 @@ public class ExcelModifier {
 	private void placeMoneyIfTheresAny(Money money) throws FileNotFoundException, NoSuchCellException {
 		if (notNull(money)) {
 			Excel excel = getExcel(MoneyExcelFileName);
-			excel.setDayRowsStyleToPrevious();
 			new ModifyMoney(money, excel);
+			excel.setDayRowsStyleToPrevious();
 			excel.save();
 		}
 	}
@@ -83,8 +83,8 @@ public class ExcelModifier {
 	private void placeTimeIfTheresAny(Time time) throws IOException, NoSuchCellException {
 		if (notNull(time)) {
 			Excel excel = getExcel(TimeExcelFileName);
+//			new ModifyTime(time, excel);
 			excel.setDayRowsStyleToPrevious();
-			new ModifyTime(time, excel);
 			excel.save();
 		}
 	}

@@ -3,18 +3,17 @@ package Classes.OwnFileTypes;
 import Classes.I18N.FailedSearch;
 import Classes.I18N.NoSuchCellException;
 import lombok.Getter;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.random.RandomGenerator;
 
 import static Classes.Day.getDay;
 import static Classes.I18N.I18N.*;
+import static java.util.Objects.checkIndex;
 import static java.util.Objects.isNull;
 
 @Getter
@@ -107,12 +106,27 @@ public class Excel extends XSSFWorkbook {
 	public void setDayRowsStyleToPrevious() throws NoSuchCellException {
 		LocalDate prev = getDay().dateOfDay.minusDays(1);
 		for (Sheet sheet : this){
-			setRowStyleToAnother(getRowByDateOnASheet(prev, sheet), getRowByDateOnASheet(getDay().dateOfDay, sheet));
+			setRowStyle(getRowByDateOnASheet(getDay().dateOfDay, sheet));
 		}
 	}
 
-	private void setRowStyleToAnother(Row previous, Row current) {
-		current.setRowStyle(previous.getRowStyle());
+	private void setRowStyle(Row current) {
+		for (int i = 0; i < rowLength(current); i++) {
+			if (isNull(current.getCell(i)))
+				current.createCell(i);
+			CellStyle cellStyle = current.getCell(i).getCellStyle();
+			cellStyle.setWrapText(true);
+			cellStyle.setAlignment(HorizontalAlignment.CENTER);
+			cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+			if (!"Nap".equals(getTitleOfACell(current.getCell(i))))
+				cellStyle.setFillBackgroundColor(new XSSFColor(new byte[]{(byte) 255, (byte) 255, (byte) 255}));
+			else
+				cellStyle.setFillBackgroundColor(new XSSFColor(new byte[]{0, 0, 0}));
+			if (!cellStyle.getWrapText() || cellStyle.getVerticalAlignment() != VerticalAlignment.CENTER || cellStyle.getAlignment() != HorizontalAlignment.CENTER)
+				System.err.println("A cella stílus állításakor a " + current.getCell(i).getAddress() + " cella a(z) " + current.getSheet().getSheetName() + " táblában nem megfelelő igazítással szerepel.");
+			current.setRowStyle(cellStyle);
+		}
+
 	}
 
 	public List<Cell> getColumnByTitle(String _title) throws FailedSearch {

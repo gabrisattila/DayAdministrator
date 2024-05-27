@@ -186,12 +186,12 @@ public class ModifyTime {
 					rowToWrite.getCell(i).setCellValue(evaluateExpression(separatedTimeString));
 				}
 				//Itt az utazással kapcsolatos adatokat írjuk a cellákba
-				else if (textContainsString(titleOfIthCell, "utazás")) {
+				if (textContainsString(titleOfIthCell, "utazás")) {
 					//TODO Megcsinálni az utazás esetén, hogy írom az cellákat.
 					throw new NotImplementedException("Utazás cella szerkesztése kimaradt, a beleírni kívánt érték: " + separatedTimeString);
 				}
 				//Ez esetben pedig a következő cellába olyan érték kerül ami szeparált time formátumot tartalmaz.
-				else {
+				if (!textContainsString(titleOfIthCell, "utazás") && !(!titleOfIthCell.isEmpty() && !titleOfIPlus1thCell.isEmpty())){
 					//Teljes idő
 					rowToWrite.getCell(i).setCellValue(evaluateExpression(separatedTimeString));
 
@@ -255,7 +255,6 @@ public class ModifyTime {
 	}
 
 
-
 	protected Map<String, String> makeSeparatedTimeParts(Map<String, List<Slot>> activities){
 		Map<String, String> mapOfActivityTypesAndTimeStrings = new HashMap<>();
 		StringBuilder finalTimeStringForActivityType;
@@ -292,7 +291,20 @@ public class ModifyTime {
 									.append("+")
 									.append(actualActivities.get(i).getTimeAmount())
 									.append(")");
+//							i++;
 						}
+					} else {
+						finalTimeStringForActivityType
+								.append(finalTimeStringForActivityType.isEmpty() ? "(" : "+(")
+								.append(actualActivities.get(i - 1).getTimeAmount())
+								.append(")+(")
+								.append(actualActivities.get(i).getTimeAmount())
+								.append(")");
+//						i++;
+//						if (!finalTimeStringForActivityType.isEmpty() && finalTimeStringForActivityType.charAt(finalTimeStringForActivityType.length() - 1) == ')'){
+//
+//						}else{
+//						}
 					}
 				}
 			}
