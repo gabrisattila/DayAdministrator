@@ -83,7 +83,7 @@ public class ExcelModifier {
 	private void placeTimeIfTheresAny(Time time) throws IOException, NoSuchCellException {
 		if (notNull(time)) {
 			Excel excel = getExcel(TimeExcelFileName);
-//			new ModifyTime(time, excel);
+			new ModifyTime(time, excel);
 			excel.setDayRowsStyleToPrevious();
 			excel.save();
 		}

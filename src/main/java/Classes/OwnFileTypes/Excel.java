@@ -3,6 +3,7 @@ package Classes.OwnFileTypes;
 import Classes.I18N.FailedSearch;
 import Classes.I18N.NoSuchCellException;
 import lombok.Getter;
+import org.apache.poi.ss.formula.functions.Column;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -111,22 +112,19 @@ public class Excel extends XSSFWorkbook {
 	}
 
 	private void setRowStyle(Row current) {
+		boolean isNapCell;
 		for (int i = 0; i < rowLength(current); i++) {
-			if (isNull(current.getCell(i)))
-				current.createCell(i);
-			CellStyle cellStyle = current.getCell(i).getCellStyle();
-			cellStyle.setWrapText(true);
-			cellStyle.setAlignment(HorizontalAlignment.CENTER);
-			cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-			if (!"Nap".equals(getTitleOfACell(current.getCell(i))))
-				cellStyle.setFillBackgroundColor(new XSSFColor(new byte[]{(byte) 255, (byte) 255, (byte) 255}));
-			else
-				cellStyle.setFillBackgroundColor(new XSSFColor(new byte[]{0, 0, 0}));
-			if (!cellStyle.getWrapText() || cellStyle.getVerticalAlignment() != VerticalAlignment.CENTER || cellStyle.getAlignment() != HorizontalAlignment.CENTER)
-				System.err.println("A cella stílus állításakor a " + current.getCell(i).getAddress() + " cella a(z) " + current.getSheet().getSheetName() + " táblában nem megfelelő igazítással szerepel.");
-			current.setRowStyle(cellStyle);
+			isNapCell = "Nap".equals(getTitleOfACell(current.getCell(i)));
+			if (isNull(current.getCell(i)) && !isNapCell)
+					current.createCell(i);
+			if (!isNapCell) {
+				CellStyle cellStyle = current.getCell(i).getCellStyle();
+				cellStyle.setWrapText(true);
+				cellStyle.setAlignment(HorizontalAlignment.CENTER);
+				cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+				current.setRowStyle(cellStyle);
+			}
 		}
-
 	}
 
 	public List<Cell> getColumnByTitle(String _title) throws FailedSearch {
@@ -163,8 +161,12 @@ public class Excel extends XSSFWorkbook {
 	}
 
 	public String getTitleOfACell(Cell cell){
-		if (notNull(cell))
-			return titlesPerSheets.get(cell.getSheet().getSheetName()).get(cell.getColumnIndex());
+		if (notNull(cell)) {
+			List<String> titleListsOfSheet = titlesPerSheets.get(cell.getSheet().getSheetName());
+			return cell.getColumnIndex() == titleListsOfSheet.size() ?
+					titleListsOfSheet.get(cell.getColumnIndex() - 1) :
+					titleListsOfSheet.get(cell.getColumnIndex());
+		}
 		return "";
 	}
 
@@ -218,5 +220,6 @@ public class Excel extends XSSFWorkbook {
 	private static void writeToCell(Cell where, String what){
 		where.setCellValue(what);
 	}
+
 
 }

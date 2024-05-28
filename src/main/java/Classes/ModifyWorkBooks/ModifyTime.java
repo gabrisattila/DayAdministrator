@@ -191,7 +191,8 @@ public class ModifyTime {
 					throw new NotImplementedException("Utazás cella szerkesztése kimaradt, a beleírni kívánt érték: " + separatedTimeString);
 				}
 				//Ez esetben pedig a következő cellába olyan érték kerül ami szeparált time formátumot tartalmaz.
-				if (!textContainsString(titleOfIthCell, "utazás") && !(!titleOfIthCell.isEmpty() && !titleOfIPlus1thCell.isEmpty())){
+				if (!textContainsString(titleOfIthCell, "utazás") &&
+						!(!titleOfIthCell.isEmpty() && !titleOfIPlus1thCell.isEmpty())){
 					//Teljes idő
 					rowToWrite.getCell(i).setCellValue(evaluateExpression(separatedTimeString));
 
@@ -257,8 +258,11 @@ public class ModifyTime {
 
 	protected Map<String, String> makeSeparatedTimeParts(Map<String, List<Slot>> activities){
 		Map<String, String> mapOfActivityTypesAndTimeStrings = new HashMap<>();
-		StringBuilder finalTimeStringForActivityType;
+		StringBuilder finalTimeStringForActivityType = new StringBuilder();
 		//Végigmegyek a tevékenység fajtákon az előre megadott típusból. Pl.: értékesbe tartozik olv., meló, stb...
+
+		boolean finalIsEmptyYet;
+		boolean sameActionsInRow;
 		for (String activityType : activities.keySet()){
 			//A végső (x + y + ... ) string lesz, magyarul a darabolt idő
 			finalTimeStringForActivityType = new StringBuilder();
@@ -275,36 +279,29 @@ public class ModifyTime {
 
 				//Végigmegyünk a sort-olt listán pl.: Olvasottak
 				for (int i = 1; i < actualActivities.size(); i++) {
-					if (actualActivities.get(i).getAction().equals(actualActivities.get(i - 1).getAction())){
-						if (!finalTimeStringForActivityType.isEmpty() && finalTimeStringForActivityType.charAt(finalTimeStringForActivityType.length() - 1) == ')'){
+					finalIsEmptyYet = finalTimeStringForActivityType.isEmpty();
+					sameActionsInRow = actualActivities.get(i).getAction().equals(actualActivities.get(i - 1).getAction());
+
+					if (finalIsEmptyYet) {
+						finalTimeStringForActivityType
+								.append("(")
+								.append(actualActivities.get(i - 1).getTimeAmount())
+								.append(sameActionsInRow ? "+" : ") + (")
+								.append(actualActivities.get(i).getTimeAmount())
+								.append(")");
+					} else {
+						if (sameActionsInRow){
 							finalTimeStringForActivityType.setCharAt(
 									finalTimeStringForActivityType.length() - 1,
 									'+'
 							);
-							finalTimeStringForActivityType
-									.append(actualActivities.get(i).getTimeAmount())
-									.append(")");
 						}else {
 							finalTimeStringForActivityType
-									.append(finalTimeStringForActivityType.isEmpty() ? "(" : "+(")
-									.append(actualActivities.get(i - 1).getTimeAmount())
-									.append("+")
-									.append(actualActivities.get(i).getTimeAmount())
-									.append(")");
-//							i++;
+									.append(" + (");
 						}
-					} else {
 						finalTimeStringForActivityType
-								.append(finalTimeStringForActivityType.isEmpty() ? "(" : "+(")
-								.append(actualActivities.get(i - 1).getTimeAmount())
-								.append(")+(")
 								.append(actualActivities.get(i).getTimeAmount())
 								.append(")");
-//						i++;
-//						if (!finalTimeStringForActivityType.isEmpty() && finalTimeStringForActivityType.charAt(finalTimeStringForActivityType.length() - 1) == ')'){
-//
-//						}else{
-//						}
 					}
 				}
 			}

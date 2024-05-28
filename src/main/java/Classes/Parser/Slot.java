@@ -15,6 +15,7 @@ import static Classes.I18N.AskTheUserForInformation.getStringAnswer;
 import static Classes.I18N.I18N.*;
 import static Classes.I18N.I18N.ActionTerms.actionType.getActionType;
 import static Classes.Parser.Action.*;
+import static java.lang.Integer.TYPE;
 import static java.lang.Integer.parseInt;
 import static java.util.Objects.isNull;
 
@@ -38,6 +39,8 @@ public class Slot {
 
 	private DurationWithActivity[] durations;
 
+	private boolean alreadyNoted;
+
 	public Slot(LocalTime from, LocalTime to, Action action){
 		initialize(from, to, action);
 	}
@@ -46,6 +49,7 @@ public class Slot {
 		this.from = from;
 		this.to = to;
 		this.action = action;
+		alreadyNoted = false;
 		if (notNull(from) && notNull(to))
 			timeAmount = getTimeAmountFromTo();
 		else
