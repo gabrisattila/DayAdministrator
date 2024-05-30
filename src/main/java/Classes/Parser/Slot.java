@@ -13,9 +13,8 @@ import java.util.List;
 
 import static Classes.I18N.AskTheUserForInformation.getStringAnswer;
 import static Classes.I18N.I18N.*;
-import static Classes.I18N.I18N.ActionTerms.actionType.getActionType;
 import static Classes.Parser.Action.*;
-import static java.lang.Integer.TYPE;
+import static Classes.Parser.Utazás.setToUtazásIfItIs;
 import static java.lang.Integer.parseInt;
 import static java.util.Objects.isNull;
 
@@ -134,6 +133,8 @@ public class Slot {
 
 		if (notNull(_durations))
 			slot.durations = _durations;
+
+		slot = setToUtazásIfItIs(slot);
 
 		return slot;
 	}
