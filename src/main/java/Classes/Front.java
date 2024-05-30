@@ -13,11 +13,11 @@ public class Front {
 						//= readInput();
 		dayText =
 				"2024.04.19.; 5:03;\n" +
-				"610-710 reggel; 86,5 kg; 1 kávé;\n" +
+//				"610-710 reggel; 86,5 kg; 1 kávé;\n" +
 				"710-810 ut. - 30 olv.; \n" +//810-1205 meló;\n" +1235-16 meló;  18-1930 Day Administrator; 20-2130 Videó; 2130-23 írás;
 				"1205-25 ebéd; 1 kávé; 16-17 ut. - 25 olv. - 10 olv.;\n" +
-				"17-1730 vacsi; 1 kávé;\n" +
-				"23-2330 este;\n" +
+//				"17-1730 vacsi; 1 kávé;\n" +
+//				"23-2330 este;\n" +
 				"10 cigi;\n";
 		Editor editor = new Editor(dayText);
 		editor.modifyAndSaveAfterModification();

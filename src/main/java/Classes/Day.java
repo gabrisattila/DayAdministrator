@@ -1,13 +1,12 @@
 package Classes;
 
-import Classes.Parser.Measures;
-import Classes.Parser.Money;
-import Classes.Parser.Slot;
-import Classes.Parser.Time;
+import Classes.Parser.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import static Classes.I18N.I18N.toDate;
 import static java.util.Objects.isNull;
@@ -25,6 +24,8 @@ public class Day {
 
 	private Time time;
 
+	private List<Utazás> napiUtazások;
+
 	public static Day getDay(String dateOfToday){
 		getDay();
 		day.dateOfDay = toDate(dateOfToday);
@@ -34,6 +35,7 @@ public class Day {
 	public static Day getDay(){
 		if (isNull(day)) {
 			day = new Day();
+			day.setNapiUtazások(new ArrayList<>());
 		}
 		if (isNull(day.dateOfDay))
 			day.dateOfDay = LocalDate.now();

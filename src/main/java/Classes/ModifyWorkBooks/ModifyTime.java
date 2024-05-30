@@ -6,6 +6,7 @@ import Classes.OwnFileTypes.Excel;
 import Classes.Parser.DurationWithActivity;
 import Classes.Parser.Slot;
 import Classes.Parser.Time;
+import Classes.Parser.Utazás;
 import lombok.Getter;
 import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -187,8 +188,11 @@ public class ModifyTime {
 				}
 				//Itt az utazással kapcsolatos adatokat írjuk a cellákba
 				if (textContainsString(titleOfIthCell, "utazás")) {
-					//TODO Megcsinálni az utazás esetén, hogy írom az cellákat.
-					throw new NotImplementedException("Utazás cella szerkesztése kimaradt, a beleírni kívánt érték: " + separatedTimeString);
+
+					double realUtazásSum = getDay().getNapiUtazások().stream().mapToDouble(Utazás::getTravellTimeAfterActivities).sum();
+					rowToWrite.getCell(i).setCellValue(realUtazásSum);
+
+					rowToWrite.getCell(i + 1).setCellValue(evaluateExpression(separatedTimeString));
 				}
 				//Ez esetben pedig a következő cellába olyan érték kerül ami szeparált time formátumot tartalmaz.
 				if (!textContainsString(titleOfIthCell, "utazás") &&
@@ -258,11 +262,12 @@ public class ModifyTime {
 
 	protected Map<String, String> makeSeparatedTimeParts(Map<String, List<Slot>> activities){
 		Map<String, String> mapOfActivityTypesAndTimeStrings = new HashMap<>();
-		StringBuilder finalTimeStringForActivityType = new StringBuilder();
+		StringBuilder finalTimeStringForActivityType;
 		//Végigmegyek a tevékenység fajtákon az előre megadott típusból. Pl.: értékesbe tartozik olv., meló, stb...
 
 		boolean finalIsEmptyYet;
 		boolean sameActionsInRow;
+
 		for (String activityType : activities.keySet()){
 			//A végső (x + y + ... ) string lesz, magyarul a darabolt idő
 			finalTimeStringForActivityType = new StringBuilder();
@@ -283,10 +288,13 @@ public class ModifyTime {
 					sameActionsInRow = actualActivities.get(i).getAction().equals(actualActivities.get(i - 1).getAction());
 
 					if (finalIsEmptyYet) {
+
 						finalTimeStringForActivityType
 								.append("(")
 								.append(actualActivities.get(i - 1).getTimeAmount())
-								.append(sameActionsInRow ? "+" : ") + (")
+								.append(sameActionsInRow ? "+" : ") + (");
+
+						finalTimeStringForActivityType
 								.append(actualActivities.get(i).getTimeAmount())
 								.append(")");
 					} else {
