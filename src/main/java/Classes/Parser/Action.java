@@ -84,6 +84,12 @@ public class Action {
                                     objects[0],
                                     objects.length > 1 ? objects[1] : null)
                     ));
+                }else{
+                    group = tryToFindEarlier(action, openExcel(TimeExcelFileName));
+                    if (isNull(group))
+                        group = whatWasTheActionGroupOfThat(action);
+                    type = getActionType(group);
+                    actualAction.append(action);
                 }
             }
             else
@@ -160,14 +166,16 @@ public class Action {
         Row endSearchHere;
         for (Sheet sheet : excel){
 
-            startSearchFromHere = getRowByDateOnASheet(oneAndAHalfMonthEarlier, sheet);
-            endSearchHere = getTodayRowOnASheet(sheet);
+            if (sheet.getSheetName().contains("_Mi")){
+                startSearchFromHere = getRowByDateOnASheet(oneAndAHalfMonthEarlier, sheet);
+                endSearchHere = getTodayRowOnASheet(sheet);
 
-            for (int i = startSearchFromHere.getRowNum(); i < endSearchHere.getRowNum(); i++) {
-                for (Cell cell : sheet.getRow(i)){
-                    if (textContainsString(cell.toString(), action)){
-                        String title = excel.getTitleOfACell(cell);
-                        return getActionGroup(title.substring(0, title.indexOf(" ")));
+                for (int i = startSearchFromHere.getRowNum(); i < endSearchHere.getRowNum(); i++) {
+                    for (Cell cell : sheet.getRow(i)) {
+                        if (textContainsString(cell.toString(), action)) {
+                            String title = excel.getTitleOfACell(cell);
+                            return getActionGroup(trimPartAfterTheFirstParentheses(title));
+                        }
                     }
                 }
             }

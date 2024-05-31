@@ -95,14 +95,19 @@ public class Slot {
 
 	public static Slot createSlot(String slotInText, String next) throws IOException, NoSuchCellException {
 		List<String> slotParts = splitSlotStringToItsParts(slotInText);
+		boolean theRestOfSlotStringContainsOnlyActionWithoutNumber = theRestOfSlotStringContainsOnlyActionWithoutNumber(slotParts.subList(2, slotParts.size()));
 
 		LocalTime from = convertFirstTimeStrToTime(slotParts.get(0));
 
-		LocalTime to = convertSecondTimeStrToTime(slotParts.get(1), from, next, slotParts.get(2));
+		LocalTime to = convertSecondTimeStrToTime(
+				slotParts.get(1), from, next,
+				slotParts.size() > 3  ?
+						slotParts.subList(3, slotParts.size() - 1).toString() :
+						slotParts.get(2));
 
 		DurationWithActivity[] _durations = null;
 
-		if (slotParts.size() > 3){
+		if (slotParts.size() > 3 && !theRestOfSlotStringContainsOnlyActionWithoutNumber){
 			_durations = new DurationWithActivity[(slotParts.size() - 3) / 2];
 			int amount = 0; String activity = null;
 			int dCounter = 0;
@@ -136,6 +141,17 @@ public class Slot {
 		return slot;
 	}
 
+	private static boolean theRestOfSlotStringContainsOnlyActionWithoutNumber(List<String> restOfSlotString){
+		for (String s : restOfSlotString){
+			try {
+				Integer.parseInt(s);
+			}catch (NumberFormatException e){
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public void setAction(String action) throws NoSuchCellException, IOException {
 		this.action = createAction(action, from, to);
 	}
@@ -146,7 +162,10 @@ public class Slot {
 		String firstTime = firstSplit[0].trim();
 		String[] secondSplit = firstSplit[1].split(" ");
 		String secondTime = secondSplit[0].trim();
-		String action = secondSplit[1].trim();
+		String action =
+				secondSplit.length > 2 ?
+						firstSplit[1].substring(firstSplit[1].indexOf(" ")).trim() :
+						secondSplit[1].trim();
 		parts.add(firstTime);
 		parts.add(secondTime);
 		parts.add(action);

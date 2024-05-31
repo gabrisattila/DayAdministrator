@@ -57,7 +57,6 @@ public class Editor {
     }
 
     private void createDay(){
-        getDay(textParser.getDateOfToday());
         if (notNull(textParser.getMeasureParser()))
             getDay().setMeasures(textParser.getMeasureParser().getMeasures());
         if (notNull(textParser.getMoneyParser()))

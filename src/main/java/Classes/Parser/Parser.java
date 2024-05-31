@@ -6,6 +6,7 @@ import lombok.Data;
 import java.io.IOException;
 import java.util.Comparator;
 
+import static Classes.Day.getDay;
 import static Classes.I18N.I18N.delimiterBetweenTextParts;
 import static Classes.I18N.I18N.isDate;
 import static Classes.Parser.Measures.*;
@@ -16,8 +17,6 @@ public class Parser {
     //region Fields
 
     private String text;
-
-    private String dateOfToday;
 
     private String measures = "";
 
@@ -75,7 +74,7 @@ public class Parser {
             if (part.isBlank())
                 continue;
             if (isDate(part)) {
-                dateOfToday = part;
+                getDay(part);
             }else if (isMeasure(part)) {
                 ms.append(part).append(";");
             }else if (isMoney(part)) {
