@@ -201,10 +201,54 @@ public class ModifyTime {
 					rowToWrite.getCell(i).setCellValue(evaluateExpression(separatedTimeString));
 
 					//Részletekre bontott formátum
-					rowToWrite.getCell(i + 1).setCellValue(activitiesInTimeStrings.get(titleOfIthCell));
+					rowToWrite.getCell(i + 1).setCellValue(
+							replaceComaPlusSignsAndUselessParenthesesInSeparatedTimeString(activitiesInTimeStrings.get(titleOfIthCell))
+					);
 				}
 			}
 		}
+	}
+
+	private String replaceComaPlusSignsAndUselessParenthesesInSeparatedTimeString(String separatedTimeString){
+		separatedTimeString = replaceComaAndPlusSigns(separatedTimeString);
+		separatedTimeString = replaceUselessParentheses(separatedTimeString);
+		return separatedTimeString;
+	}
+
+	private String replaceComaAndPlusSigns(String separatedTimeString){
+		separatedTimeString = separatedTimeString.replace(".", ",");
+		separatedTimeString = separatedTimeString.replace("+", " + ");
+		return separatedTimeString;
+	}
+
+	private String replaceUselessParentheses(String separatedTimeString){
+		if (separatedTimeString.chars().filter(c -> c == '(').count() == 1 && separatedTimeString.chars().filter(c -> c == ')').count() == 1){
+			separatedTimeString = separatedTimeString.replace("(", "");
+			separatedTimeString = separatedTimeString.replace(")", "");
+		}
+		char beginer = '(';
+		char finisher = ')';
+		int startI = separatedTimeString.indexOf(beginer);
+		int endI = separatedTimeString.indexOf(finisher);
+
+		String oldSub, newSub = "";
+
+		while (startI != -1 && endI != -1){
+			oldSub = separatedTimeString.substring(startI, endI + 1);
+			if (!oldSub.contains("+")){
+				newSub = trimParentheses(oldSub);
+			}
+			separatedTimeString = separatedTimeString.replace(oldSub, newSub);
+			startI = separatedTimeString.indexOf(beginer);
+			endI = separatedTimeString.indexOf(finisher);
+		}
+		return separatedTimeString;
+	}
+
+	private String trimParentheses(String string){
+		string = string.replace("(", "");
+		string = string.replace(")", "");
+		return string;
 	}
 
 
@@ -292,7 +336,7 @@ public class ModifyTime {
 						finalTimeStringForActivityType
 								.append("(")
 								.append(actualActivities.get(i - 1).getTimeAmount())
-								.append(sameActionsInRow ? "+" : ") + (");
+								.append(sameActionsInRow ? "+" : ")+(");
 
 						finalTimeStringForActivityType
 								.append(actualActivities.get(i).getTimeAmount())
@@ -305,7 +349,7 @@ public class ModifyTime {
 							);
 						}else {
 							finalTimeStringForActivityType
-									.append(" + (");
+									.append("+(");
 						}
 						finalTimeStringForActivityType
 								.append(actualActivities.get(i).getTimeAmount())

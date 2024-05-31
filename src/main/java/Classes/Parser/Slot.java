@@ -57,7 +57,7 @@ public class Slot {
 			long minutes = ChronoUnit.MINUTES.between(from, to);
 			int hours = (int) (minutes / 60.0);
 			double fraction = (minutes % 60) / 60.0;
-			return hours + fraction;
+			return roundTo2(hours + fraction);
 		}else {
 			return 0;
 		}
@@ -286,7 +286,7 @@ public class Slot {
 			tmp = LocalTime.MIDNIGHT.minusHours(slot.from.getHour()).minusMinutes(slot.from.getMinute());
 			tmp = tmp.plusHours(slot.to.getHour()).plusMinutes(slot.to.getMinute());
 			h = tmp.getHour(); m = tmp.getMinute();
-			slot.setTimeAmount(h + (double) m / 60);
+			slot.setTimeAmount(roundTo2(h + (double) m / 60));
 		}
 	}
 

@@ -111,6 +111,19 @@ public class I18N {
         return !isNull(o);
     }
 
+    public static double roundTo2(double value){
+        return round(value, 2);
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
+    }
+
     public static String getFileNameFromPath(String path) {
         // Az elérési út végéről kinyerjük a fájl nevét
         int lastSeparatorIndex = path.lastIndexOf('\\');

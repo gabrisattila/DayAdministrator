@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.time.LocalTime;
 
 import static Classes.Day.getDay;
+import static Classes.I18N.I18N.roundTo2;
 import static Classes.I18N.I18N.textContainsString;
 import static Classes.Parser.Action.createAction;
 import static Classes.Parser.Action.previouslyContains;
@@ -28,11 +29,11 @@ public class Utazás extends Slot{
 
 	private void setTravellTimeVars(){
 		double duration = super.getTimeAmount();
-		travellTime = duration;
+		travellTime = roundTo2(duration);
 		for (int minus : minusTimes){
-			duration -= ((double) minus / 60);
+			duration -= roundTo2((double) minus / 60);
 		}
-		travellTimeAfterActivities = duration;
+		travellTimeAfterActivities = roundTo2(duration);
 	}
 
 	public static Slot setToUtazásIfItIs(Slot slot) throws NoSuchCellException, IOException {
