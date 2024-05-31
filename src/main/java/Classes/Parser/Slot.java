@@ -38,8 +38,6 @@ public class Slot {
 
 	private DurationWithActivity[] durations;
 
-	private boolean alreadyNoted;
-
 	public Slot(LocalTime from, LocalTime to, Action action){
 		initialize(from, to, action);
 	}
@@ -48,7 +46,6 @@ public class Slot {
 		this.from = from;
 		this.to = to;
 		this.action = action;
-		alreadyNoted = false;
 		if (notNull(from) && notNull(to))
 			timeAmount = getTimeAmountFromTo();
 		else

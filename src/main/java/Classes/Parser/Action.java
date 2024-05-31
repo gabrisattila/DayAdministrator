@@ -18,6 +18,7 @@ import java.util.Objects;
 import static Classes.Day.getDay;
 import static Classes.I18N.AskTheUserForInformation.getStringAnswer;
 import static Classes.I18N.I18N.*;
+import static Classes.I18N.I18N.ActionTerms.actionGroup.Utazás_és_vagy_készülődés;
 import static Classes.I18N.I18N.ActionTerms.actionGroup.getActionGroup;
 import static Classes.I18N.I18N.ActionTerms.actionType.getActionType;
 import static Classes.I18N.I18N.notNull;
@@ -64,12 +65,14 @@ public class Action {
                     actualAction.append(" ").append(actionParts[i]);
                 }
             }else {
-                actualAction.append(
-                        whatWasTheActualAction(
-                                group,
-                                objects[0],
-                                objects.length > 1 ? objects[1] : null)
-                );
+                if (group != Utazás_és_vagy_készülődés) {
+                    actualAction.append(
+                            whatWasTheActualAction(
+                                    group,
+                                    objects[0],
+                                    objects.length > 1 ? objects[1] : null)
+                    );
+                }
             }
         }else{
             if (actionParts.length > 1){

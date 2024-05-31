@@ -326,7 +326,7 @@ public class I18N {
             put(actionGroup.Templom, new ArrayList<>(){{
                 add("mise"); add("lelkiismeret vizsgálat"); add("gyónás"); add("szertartás"); add("gyak.");
             }});
-            put(actionGroup.Egyéb_ért, new ArrayList<>(){{
+            put(actionGroup.Egyéb_értékes, new ArrayList<>(){{
                 add("naptár"); add("tervezése"); add("jövő heti"); add("jövő hét"); add("terv"); add("intézés");
             }});
         }};
@@ -343,9 +343,8 @@ public class I18N {
             }});
             put(actionGroup.Esti_tevékenységek, new ArrayList<>(){{
                 add("fogmosás"); add("fog."); add("tus"); add("hajmosás"); add("haj."); add("vacsi"); add("vacsora"); add("vacsi.");
-                add("másnapra"); add("előkészítés"); add("előkészít.");
-            }});
-            put(actionGroup.Utazás_és_készülődés, new ArrayList<>(){{
+                add("másnapra"); add("előkészítés"); add("előkészít."); add("fekvés"); add("tus"); add("este");}});
+            put(actionGroup.Utazás_és_vagy_készülődés, new ArrayList<>(){{
                 add("ut."); add("utazás"); add("utaz"); add("utaz.");
             }});
             put(actionGroup.Bevásárlás, new ArrayList<>(){{
@@ -367,7 +366,7 @@ public class I18N {
             put(actionGroup.Daily, new ArrayList<>(){{
                 add("napi"); add("napi teendők"); add("teendők"); add("összegzés"); add("összegzése");
             }});
-            put(actionGroup.Egyéb_szab, new ArrayList<>(){{
+            put(actionGroup.Egyéb_szükséges, new ArrayList<>(){{
                 add("pénz felvétel"); add("bürokrácia"); add("ügyintézés"); add("gyak"); add("intézés");
             }});
         }};
@@ -432,13 +431,13 @@ public class I18N {
 
             public static actionType getActionType(actionGroup actionGroup){
                 switch (actionGroup){
-                    case Munka, Olvasás, Írás, Önálló_munka, Videózás, Közélet, Sport, IG_ért, Tanulás, Templom, Egyéb_ért -> {
+                    case Munka, Olvasás, Írás, Önálló_munka, Videózás, Közélet, Sport, IG_ért, Tanulás, Templom, Egyéb_értékes -> {
                         return Értékes;
                     }
-                    case Reggeli_tevékenységek, Ebéd_és_vagy_főzés, Esti_tevékenységek, Utazás_és_készülődés, Bevásárlás, Takarítás, Mosás, Mosogatás, Vasalás, Daily, Egyéb_szük -> {
+                    case Reggeli_tevékenységek, Ebéd_és_vagy_főzés, Esti_tevékenységek, Utazás_és_vagy_készülődés, Bevásárlás, Takarítás, Mosás, Mosogatás, Vasalás, Daily, Egyéb_szükséges -> {
                         return Szükséges;
                     }
-                    case Család, Kórus, IG_szabad, Időtöltés_Mással, Időtöltés_több_emberrel, Egyéb_szab -> {
+                    case Család, Kórus, IG_szabad, Időtöltés_Mással, Időtöltés_több_emberrel, Egyéb_szabad -> {
                         return Szabadidő;
                     }
                 }
@@ -447,11 +446,11 @@ public class I18N {
         }
 
         public enum actionGroup {
-            Munka, Olvasás, Írás, Önálló_munka, Videózás, Közélet, Sport, IG_ért, Tanulás, Templom, Egyéb_ért,
+            Munka, Olvasás, Írás, Önálló_munka, Videózás, Közélet, Sport, IG_ért, Tanulás, Templom, Egyéb_értékes,
 
-            Reggeli_tevékenységek, Ebéd_és_vagy_főzés, Esti_tevékenységek, Utazás_és_készülődés, Bevásárlás, Takarítás, Mosás, Mosogatás, Vasalás, Daily, Egyéb_szük,
+            Reggeli_tevékenységek, Ebéd_és_vagy_főzés, Esti_tevékenységek, Utazás_és_vagy_készülődés, Bevásárlás, Takarítás, Mosás, Mosogatás, Vasalás, Daily, Egyéb_szükséges,
 
-            Család, Kórus, IG_szabad, Időtöltés_Mással, Időtöltés_több_emberrel, Egyéb_szab;
+            Család, Kórus, IG_szabad, Időtöltés_Mással, Időtöltés_több_emberrel, Egyéb_szabad;
 
             @Override
             public String toString() {

@@ -1,18 +1,15 @@
 package Classes.Parser;
 
-import Classes.I18N.I18N;
 import Classes.I18N.NoSuchCellException;
 import lombok.Getter;
 
 import java.io.IOException;
 import java.time.LocalTime;
-import java.util.List;
 
 import static Classes.Day.getDay;
-import static Classes.I18N.I18N.ActionTerms.SzükségesActionTerms;
-import static Classes.I18N.I18N.ActionTerms.actionGroup.Utazás_és_készülődés;
 import static Classes.I18N.I18N.textContainsString;
 import static Classes.Parser.Action.createAction;
+import static Classes.Parser.Action.previouslyContains;
 
 @Getter
 public class Utazás extends Slot{
@@ -49,12 +46,17 @@ public class Utazás extends Slot{
 					i++;
 				}
 				Utazás utazás = new Utazás(slot.getFrom(), slot.getTo(), minusTimes);
+				utazás.getOtherDataFromOriginSlot(slot);
 				getDay().getNapiUtazások().add(utazás);
 				return utazás;
 			}
         }
         return slot;
     }
+
+	private void getOtherDataFromOriginSlot(Slot origin){
+		this.setDurations(origin.getDurations());
+	}
 
 }
 
