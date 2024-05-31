@@ -3,9 +3,9 @@ package Classes.OwnFileTypes;
 import Classes.I18N.FailedSearch;
 import Classes.I18N.NoSuchCellException;
 import lombok.Getter;
-import org.apache.poi.ss.formula.functions.Column;
+import org.apache.poi.poifs.macros.Module;
+import org.apache.poi.poifs.macros.VBAMacroReader;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
@@ -26,8 +26,11 @@ public class Excel extends XSSFWorkbook {
 
 	private final Map<String, List<String>> titlesPerSheets = new HashMap<>();
 
+	private final InputStream fileStream;
+
 	public Excel(InputStream excelFile) throws IOException {
 		super(excelFile);
+		fileStream = excelFile;
 		exploreFile();
 	}
 
@@ -104,8 +107,10 @@ public class Excel extends XSSFWorkbook {
 
 	}
 
-	public void setDayRowsStyleToPrevious() throws NoSuchCellException {
-		LocalDate prev = getDay().dateOfDay.minusDays(1);
+	public void setDayRowsStyleToMinta() throws NoSuchCellException, IOException {
+		VBAMacroReader reader = new VBAMacroReader(fileStream);
+//		VBAMacroReader reader = new VBAMacroReader(new File(TimeExcelFileName));
+		Map<String, Module> macroModules = reader.readMacroModules();
 		for (Sheet sheet : this){
 			setRowStyle(getRowByDateOnASheet(getDay().dateOfDay, sheet));
 		}
@@ -119,10 +124,12 @@ public class Excel extends XSSFWorkbook {
 					current.createCell(i);
 			if (!isNapCell) {
 				CellStyle cellStyle = current.getCell(i).getCellStyle();
-				cellStyle.setWrapText(true);
 				cellStyle.setAlignment(HorizontalAlignment.CENTER);
 				cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+				cellStyle.setWrapText(true);
+				current.setHeight((short) -1);
 				current.setRowStyle(cellStyle);
+
 			}
 		}
 	}
@@ -220,6 +227,8 @@ public class Excel extends XSSFWorkbook {
 	private static void writeToCell(Cell where, String what){
 		where.setCellValue(what);
 	}
+
+
 
 
 }

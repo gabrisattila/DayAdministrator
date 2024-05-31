@@ -62,20 +62,20 @@ public class ExcelModifier {
 		excelFiles.forEach(Excel::save);
 	}
 
-	private void placeMeasuresIfTheresAny(Measures measures) throws FileNotFoundException, NoSuchCellException {
+	private void placeMeasuresIfTheresAny(Measures measures) throws IOException, NoSuchCellException {
 		if (notNull(measures)) {
 			Excel excel = getExcel(MeasureExcelFileName);
 			new ModifyMeasures(measures, excel);
-			excel.setDayRowsStyleToPrevious();
+			excel.setDayRowsStyleToMinta();
 			excel.save();
 		}
 	}
 
-	private void placeMoneyIfTheresAny(Money money) throws FileNotFoundException, NoSuchCellException {
+	private void placeMoneyIfTheresAny(Money money) throws IOException, NoSuchCellException {
 		if (notNull(money)) {
 			Excel excel = getExcel(MoneyExcelFileName);
 			new ModifyMoney(money, excel);
-			excel.setDayRowsStyleToPrevious();
+			excel.setDayRowsStyleToMinta();
 			excel.save();
 		}
 	}
@@ -84,7 +84,7 @@ public class ExcelModifier {
 		if (notNull(time)) {
 			Excel excel = getExcel(TimeExcelFileName);
 			new ModifyTime(time, excel);
-			excel.setDayRowsStyleToPrevious();
+			excel.setDayRowsStyleToMinta();
 			excel.save();
 		}
 	}

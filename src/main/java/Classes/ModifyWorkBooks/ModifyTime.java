@@ -8,17 +8,13 @@ import Classes.Parser.Slot;
 import Classes.Parser.Time;
 import Classes.Parser.Utazás;
 import lombok.Getter;
-import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.*;
 
 import static Classes.Day.getDay;
-import static Classes.I18N.AskTheUserForInformation.getStringAnswer;
 import static Classes.I18N.I18N.*;
 import static Classes.I18N.I18N.ActionTerms.actionType.*;
 import static Classes.I18N.I18N.ActionTerms.getTitleOfAnAction;
@@ -201,23 +197,20 @@ public class ModifyTime {
 					rowToWrite.getCell(i).setCellValue(evaluateExpression(separatedTimeString));
 
 					//Részletekre bontott formátum
-					rowToWrite.getCell(i + 1).setCellValue(
-							replaceComaPlusSignsAndUselessParenthesesInSeparatedTimeString(activitiesInTimeStrings.get(titleOfIthCell))
-					);
+					insertSeparatedTimeStringToCell(activitiesInTimeStrings.get(titleOfIthCell), rowToWrite.getCell(i + 1));
 				}
 			}
 		}
 	}
 
-	private String replaceComaPlusSignsAndUselessParenthesesInSeparatedTimeString(String separatedTimeString){
-		separatedTimeString = replaceComaAndPlusSigns(separatedTimeString);
-		separatedTimeString = replaceUselessParentheses(separatedTimeString);
-		return separatedTimeString;
+	private void insertSeparatedTimeStringToCell(String origin, Cell cell){
+		origin = replaceComas(origin);
+		origin = replaceUselessParentheses(origin);
+		cell.setCellValue(origin);
 	}
 
-	private String replaceComaAndPlusSigns(String separatedTimeString){
+	private String replaceComas(String separatedTimeString){
 		separatedTimeString = separatedTimeString.replace(".", ",");
-		separatedTimeString = separatedTimeString.replace("+", " + ");
 		return separatedTimeString;
 	}
 
@@ -250,7 +243,6 @@ public class ModifyTime {
 		string = string.replace(")", "");
 		return string;
 	}
-
 
 	private boolean isÉrtékes(Slot slot) throws NoSuchCellException, AskTheUserForInformation, IOException {
 		String action = slot.getActionDescriptor();
@@ -361,7 +353,6 @@ public class ModifyTime {
 		}
 		return mapOfActivityTypesAndTimeStrings;
 	}
-
 
 	private static double evaluateExpression(String expression) {
 		Stack<Double> numbers = new Stack<>();
