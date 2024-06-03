@@ -110,9 +110,10 @@ public class Excel extends XSSFWorkbook {
 	public void setDayRowsStyleToMinta() throws NoSuchCellException, IOException {
 		VBAMacroReader reader = new VBAMacroReader(fileStream);
 //		VBAMacroReader reader = new VBAMacroReader(new File(TimeExcelFileName));
-		Map<String, Module> macroModules = reader.readMacroModules();
+		Map<String, String> macroModules = reader.readMacros();
 		for (Sheet sheet : this){
 			setRowStyle(getRowByDateOnASheet(getDay().dateOfDay, sheet));
+			addThisRowWhichMustUpdated(getRowByDateOnASheet(getDay().dateOfDay, sheet));
 		}
 	}
 
@@ -129,10 +130,34 @@ public class Excel extends XSSFWorkbook {
 				cellStyle.setWrapText(true);
 				current.setHeight((short) -1);
 				current.setRowStyle(cellStyle);
-
 			}
 		}
 	}
+
+	//region Macro Machination
+
+	private void addThisRowWhichMustUpdated(Row current) {
+		Sheet sheet = current.getSheet();
+/*
+		VBAMacroReader reader = new VBAMacroReader(new FileInputStream(dataExcelsPath + probaExcelFileName));
+		Map<String, String> macroModules = reader.readMacros();
+		for (Map.Entry<String, String> entry : macroModules.entrySet()) {
+			String macroName = entry.getKey();
+			String macroCode = entry.getValue();
+
+			System.out.println(macroName + ": " + macroCode);
+//            entry.setValue();
+		}
+		TODO A Workbook_open makró kontentjét kell változtatni aszerint, hogy melyik sorra akarjuk vele alkalmazni a WrapText-et.
+		TODO Ehhez kell tehát a sor string-ként és a sheet neve.
+*/
+	}
+
+	private String changeMacroValueToNeededRows(){
+		return null;
+	}
+
+	//endregion
 
 	public List<Cell> getColumnByTitle(String _title) throws FailedSearch {
 		for (String sheetName : titlesPerSheets.keySet()){
