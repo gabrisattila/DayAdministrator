@@ -2,8 +2,9 @@ package Classes.OwnFileTypes;
 
 import Classes.I18N.FailedSearch;
 import Classes.I18N.NoSuchCellException;
+import Classes.I18N.Pair;
 import lombok.Getter;
-import org.apache.poi.poifs.macros.Module;
+import org.apache.poi.poifs.macros.VBAMacroExtractor;
 import org.apache.poi.poifs.macros.VBAMacroReader;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -107,54 +108,66 @@ public class Excel extends XSSFWorkbook {
 
 	}
 
-	public void setDayRowsStyleToMinta() throws NoSuchCellException, IOException {
-		VBAMacroReader reader = new VBAMacroReader(fileStream);
-//		VBAMacroReader reader = new VBAMacroReader(new File(TimeExcelFileName));
-		Map<String, String> macroModules = reader.readMacros();
-		for (Sheet sheet : this){
-			setRowStyle(getRowByDateOnASheet(getDay().dateOfDay, sheet));
-			addThisRowWhichMustUpdated(getRowByDateOnASheet(getDay().dateOfDay, sheet));
-		}
-	}
-
-	private void setRowStyle(Row current) {
-		boolean isNapCell;
-		for (int i = 0; i < rowLength(current); i++) {
-			isNapCell = "Nap".equals(getTitleOfACell(current.getCell(i)));
-			if (isNull(current.getCell(i)) && !isNapCell)
-					current.createCell(i);
-			if (!isNapCell) {
-				CellStyle cellStyle = current.getCell(i).getCellStyle();
-				cellStyle.setAlignment(HorizontalAlignment.CENTER);
-				cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-				cellStyle.setWrapText(true);
-				current.setHeight((short) -1);
-				current.setRowStyle(cellStyle);
-			}
-		}
+	public void setDayRowsStyle() throws NoSuchCellException, IOException {
+		replaceMacroEntry(
+				createWorkbookOpenMacroParts()
+		);
 	}
 
 	//region Macro Machination
 
-	private void addThisRowWhichMustUpdated(Row current) {
-		Sheet sheet = current.getSheet();
-/*
+	private void replaceMacroEntry(Pair<String, String> macroNameAndEntry) throws NoSuchCellException, IOException {
+
 		VBAMacroReader reader = new VBAMacroReader(new FileInputStream(dataExcelsPath + probaExcelFileName));
 		Map<String, String> macroModules = reader.readMacros();
 		for (Map.Entry<String, String> entry : macroModules.entrySet()) {
-			String macroName = entry.getKey();
-			String macroCode = entry.getValue();
+			String placeOfMacro = entry.getKey();
 
-			System.out.println(macroName + ": " + macroCode);
-//            entry.setValue();
+			if ("ThisworkBook".equals(placeOfMacro)) {
+				String[] unusedAndUsedPartOfMacro = entry.getValue().split("Sub ");
+				unusedAndUsedPartOfMacro[1] = macroNameAndEntry.getSecond();
+				entry.setValue(unusedAndUsedPartOfMacro[0] + unusedAndUsedPartOfMacro[1]);
+			}
 		}
-		TODO A Workbook_open makró kontentjét kell változtatni aszerint, hogy melyik sorra akarjuk vele alkalmazni a WrapText-et.
-		TODO Ehhez kell tehát a sor string-ként és a sheet neve.
-*/
 	}
 
-	private String changeMacroValueToNeededRows(){
-		return null;
+	private Pair<String, String> createWorkbookOpenMacroParts() throws NoSuchCellException {
+		StringBuilder builder = new StringBuilder();
+
+		Row rowToUpdate;
+		String rowAddress;
+
+		for (Sheet sheet : this){
+			rowToUpdate = getRowByDateOnASheet(getDay().dateOfDay, sheet);
+			rowAddress = getAddressOfThisRowAsUpdated(rowToUpdate);
+			builder
+					.append(prepareCallerMacroWithGivenParamValues("performWrapTextWithVbaOnRange", sheet.getSheetName(), rowAddress))
+					.append("\n");
+		}
+
+		return new Pair<>("Workbook_open", builder.toString());
+	}
+
+	private String getAddressOfThisRowAsUpdated(Row current) {
+		String beginAd = current.getCell(0).getAddress().toString(),
+				endAdcurrent = current.getCell(rowLength(current) - 1).getAddress().toString();
+		return beginAd + ":" + endAdcurrent;
+	}
+
+
+	private String prepareCallerMacroWithGivenParamValues(String macroName, String... paramValues){
+		String[] params = prepareParamValueListFromParamValues(paramValues);
+		String macro = CallSubMacroSkeleton.replace("macroName", macroName);
+		StringBuilder builder = new StringBuilder();
+		Arrays.stream(params).forEach(builder::append);
+		return macro.replace("params", builder.toString());
+	}
+
+	private String[] prepareParamValueListFromParamValues(String[] paramValues) {
+		for (int i = 0; i < paramValues.length; i++) {
+			paramValues[i] = MacroParamSkeleton.replace("param", paramValues[i]);
+		}
+		return paramValues;
 	}
 
 	//endregion

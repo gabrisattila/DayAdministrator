@@ -8,9 +8,12 @@ import Classes.Parser.Time;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.awt.*;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 import static Classes.Day.getDay;
 import static Classes.I18N.I18N.*;
@@ -56,17 +59,20 @@ public class ExcelModifier {
 //		placeMeasuresIfTheresAny(getDay().getMeasures());
 //		placeMoneyIfTheresAny(getDay().getMoney());
 		placeTimeIfTheresAny(getDay().getTime());
+		safeSaveExcels();
 	}
 
-	public void saveExcels(){
-		excelFiles.forEach(Excel::save);
+	public void safeSaveExcels() throws IOException {
+		for (Excel excel : excelFiles){
+			Desktop.getDesktop().open(new File(excel.getPath()));
+		}
 	}
 
 	private void placeMeasuresIfTheresAny(Measures measures) throws IOException, NoSuchCellException {
 		if (notNull(measures)) {
 			Excel excel = getExcel(MeasureExcelFileName);
 			new ModifyMeasures(measures, excel);
-			excel.setDayRowsStyleToMinta();
+			excel.setDayRowsStyle();
 			excel.save();
 		}
 	}
@@ -75,7 +81,7 @@ public class ExcelModifier {
 		if (notNull(money)) {
 			Excel excel = getExcel(MoneyExcelFileName);
 			new ModifyMoney(money, excel);
-			excel.setDayRowsStyleToMinta();
+			excel.setDayRowsStyle();
 			excel.save();
 		}
 	}
@@ -84,7 +90,7 @@ public class ExcelModifier {
 		if (notNull(time)) {
 			Excel excel = getExcel(TimeExcelFileName);
 			new ModifyTime(time, excel);
-			excel.setDayRowsStyleToMinta();
+			excel.setDayRowsStyle();
 			excel.save();
 		}
 	}

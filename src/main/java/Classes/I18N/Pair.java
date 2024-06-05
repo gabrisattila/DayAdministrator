@@ -15,5 +15,4 @@ public class Pair <F, S> {
         first = f;
         second = s;
     }
-
 }

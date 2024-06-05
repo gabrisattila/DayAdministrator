@@ -40,11 +40,19 @@ public class I18N {
 
     public static final String delimiterBetweenTextParts = ";";
 
-    public static final double timesNewRomanCharPixelSize = 5.5;
+    public static final String WorkbookOpenMacroSkeleton =
+            "Sub Workbook_Open()\n" +
+            "    \n" +
+            "    callMacros\n" +
+            "\n" +
+            "End Sub";
 
     public static int getPossibleCharNumInColumn(Sheet sheet, int colI){
         return (int) (sheet.getColumnWidthInPixels(colI) / timesNewRomanCharPixelSize);
     }
+    public static final String CallSubMacroSkeleton = "Call macroName(params)";
+
+    public static final String MacroParamSkeleton = "param,";
 
     public static <T> T[] swap(T[] array, int i, int j){
         if (array.length < i || array.length < j)
