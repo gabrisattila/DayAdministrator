@@ -47,9 +47,6 @@ public class I18N {
             "\n" +
             "End Sub";
 
-    public static int getPossibleCharNumInColumn(Sheet sheet, int colI){
-        return (int) (sheet.getColumnWidthInPixels(colI) / timesNewRomanCharPixelSize);
-    }
     public static final String CallSubMacroSkeleton = "Call macroName(params)";
 
     public static final String MacroParamSkeleton = "param,";
